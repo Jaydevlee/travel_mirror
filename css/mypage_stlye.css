@@ -6,12 +6,20 @@
 /*body*/
 body {margin: 0 auto;padding: 0;width: 1400px;}
 .review_list{list-style: none;width: 77%; padding: 0;margin: 0 auto;}
+
+/*검색*/
+.search_frame{width: 75%; margin: 0 auto;}
+.search_area{width: 100%;background-color: #41E9C2;height: 4rem;margin: 0 auto;border: 1px solid #ccc;border-radius: 8px;}
+#address_search{margin: 1rem;width: 80%;padding: 10px;border: 1px solid #ddd;border-radius: 4px;font-size: 14px;}
+
 .card{border: 1px solid #ccc; border-radius: 8px; margin:10px;}
 
 /*card_head*/
 .card_head{display: flex;justify-content: space-between;padding: 5px 10px;background-color: #41E9C2;}
-.card_head h3{margin:0.4em 0 0 0.4em; color: #fff; width: 90%;}
-.card_head h3 input{display: none; width: 80%; border: 1px solid #ccc; border-radius: 5px; padding: 8px;box-sizing: border-box;}
+.card_head .card_title{width: 80%;}
+.card_head .addr_area input{width: 70%;padding: 10px;border: none;background-color: #41E9C2;font-size: 1rem;font-weight: bold;color: #fff;}
+.card_head h3{margin:0.4em 0 0 0.4em; color: #fff; width: 70%;}
+.card_head h3 input{width: 100%; border: 1px solid #ccc; border-radius: 5px; padding: 8px;box-sizing: border-box; font-size: 1rem;}
 .card_head a{ margin:0 10px 0 10px; text-decoration: none; font-size: 1rem; width: 15%;}
 .card_head a:hover{ margin:0 10px 0 10px; text-decoration: underline; font-size: 1rem;}
 

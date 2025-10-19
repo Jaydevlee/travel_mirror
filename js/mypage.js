@@ -1,12 +1,14 @@
 $(document).ready(function(){
     // expend_btn_area 버튼 클릭 시 적용
-    $(document).on('click', '.card_head', function(){
-        const $body = $(this).siblings('.card_body'); // 현재 카드의 내용 영역
-        toggleOnOff($body);
+
+        $(document).on('click', '.expend_btn_area', function(e){
+        const $card_head = $(this).closest('.card_head');
+        const $card_body = $card_head.siblings('.card_body');
+        toggleOnOff($card_body);
 
         // 버튼 화살표 이미지 교체 (down ↔ up)
-        const $img = $(this).find('.expend_btn_area img');
-        $img.attr('src', $body.hasClass('on') ? 'img/icon/up.png' : 'img/icon/down.png');
+        const $img = $(this).find('button img');
+        $img.attr('src', $card_body.hasClass('on') ? 'img/icon/up.png' : 'img/icon/down.png');
     });
 
     // btn_area 버튼 클릭 시 적용
