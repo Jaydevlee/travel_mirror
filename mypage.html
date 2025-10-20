@@ -18,25 +18,28 @@
       <!--지도 영역 -->
       <div id="map"></div>
       <!--후기 영역-->
+      <!--검색창-->
       <div class="search_frame">
         <div class="search_area">
           <input id="address_search" type="text" placeholder="주소 또는 장소를 검색하세요">
         </div>
       </div>
-        <ul class="review_list">
-          <!--후기 작성시 동적 li 추가-->
-        </ul>
+        <form>
+          <ul class="review_list">
+            <!--후기 작성시 동적 li 추가-->
+          </ul>
+        </form>
       </div>
     </div>
     <!--footer-->
   </div>
+  
 <script>
   let map;
   let marker;
   let labelIndex = 1;//마커라벨
   let markers = []; // 마커를 저장할 배열
   let addr;
-  let place_id;
   
   //구글맵 api
   async function initMap() {
@@ -213,7 +216,7 @@
               </div>
             </div>
             <div class="expend_btn_area">
-              <button>
+              <button type="button">
                 <img src="img/icon/down.png" width="40">
               </button>
             </div>
@@ -244,7 +247,7 @@
                       <input type="file" id="file_upload_${lat}_${lng}" class="file_upload" multiple>
               </div>
               <div class="write_btn_area btn">
-                <button type="submit">작성</button>
+                <button type="button">작성</button>
                 <button type="reset">취소</button>
               </div>
             </div>
