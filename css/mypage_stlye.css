@@ -26,15 +26,12 @@ body {margin: 0 auto;padding: 0;width: 1400px;}
 /*card_body*/
 .card_body{padding: 15px;display:flex;flex-direction: column;justify-content: space-around; box-sizing: border-box;}
 
-/*내용 보이는 영역*/
-.content_box{display: flex;justify-content: space-between;}
-.content_view_area{width: 100%; padding: 10px 5px;}
-
 /*수정삭제 버튼*/
 .btn_area{position: relative;}
 .set_btn{font-size: 18px;border: 0;background: #fff;color: #7f7f7f;}
 .btn_ul{display: none;list-style: none;padding: 0; position: absolute; width: 65px;top: 10px;right: 10px;background-color: #fff;border-radius: 5px;z-index: 999; }
 .btn_ul > li{text-align: center; padding: 5px;border:1px solid #e3e3e3}
+.btn_ul > li > button{width: 100%;border: none;background-color: #fff;font-size: 1rem;font-weight: bold;color: #41E9C2;}
 
 /*내용작성 영역*/
 .text_area_box{margin: 10px 0;width: 100%;}
@@ -49,6 +46,14 @@ body {margin: 0 auto;padding: 0;width: 1400px;}
 
 .on{display: block !important;}
 .off{display: none !important;}
+
+/*내용 보이는 영역*/
+.content_box{display: flex;justify-content: space-between;}
+.content_view_area{width: 100%; padding: 10px 5px;}
+.addr_area .tr_addr{width: 70%;padding: 5px 10px;background-color: #41E9C2;font-size: 1rem;font-weight: bold;color: #fff;}
+.view_head{display: flex; justify-content: space-between;}
+.menu_btn{font-weight: bold;font-size: 1.5rem;border: none;background-color: #fff;color: #41E9C2;}
+.stars{font-size: 2rem;line-height: 1;background: none;border: 0;color: rgb(245, 158, 11);}
 
 
 /*googleMap*/

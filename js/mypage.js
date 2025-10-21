@@ -11,8 +11,27 @@ let map;
 let marker;
 let labelIndex = 1; // 마커 라벨
 let markers = []; // 마커를 저장할 배열
-let addr;
 
+//로컬스토리지
+const ReviewStorage={
+  // 전체 리뷰 가져오기
+    getAll() {
+        const data = localStorage.getItem('reviews');
+        return data ? JSON.parse(data) : [];
+    },
+    
+    // 리뷰 저장
+    save(review) {
+        const reviews = this.getAll();
+        review.id = Date.now(); // 고유 ID 생성
+        review.createdAt = new Date().toISOString();
+        reviews.push(review);
+        localStorage.setItem('reviews', JSON.stringify(reviews));
+        return review;
+    }
+}
+
+//구글맵 api
 async function initMap() {
   // 초기 맵 설정 (서울 시청 좌표 기준 예시)
     const initialLocation = { lat: 37.5665, lng: 126.9780 };
@@ -82,88 +101,94 @@ async function initMap() {
         }, 500);
         labelIndex++; 
 
-    // 주소 가져오기
-    let address = "";
-    let addressComponents = [];
+        // 주소 가져오기
+        let address = "";
+        let addressComponents = [];
 
-    // 역지오코딩(좌표 -> 주소)
-    try {
-        const addr_result = await geocoder.geocode({location: latLng});
-        if (addr_result.results[0]) {
-            address = addr_result.results[0].formatted_address;
-            addressComponents = addr_result.results[0].address_components;
+        // 역지오코딩(좌표 -> 주소)
+        try {
+            const addr_result = await geocoder.geocode({location: latLng});
+            if (addr_result.results[0]) {
+                address = addr_result.results[0].formatted_address;
+                addressComponents = addr_result.results[0].address_components;
+            }
+        } catch(e) {
+            address = "주소 없음";
         }
-    } catch(e) {
-        address = "주소 없음";
-    }
-    addr = address;
+        
 
-    // 장소명 가져오기
-    let place_name = "";
-    try {
-      // placeService 객체
-        const service = new google.maps.places.PlacesService(map);
-        place_name = await new Promise((resolve) => {
-        service.nearbySearch({
-            location: latLng,
-            radius: 5, // 반경 5미터
-        },
-        (results, status) => {
-            if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
-            // console.log("nearbySearch results:", results);
-                let bestPlace = null;
-                let minDistance = null;
+        // 장소명 가져오기
+        let place_name = "";
+        try {
+        // placeService 객체
+            const service = new google.maps.places.PlacesService(map);
+            place_name = await new Promise((resolve) => {
+            service.nearbySearch({
+                location: latLng,
+                radius: 5, // 반경 5미터
+            },
+            (results, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
+                // console.log("nearbySearch results:", results);
+                    let bestPlace = null;
+                    let minDistance = null;
 
-            for (let place of results) {
-                const types = place.types || [];
-                const name = place.name;
-                // 제외할 키워드
-                const ban_types = ['country','political'];
-                const has_ban_type = types.some(ban_type => ban_types.includes(ban_type));
-                const ban_name = ['대한민국', 'South Korea', '구', '동'];
-                const has_ban_name = ban_name.some(banned => place.name.includes(banned));
+                for (let place of results) {
+                    const types = place.types || [];
+                    const name = place.name;
+                    // 제외할 키워드
+                    const ban_types = ['country','political'];
+                    const has_ban_type = types.some(ban_type => ban_types.includes(ban_type));
+                    const ban_name = ['대한민국', 'South Korea', '구', '동'];
+                    const has_ban_name = ban_name.some(banned => place.name.includes(banned));
 
-                if (!has_ban_type && !has_ban_name && name && name !== address) {
-                    // 좌표와 근처 거리 계산
-                    const placeLocation = place.geometry.location;
-                    const distance = google.maps.geometry.spherical.computeDistanceBetween(
-                    latLng,
-                    placeLocation
-                );
-                
-                    // 5미터 이내의 가장 가까운 장소
-                    if (distance < 5 && (minDistance === null || distance < minDistance)) {
-                        minDistance = distance;
-                        bestPlace = { name, distance };
+                    if (!has_ban_type && !has_ban_name && name && name !== address) {
+                        // 좌표와 근처 거리 계산
+                        const placeLocation = place.geometry.location;
+                        const distance = google.maps.geometry.spherical.computeDistanceBetween(
+                        latLng,
+                        placeLocation
+                    );
+                    
+                        // 5미터 이내의 가장 가까운 장소
+                        if (distance < 5 && (minDistance === null || distance < minDistance)) {
+                            minDistance = distance;
+                            bestPlace = { name, distance };
+                        }
                     }
                 }
-            }
-                if (bestPlace) {
-                    resolve(bestPlace.name);
+                    if (bestPlace) {
+                        resolve(bestPlace.name);
+                    } else {
+                        resolve("");
+                    }
                 } else {
-                    resolve("");
+                resolve("");
                 }
-            } else {
-            resolve("");
-            }
+            });
         });
+        } catch(e) {
+            console.error("장소명 검색 오류:", e);
+            const sublocality = addressComponents.find(comp =>
+            comp.types.includes('sublocality_level_2')
+            );
+            place_name = sublocality ? sublocality.long_name : "";
+        }
+        //글작성 li 템플릿
+        createWriteForm(lat, lng, place_name, address, currentIndex);
     });
-    } catch(e) {
-        console.error("장소명 검색 오류:", e);
-        const sublocality = addressComponents.find(comp =>
-        comp.types.includes('sublocality_level_2')
-        );
-        place_name = sublocality ? sublocality.long_name : "";
-    }
-
-    // li 템플릿 생성
+}
+    //리뷰 작성 템플릿
+    function createWriteForm(lat, lng, place_name, address, currentIndex){
+    //좌표+작성일로 li id 생성
+    const tr_id = `${lat}_${lng}_${Date.now()}`;
     const $li = $(`
-        <li>
+        <li id="${tr_id}">
             <div class="card">
             <div class="card_head">
                 <div class="card_title">
                 <h3>
-                    <input type="text" name="tr_subject" id="tr_subject_${lat}_${lng}" class="tr_subject" value="${place_name}">
+                    <input type="text" name="tr_subject" id="tr_subject_${lat}_${lng}" class="tr_subject" value="${place_name}" placeholder="장소명을 입력하세요.">
                 </h3>
                 <div class="addr_area">
                     <input type="text" name="tr_addr" id="tr_addr_${lat}_${lng}" class="tr_addr" value="${address}" disabled>
@@ -171,7 +196,7 @@ async function initMap() {
                 </div>
                 <div class="expend_btn_area">
                 <button type="button">
-                    <img src="img/icon/down.png" width="40">
+                    <img src="img/icon/down.png" width="40" alt="펼치기">
                 </button>
                 </div>
             </div>
@@ -191,28 +216,137 @@ async function initMap() {
                     </div>
                 </form>
                 <div class="text_area_box">
-                    <textarea class="text_area" rows="6"></textarea>
+                    <textarea class="text_area" rows="6" placeholder="후기를 작성해주세요."></textarea>
                 </div>
                 <div class="file_area">
-                    <label for="file_upload_${lat}_${lng}" class="file_label" multiple>
+                    <label for="file_upload_${tr_id}" class="file_label" multiple>
                     <img src="img/icon/input_icon.png" alt="업로드 버튼 이미지" width="10px">
                     </label>
-                    <input type="file" id="file_upload_${lat}_${lng}" class="file_upload" multiple>
+                    <input type="file" id="file_upload_${tr_id}" class="file_upload" multiple>
                 </div>
                 <div class="write_btn_area btn">
-                    <button type="button">작성</button>
-                    <button type="reset">취소</button>
+                    <button type="button" id="btn_submit">작성</button>
+                    <button type="reset" id="btn_cancel">취소</button>
                 </div>
                 </div>
             </div>
             </div>
         </li>
     `);
+    //좌표, 마커인덱스 저장
+    $li.data('location',{lat, lng, currentIndex});
     
     // review_list에 append
     $(".review_list").append($li);
+    //별점 초기화
+    // initStarRating($li.find('.tr_starForm'));
+    }
+
+    //작성 리뷰 템플릿
+    function createViewForm(review){
+        console.log(review);
+        const $li = $(`
+        <li id="${review.id}">
+            <div class="card">
+            <div class="card_head">
+                <div class="card_title">
+                    <h3>${review.tr_subject}</h3>
+                    <div class="addr_area">
+                        <span class="tr_addr">${review.tr_address}</span>
+                    </div>
+                </div>
+                <div class="expend_btn_area">
+                    <button type="button">
+                        <img src="img/icon/down.png" width="40" alt="펼치기">
+                    </button>
+                </div>
+            </div>
+            <div class="card_body">
+                <div class="content_write_area">
+                <div class="view_head">
+                    <!--별점-->
+                    <div class="rating_display">
+                        <span class="stars">${'★'.repeat(review.tr_ratingVal)}${'☆'.repeat(5-review.tr_ratingVal)}</span>
+                    </div>
+                    <div class="btn_area">
+                        <button type="button" class="menu_btn">⋮</button>
+                        <ul class="btn_ul off">
+                        <li><button type="button" class="btn_edit">수정</button></li>
+                        <li><button type="button" class="btn_delete">삭제</button></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content_view_area">
+                <!--이미지 영역-->
+                    ${review.images && review.images.length > 0 ? `
+                    <div class="image_preview_area">
+                        ${review.images.map(img => `<img src="${img}" alt="첨부 이미지" style="max-width:150px; height:auto; border-radius:8px; margin:5px;">`).join('')}
+                    </div>
+                    ` : ''}
+                    <div class="content_text">
+                    <p>${review.content.replace(/\n/g, '<br>')}</p>
+                    </div>
+                    <div class="review_meta">
+                    <span>${new Date(review.createdAt).toLocaleString('ko-KR')}</span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </li>
+    `);
+    return $li;
+    }
+
+    //글작성 버튼
+    $(document).on('click', '#btn_submit', function() {
+        const $li = $(this).closest('li');
+        const $card = $li.find('.card');
+        const tr_subject = $li.find('.tr_subject').val().trim();
+        const tr_address = $li.find('.tr_addr').val();
+        const tr_ratingVal = Number($li.find('.tr_ratingVal').val());
+        const content = $li.find('.text_area').val().trim();
+        const location = $li.data('location');
+    
+        // 유효성 검사
+        if (!tr_subject) {
+            alert('장소명을 입력해주세요.');
+            return;
+        }
+        if (tr_ratingVal === 0) {
+            alert('별점을 선택해주세요.');
+            return;
+        }
+        if (!content) {
+            alert('후기 내용을 작성해주세요.');
+            return;
+        }
+        
+        // 이미지 수집
+        const images = [];
+        $li.find('.file_preview img').each(function() {
+            images.push($(this).attr('src'));
+        });
+        
+        // 리뷰 데이터 생성
+        const reviewData = {
+            tr_subject,
+            tr_address,
+            tr_ratingVal,
+            content,
+            images,
+            location
+        };
+        
+        // 로컬 스토리지에 저장
+        const savedReview = ReviewStorage.save(reviewData);
+        
+        // 글보기 li로 교체
+        const $viewLi = createViewForm(savedReview);
+        $li.replaceWith($viewLi);
+        
+        alert('후기가 작성되었습니다.');
     });
-}
+
 
         $(document).ready(function() {
         // expend_btn_area 버튼 클릭 시 적용
@@ -327,7 +461,7 @@ async function initMap() {
                         src="${url}"
                         style="max-width:100%; height:auto; display:block; border-radius:8px; margin-top:6px;">`
                 );
-                $img.on('load', () => URL.revokeObjectURL(url));
+                // $img.on('load', () => URL.revokeObjectURL(url));
                 $preview.append($img);
             });
     });
