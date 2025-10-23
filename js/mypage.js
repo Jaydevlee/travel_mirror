@@ -756,4 +756,31 @@ $(document).ready(function() {
             $('.btn_ul').removeClass('on').addClass('off');
         }
     });
+    //리뷰 주소 추적
+    $(document).on('click', '.review_list li[data-review-id]', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // 클릭된 li에서 리뷰 id를 가져옴
+        const review_id = $(this).data('review-id');
+        const review = ReviewStorage.getById(review_id);
+
+        if (!review || !review.location) {
+            console.warn('리뷰에 위치 정보가 없습니다.');
+            return;
+        }
+
+        const { lat, lng } = review.location;
+
+        // 지도 중심 이동
+        const position = new google.maps.LatLng(Number(lat), Number(lng));
+        map.setCenter(position);
+        map.setZoom(18); // 확대 정도 조절 가능
+        // 새 마커 생성
+        marker = new google.maps.Marker({
+            position: position,
+            map: map,
+            animation: google.maps.Animation.DROP
+        });
+});
 });
