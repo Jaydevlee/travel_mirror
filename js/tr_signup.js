@@ -25,14 +25,14 @@ body.css({"backgroundImage" : backgrounds[randomIndex],
 //id 유효성 검사
 const tr_id = $('#tr_id');  //아이디 입력창 지정
 const resultId = $('#resultId');  // 유효성 결과 표시부분
-const idReg = /^(?=.*[a-zA-Z])(?=.*\d)[a-z|A-Z\d]{5,15}$/; //id정규식
+const idReg = /^(?=.*[a-zA-Z])(?=.*\d)[a-z|A-Z\d]{5,20}$/; //id정규식
 function idCheck(){
   if(idReg.test(tr_id.val())){
     resultId.html("");
     resultId.css("color", "");
     return true;
   } else {
-    resultId.html("아이디는 영문자와 숫자포함 5자이상 15자 이내여야 합니다.");
+    resultId.html("아이디는 영문자와 숫자포함 5자이상 20자 이내여야 합니다.");
     resultId.css("color", "#A50000");
     return false;
   }
@@ -59,7 +59,7 @@ dupCheck.on('click', () => {
 //pw유효성 검사
 const tr_pw = $('#tr_pw'); //비밀번호 입력 지정
 const resultPw = $("#resultPw"); //비밀번호 유효성 검사 결과 지정
-const pwReg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@!#$])[a-z|A-Z\d!@#$]{7,20}$/; //pw정규식
+const pwReg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!.@#$%^&*])[a-z|A-Z\d!@#$%^&*]{7,20}$/; //pw정규식
 function pwCheck(){  
   if(pwReg.test(tr_pw.val())){
     resultPw.html("");
@@ -143,7 +143,22 @@ form.on('submit', (e) => {
     return;
   }
   if(idCheck() && pwCheck() && verifyPw() && emailCheck()){
-    form[0].submit();
+     const userData = {
+        id: tr_id.val(),
+        password: tr_pw.val(),
+        email: tr_email.val()
+      };
+
+      // 로컬 스토리지에 회원 정보 저장
+      localStorage.setItem('userData', JSON.stringify(userData));
+
+      // 세션 스토리지에 로그인 상태 유지 (사용자가 로그인한 상태로 처리)
+      sessionStorage.setItem('isLoggedIn', 'true');
+
+      alert("회원가입이 완료되었습니다!");
+
+      // 회원가입 후 마이페이지 이동 
+      window.location.href = '/mypage.html';;
   }
 });
 });
