@@ -12,6 +12,7 @@ const ReviewStorage = {
         review.createdAt = new Date().toISOString();
         reviews.push(review);
         localStorage.setItem('reviews', JSON.stringify(reviews));
+        console.log(review);
         return review;
     },
     //리뷰수정
