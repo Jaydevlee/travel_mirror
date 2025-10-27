@@ -113,6 +113,7 @@ function ensurePlaceGroup(review) {
       </div>
     </li>
   `);
+  console.log(review.location);
 
   $(".review_list").prepend($group);
   return $group;
@@ -122,7 +123,6 @@ function ensurePlaceGroup(review) {
     window.makePlaceId = makePlaceId;
     window.ensurePlaceGroup = ensurePlaceGroup;
 
-console.log(review);
 // 리뷰 보기 폼
 // 리뷰 보기 폼 수정 1026 //
 function createViewForm(review) {

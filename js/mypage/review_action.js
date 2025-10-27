@@ -130,7 +130,6 @@ function handleReviewUpdate($li) {
     // 리뷰 업데이트
     const updatedReview = ReviewStorage.modify(reviewId, {
         tr_subject: trSubject,
-        tr_placeName : trPlaceName,
         tr_ratingVal: trRatingVal,
         content,
         images: allImages
