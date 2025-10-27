@@ -25,7 +25,13 @@ body {margin: 0 auto;padding: 0;width: 1400px;}
 
 /*card_body*/
 .card_body{padding: 15px;display:flex;flex-direction: column;justify-content: space-around; box-sizing: border-box;}
+.group_reviews{list-style: none; padding: 0;}
+.head_right{display: flex;}
 
+.rating_filter{width:20rem;margin-top: 1rem;}
+.rating_filter button{width: calc(100% / 7);border: none;background-color: #fff;color: #41E9C2;border-radius: 6px;padding: 5px;font-size: 1rem;font-weight: bold; box-shadow: 0 4px 8px rgba(0, 191, 165, 0.35);}
+.rating_filter button:hover{width: calc(100% / 7);border: none;background-color: #177d65;color: #fff;border-radius: 6px;padding: 5px;font-size: 1rem;font-weight: bold; box-shadow: 0 4px 8px rgba(0, 191, 165, 0.35);}
+.expend_btn_area{margin-top: 0;}
 /*수정삭제 버튼*/
 .btn_area{position: relative;}
 .set_btn{font-size: 18px;border: 0;background: #fff;color: #7f7f7f;}
