@@ -33,14 +33,27 @@ tr_formId.on("submit", (e) => {
     alert("이메일을 입력해주세요!");
     return;
   } else {
-    tr_formId.submit();
+    //이메일 입력 시 기존 회원정보에서 이메일과 일치하는 아이디 찾기
+    //회원정보 불러오기
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    //이메일 입력값 저장
+    const inputEmail = email_findId.val().trim();
+    //이메일과 일치하는 사용자 찾기
+    const matchedUser = users.find(user => user.email === inputEmail);
+    if(matchedUser){
+      alert(`회원님의 아이디는 ${matchedUser.id} 입니다.`);
+    } else {
+      alert("입력하신 이메일과 일치하는 아이디가 없습니다.");
+    }
   }
-});
+  });
 
 //비밀번호 찾기에서 필드가 하나라도 비어 있는 경우
 const tr_formPw = $('#tr_formPw');
 const id_findPw = $('.id_findPw')
 const email_findPw = $('.email_findPw');
+
+//비밀번호 찾기(재생성을 연결할 예정이지만 우선은 기존 비밀번호를 알려주는 방식으로 구현)
 tr_formPw.on("submit", (e) => {
   e.preventDefault();
   if(id_findPw.val().trim() === "" && email_findPw.val().trim() === ""){
@@ -50,7 +63,16 @@ tr_formPw.on("submit", (e) => {
   } else if(email_findPw.val().trim() === ""){
     alert("이메일을 입력해주세요!");
   } else{
-    tr_formPw.submit();
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    const inputId = id_findPw.val().trim();
+    const inputEmail = email_findPw.val().trim();
+    const matchedUser = users.find(user => user.id === inputId && user.email === inputEmail);
+    if(matchedUser){
+      alert(`회원님의 비밀번호는 ${matchedUser.pw} 입니다.`);
+      //비밀번호 재설정 페이지(window.location.href = 'tr_resetpassword.html';)로 이동하는 방식으로 변경 예정
+    } else {
+      alert("입력하신 아이디와 이메일과 일치하는 비밀번호가 없습니다.");
+    }
   }
 });
 });

@@ -22,6 +22,8 @@ body.css({"backgroundImage" : backgrounds[randomIndex],
           "backgroundPosition" : "center"
   });
 
+// --------------------------------------------------------------------------------
+
 //id 유효성 검사
 const tr_id = $('#tr_id');  //아이디 입력창 지정
 const resultId = $('#resultId');  // 유효성 결과 표시부분
@@ -38,9 +40,12 @@ function idCheck(){
   }
 };
 tr_id.on('input', idCheck);
+//id입력시 중복확인 초기화
 tr_id.on('input', () => {
   isIdChecked = false;
 });
+
+// --------------------------------------------------------------------------------
 
 //id중복확인
 let isIdChecked = false; //const 사용X const 쓰면 false로 고정됨.
@@ -51,10 +56,21 @@ dupCheck.on('click', () => {
     isIdChecked = false;
     return;
   }
-  alert("사용가능한 아이디입니다.");
-  isIdChecked = true; //지금은 DB가 없어서 입력만하면 사용가능하다고 뜹니다
+
+//기존 회원가입된 정보 가져오기
+const users = JSON.parse(localStorage.getItem('users')) || [];
+
+const isDuplicate = users.some(user => user.id === tr_id.val());
+if(isDuplicate){
+  alert("이미 사용중인 아이디입니다.");
+  isIdChecked = false;
+} else {
+   alert("사용가능한 아이디입니다.");
+  isIdChecked = true;
+  }
 });
 
+// --------------------------------------------------------------------------------
 
 //pw유효성 검사
 const tr_pw = $('#tr_pw'); //비밀번호 입력 지정
@@ -90,6 +106,7 @@ function verifyPw(){
 }
 tr_pwVer.on('input', verifyPw);
 
+// --------------------------------------------------------------------------------
 
 //email 유효성 검사
 const tr_email = $('#tr_email');  //이메일 입력창 지정
@@ -107,6 +124,8 @@ function emailCheck(){
   }
 };
 tr_email.on('input', emailCheck);
+
+// --------------------------------------------------------------------------------
 
 //약관 팝업
 const modal = $("#tr_termsModal");
@@ -128,6 +147,8 @@ $(window).on("click", (e) => {
   }
 });
 
+// --------------------------------------------------------------------------------
+
 //회원가입버튼 이벤트
 const form = $('form');
 form.on('submit', (e) => {
@@ -142,23 +163,32 @@ form.on('submit', (e) => {
     alert("필수 이용약관에 동의해주세요.");
     return;
   }
-  if(idCheck() && pwCheck() && verifyPw() && emailCheck()){
-     const userData = {
-        id: tr_id.val(),
-        password: tr_pw.val(),
-        email: tr_email.val()
-      };
+  if(idCheck() && pwCheck() && verifyPw() && emailCheck()){     
+    //회원정보 저장 변수
+    let users = JSON.parse(localStorage.getItem('users')) || []; //const 사용X
+    //배열 형태로 보정
+    if(!Array.isArray(users)){
+      users = [];
+    }
+    //회원정보
+    const userData = {
+      id: tr_id.val(),
+      pw: tr_pw.val(),
+      email: tr_email.val()
+    };
 
-      // 로컬 스토리지에 회원 정보 저장
-      localStorage.setItem('userData', JSON.stringify(userData));
+    users.push(userData);
 
-      // 세션 스토리지에 로그인 상태 유지 (사용자가 로그인한 상태로 처리)
-      sessionStorage.setItem('isLoggedIn', 'true');
+    // 로컬 스토리지에 회원 정보 저장
+    localStorage.setItem('users', JSON.stringify(users));
 
-      alert("회원가입이 완료되었습니다!");
+    // 세션 스토리지에 로그인 상태 유지 (사용자가 로그인한 상태로 처리)
+    sessionStorage.setItem('isLoggedIn', 'true');
 
-      // 회원가입 후 마이페이지 이동 
-      window.location.href = '/mypage.html';;
-  }
+    alert("회원가입이 완료되었습니다!");
+
+    // 회원가입 후 마이페이지 이동 
+    window.location.href = '/mypage.html';;
+}
 });
 });
