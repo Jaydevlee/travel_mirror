@@ -101,9 +101,10 @@ function setupMapClickEvent(geocoder) {
         
         //장소명 검색
         const placeName = await getPlaceName(latLng, address.components);
-        
+        const placeName2 = await getPlaceName(latLng, address.components);
         //리뷰 작성 폼 생성
-        createWriteForm(lat, lng, placeName, address.formatted, currentIndex);
+        createWriteForm(lat, lng, placeName,placeName2, address.formatted, currentIndex);
+        
     });
 }
 

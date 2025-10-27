@@ -1,5 +1,5 @@
 // 리뷰 작성 폼
-function createWriteForm(lat, lng, placeName, address, currentIndex) {
+function createWriteForm(lat, lng, placeName, placeName2,address, currentIndex) {
     const trId = `${lat}_${lng}_${Date.now()}`;
     const $li = $(`
         <li data-mode="write" data-unique-id="${trId}">
@@ -8,6 +8,7 @@ function createWriteForm(lat, lng, placeName, address, currentIndex) {
                     <div class="card_title">
                         <h2>
                             <input type="text" name="tr_subject" id="tr_subject_${lat}_${lng}" class="tr_subject" value="${placeName}" placeholder="장소명을 입력하세요.">
+                            <input type="hidden" name="tr_placeName" id="tr_placeName" class="tr_placeName" value="${placeName2}">
                         </h2>
                         <div class="addr_area">
                             <input type="text" name="tr_addr" id="tr_addr_${lat}_${lng}" class="tr_addr" value="${address}" disabled>
@@ -81,7 +82,7 @@ function ensurePlaceGroup(review) {
       <div class="card group_card">
         <div class="card_head">
           <div class="card_title">
-            <h2 class="group_title">${review.tr_subject}</h2>
+            <h2 class="group_title">${review.tr_placeName}</h2>
             <div class="addr_area"><span class="tr_addr">${review.tr_address}</span></div>
           </div>
 
@@ -121,7 +122,7 @@ function ensurePlaceGroup(review) {
     window.makePlaceId = makePlaceId;
     window.ensurePlaceGroup = ensurePlaceGroup;
 
-
+console.log(review);
 // 리뷰 보기 폼
 // 리뷰 보기 폼 수정 1026 //
 function createViewForm(review) {

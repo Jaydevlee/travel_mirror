@@ -3,6 +3,7 @@
 // 리뷰 작성 완료
 function handleReviewSubmit($li) {
     const trSubject = $li.find('.tr_subject').val().trim();
+    const trPlaceName = $li.find('.tr_placeName').val().trim();
     const trAddress = $li.find('.tr_addr').val();
     const trRatingVal = Number($li.find('.tr_ratingVal').val());
     const content = $li.find('.text_area').val().trim();
@@ -32,6 +33,7 @@ function handleReviewSubmit($li) {
     
     const reviewData = {
         tr_subject: trSubject,
+        tr_placeName : trPlaceName,
         tr_address: trAddress,
         tr_ratingVal: trRatingVal,
         content,
@@ -128,6 +130,7 @@ function handleReviewUpdate($li) {
     // 리뷰 업데이트
     const updatedReview = ReviewStorage.modify(reviewId, {
         tr_subject: trSubject,
+        tr_placeName : trPlaceName,
         tr_ratingVal: trRatingVal,
         content,
         images: allImages
