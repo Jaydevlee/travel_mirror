@@ -189,8 +189,43 @@ function initUIHandlers() {
             $('.btn_ul').removeClass('on').addClass('off');
         }
     });
-}
 
+    // // 1026 별점 필터 동작 추가 //
+
+    // 장소(같은 주소)그룹 별 별점 필터
+    $(document).on('click', '.place_group .rating_filter button', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const $btn = $(this);
+        const star = $btn.data('star'); 
+        const $group = $btn.closest('.place_group');
+        const $list    = $group.find('.group_reviews');     
+        const $reviews = $list.find('> li[data-mode="view"]'); 
+
+    // 버튼 전체, 각 별점 별로 all, 별1,2,3,4,5 
+        $btn.addClass('active').siblings().removeClass('active');
+
+        if (star === 'all') {
+            $reviews.show();
+        } else {
+            const s = parseInt(star, 10);
+            $reviews.each(function() {
+            const r = parseInt($(this).data('rating'), 10);
+            $(this).toggle(r === s);
+            });
+        }
+    // 해당 별점에 리뷰가 없다면 안내 메시지 표시하기
+        let $empty = $list.children('li.no_rating_msg');
+            if (!$empty.length) {
+            $empty = $('<li class="no_rating_msg" aria-live="polite">해당 별점 리뷰가 없습니다.</li>').hide();
+            $list.append($empty);
+        }
+        const hasVisible = $reviews.filter(':visible').length > 0;
+        $empty.toggle(!hasVisible);
+        $group.show();
+});
+}
 // 별점 초기화
 function initStarRatings() {
     $('.tr_starForm').each(function() {
@@ -200,7 +235,6 @@ function initStarRatings() {
         paintStars($stars, $hidden, 0);
     });
 }
-
 $(document).on('click', '.file_label, .file_upload', function(e) {
         e.stopPropagation();
     });

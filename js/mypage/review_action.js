@@ -7,6 +7,9 @@ function handleReviewSubmit($li) {
     const trRatingVal = Number($li.find('.tr_ratingVal').val());
     const content = $li.find('.text_area').val().trim();
     const location = $li.data('location');
+// 1026 같은 장소는 한 카드로 묶고(place_group), 그 카드 안에서 별점으로 필터링하기 위해서 // 
+    //1026 장소키 생성, 추가 // 
+    const placeId = window.makePlaceId ? window.makePlaceId(location) : '';
 
     // 유효성 검사
     if (!trSubject) {
@@ -33,19 +36,29 @@ function handleReviewSubmit($li) {
         tr_ratingVal: trRatingVal,
         content,
         images,
-        location
+        location,
+        placeId //1026 위에 추가한 장소키 생성 데이터 저장 
     };
     console.log(reviewData);
     
-    // 리뷰 저장
-    const savedReview = ReviewStorage.save(reviewData);
-    
-    // 뷰 폼으로 전환
-    const $viewLi = createViewForm(savedReview);
-    $li.replaceWith($viewLi);
-    
-    alert('후기가 작성되었습니다.');
-    return true;
+     // 1026 수정, 뷰 폼으로 전환을 그룹에 삽입으로 변경//
+
+        // 리뷰 저장
+        const savedReview = ReviewStorage.save(reviewData);
+
+        // 그룹 밑으로 삽입
+        const $viewLi = createViewForm(savedReview);
+        const $group = window.ensurePlaceGroup ? window.ensurePlaceGroup(savedReview) : null;
+
+        if ($group && $group.length) {
+        $group.find('.group_reviews').prepend($viewLi);
+        $li.remove(); // 작성 li 제거
+        } else { // 그룹이 안된다면 그대로
+        $li.replaceWith($viewLi);
+        }
+
+        alert('후기가 작성되었습니다.');
+        return true;
 }
 
 // 리뷰 작성 취소
@@ -119,13 +132,19 @@ function handleReviewUpdate($li) {
         content,
         images: allImages
     });
-    
-    if (updatedReview) {
-        const $viewLi = createViewForm(updatedReview);
+      // 1026 수정 하고도 해당 그룹(같은 장소)으로 가게//
+        if (updatedReview) {
+            const $viewLi = createViewForm(updatedReview);
+            const $group = window.ensurePlaceGroup ? window.ensurePlaceGroup(updatedReview) : null;
+
         $li.replaceWith($viewLi);
+         if ($group && !$viewLi.closest('.group_reviews').length) {
+            $group.find('.group_reviews').prepend($viewLi);
+        }
+
         alert('수정되었습니다.');
         return true;
-    }
+     }
     return false;
 }
 
@@ -145,12 +164,21 @@ function handleReviewEditCancel($li) {
 // 리뷰 삭제
 function handleReviewDelete($li) {
     const reviewId = $li.data('review-id');
+    // 1026 삭제시, 비어있는 그룹은 정리하기 //
     
     if (confirm('정말 삭제하시겠습니까?')) {
         const result = ReviewStorage.delete(reviewId);
         console.log('삭제 결과:', result);
-        
+
+        // 그룹 참조 확보 후 삭제
+        const $group = $li.closest('li.place_group');
         $li.remove();
+
+        // 그룹이 비면 (아무 리뷰가 없으면) 제거
+        if ($group.length && $group.find('.group_reviews > li[data-mode="view"]').length === 0) {
+            $group.remove();
+        }
+
         alert('삭제되었습니다.');
         return true;
     }
