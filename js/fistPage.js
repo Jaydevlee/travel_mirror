@@ -30,3 +30,33 @@ function validatePw(){
 }
 tr_id.addEventListener("blur",validateId)
 tr_psw.addEventListener("blur",validatePw)
+
+$(document).ready(function() {
+  const form = $('#register');
+  const loginId = $('#tr_id');
+  const loginPw = $('#tr_psw');
+
+  form.on('submit', function(e) {
+    e.preventDefault();
+
+    const savedUser = JSON.parse(localStorage.getItem('userData'));
+
+    if (!savedUser) {
+      alert("등록된 회원이 없습니다. 회원가입을 먼저 해주세요.");
+      return;
+    }
+
+    const inputId = loginId.val();
+    const inputPw = loginPw.val();
+
+    if (inputId == savedUser.id && inputPw == savedUser.password) {
+      alert("로그인 성공!");
+      sessionStorage.setItem('isLoggedIn', 'true');
+      sessionStorage.setItem('loginUser', savedUser.id);
+      
+      window.location.href = 'mypage.html';
+    } else {
+      alert("아이디 또는 비밀번호가 올바르지 않습니다.");
+    }
+  });
+});
