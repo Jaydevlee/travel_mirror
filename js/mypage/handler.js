@@ -200,3 +200,7 @@ function initStarRatings() {
         paintStars($stars, $hidden, 0);
     });
 }
+
+$(document).on('click', '.file_label, .file_upload', function(e) {
+        e.stopPropagation();
+    });
