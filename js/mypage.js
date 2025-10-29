@@ -41,13 +41,12 @@ const ReviewStorage = {
 }
 
 //이미지 Base64 변환 함수 
-
 function fileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result); // data:image/png;base64,xxx 형태
+        reader.onload = () => resolve(reader.result);
         reader.onerror = reject;
-        reader.readAsDataURL(file); // Base64로 읽기
+        reader.readAsDataURL(file);
     });
 }
 
@@ -58,14 +57,13 @@ function fileToBase64(file) {
  */
 async function filesToBase64Array(files) {
     const promises = Array.from(files).map(file => {
-        // 이미지 파일만 처리
         if (file.type && file.type.startsWith('image/')) {
             return fileToBase64(file);
         }
         return null;
     });
     const results = await Promise.all(promises);
-    return results.filter(r => r !== null); // null 제거
+    return results.filter(r => r !== null);
 }
 
 //google api 전역변수
@@ -73,6 +71,7 @@ let map;
 let marker;
 let labelIndex = 1;
 let markers = [];
+let polylines = []; // 폴리라인 및 거리 레이블 배열 추가
 
 //google 맵 api 동적로드
 (function loadGoogleMaps() {
@@ -82,6 +81,94 @@ let markers = [];
     script.defer = true;
     document.head.appendChild(script);
 })();
+
+// 색상 배열 (원하는 색상으로 커스터마이징 가능)
+const polylineColors = [
+    '#FF6B6B', // 빨강
+    '#4ECDC4', // 청록
+    '#45B7D1', // 하늘색
+    '#FFA07A', // 연어색
+    '#98D8C8', // 민트
+    '#F7DC6F', // 노랑
+    '#BB8FCE', // 보라
+    '#85C1E2', // 파랑
+    '#F8B739', // 주황
+    '#52D681'  // 초록
+];
+
+// 마커들을 폴리라인으로 연결하고 거리 표시
+function connectMarkers() {
+    // 기존 폴리라인 및 레이블 모두 제거
+    polylines.forEach(item => {
+        if (item.setMap) {
+            item.setMap(null);
+        }
+        if (item.close) {
+            item.close();
+        }
+    });
+    polylines = [];
+    
+    // 마커가 2개 미만이면 연결할 수 없음
+    if (markers.length < 2) return;
+    
+    // 각 구간의 거리 계산 및 표시
+    let totalDistance = 0;
+    for (let i = 0; i < markers.length - 1; i++) {
+        const start = markers[i].getPosition();
+        const end = markers[i + 1].getPosition();
+        
+        // 각 구간마다 다른 색상 선택 (색상 배열을 순환)
+        const colorIndex = i % polylineColors.length;
+        const lineColor = polylineColors[colorIndex];
+        
+        // 개별 구간 폴리라인 생성
+        const segmentPolyline = new google.maps.Polyline({
+            path: [start, end],
+            geodesic: true,
+            strokeColor: lineColor,
+            strokeOpacity: 0.8,
+            strokeWeight: 4,
+            icons: [{
+                icon: {
+                    path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+                },
+                offset: '100%',
+                repeat: '150px'
+            }]
+        });
+        
+        segmentPolyline.setMap(map);
+        polylines.push(segmentPolyline);
+        
+        // 두 지점 간 거리 계산 (미터 단위)
+        const distance = google.maps.geometry.spherical.computeDistanceBetween(start, end);
+        totalDistance += distance;
+        
+        // 중간 지점 계산
+        const midPoint = google.maps.geometry.spherical.interpolate(start, end, 0.5);
+        
+        // 거리 표시 (1km 이상이면 km, 미만이면 m)
+        const distanceText = distance >= 1000 
+            ? `${(distance / 1000).toFixed(2)} km`
+            : `${Math.round(distance)} m`;
+        
+        // 거리 표시 레이블 (선 색상과 동일하게)
+        const distanceLabel = new google.maps.InfoWindow({
+            position: midPoint,
+            content: `<div style="background:white; padding:5px 10px; border-radius:4px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.3); border-left:4px solid ${lineColor};">
+                        ${distanceText}
+                      </div>`,
+            disableAutoPan: true
+        });
+        
+        distanceLabel.open(map);
+        polylines.push(distanceLabel);
+    }
+    
+    // 전체 거리 콘솔 출력
+    console.log(`전체 경로 거리: ${(totalDistance / 1000).toFixed(2)} km (${Math.round(totalDistance)} m)`);
+}
 
 async function initMap() {
     //초기위치
@@ -147,9 +234,15 @@ async function initMap() {
         });
         markers.push(marker);
 
+        // 마커 드래그 종료 시 연결선 다시 그리기
+        google.maps.event.addListener(marker, 'dragend', function() {
+            connectMarkers();
+        });
+
         //0.5초 딜레이 후 마커 추가(인덱스가 너무 일찍 나옴)
         setTimeout(() => {
             marker.setLabel(String(currentIndex));
+            connectMarkers(); // 마커 추가 후 연결선 업데이트
         }, 500);
         labelIndex++; 
 
@@ -503,6 +596,23 @@ $(document).on('click', '.btn_cancel', function(event) {
     //작성 모드면 해당 li 삭제
     if ($li.data('mode') === 'write') {
         if (confirm('작성을 취소하시겠습니까?')) {
+            const location = $li.data('location');
+            
+            // 해당 마커 찾아서 제거
+            if (location) {
+                const markerIndex = markers.findIndex(m => {
+                    const pos = m.getPosition();
+                    return pos.lat().toFixed(5) == location.lat && 
+                           pos.lng().toFixed(5) == location.lng;
+                });
+                
+                if (markerIndex !== -1) {
+                    markers[markerIndex].setMap(null);
+                    markers.splice(markerIndex, 1);
+                    connectMarkers(); // 연결선 다시 그리기
+                }
+            }
+            
             $li.remove(); 
         }
     }
@@ -514,7 +624,6 @@ $(document).on('click', '.btn_edit', function(e) {
     e.stopPropagation();
     
     const $li = $(this).closest('li[data-review-id]');
-    // console.log('리뷰 id:', $li.data('review-id'));
     modifyReview($li);
 });
 
@@ -588,12 +697,28 @@ $(document).on('click', '.btn_delete', function(event) {
     
     const $li = $(this).closest('li[data-review-id]');
     const review_id = $li.data('review-id');
+    const review = ReviewStorage.getById(review_id);
     
     console.log('삭제 시도:', review_id);
     
     if (confirm('정말 삭제하시겠습니까?')) {
         const result = ReviewStorage.delete(review_id);
         console.log('삭제 결과:', result);
+        
+        // 해당 마커 찾아서 제거
+        if (review && review.location) {
+            const markerIndex = markers.findIndex(m => {
+                const pos = m.getPosition();
+                return pos.lat().toFixed(5) == review.location.lat && 
+                       pos.lng().toFixed(5) == review.location.lng;
+            });
+            
+            if (markerIndex !== -1) {
+                markers[markerIndex].setMap(null);
+                markers.splice(markerIndex, 1);
+                connectMarkers(); // 연결선 다시 그리기
+            }
+        }
         
         $li.remove();
         alert('삭제되었습니다.');
@@ -714,17 +839,6 @@ $(document).ready(function() {
                 return;
             }
 
-            // Array.from(input.files).forEach((file) => {
-            //     if (!file.type || !file.type.startsWith('image/') || file.type.startsWith('video/')) return;
-            //     const url = URL.createObjectURL(file);
-            //     const $img = $(
-            //         `<img alt="첨부 이미지 미리보기"
-            //             src="${url}"
-            //             style="max-width:100%; height:auto; display:block; border-radius:8px; margin-top:6px;">`
-            //     );
-            //     $preview.append($img);
-            // });
-
             // 선택된 파일들을 Base64로 변환
             const files = Array.from(input.files).slice(0, remain); // 남은 개수만큼만
             
@@ -757,6 +871,7 @@ $(document).ready(function() {
             $('.btn_ul').removeClass('on').addClass('off');
         }
     });
+    
     //리뷰 주소 추적
     $(document).on('click', '.review_list li[data-review-id]', function(event) {
         event.preventDefault();
@@ -777,11 +892,5 @@ $(document).ready(function() {
         const position = new google.maps.LatLng(Number(lat), Number(lng));
         map.setCenter(position);
         map.setZoom(18); // 확대 정도 조절 가능
-        // 새 마커 생성
-        marker = new google.maps.Marker({
-            position: position,
-            map: map,
-            animation: google.maps.Animation.DROP
-        });
-});
+    });
 });
