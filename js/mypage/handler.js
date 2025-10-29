@@ -225,6 +225,14 @@ function initUIHandlers() {
         $empty.toggle(!hasVisible);
         $group.show();
 });
+// 1028 이미지 확대 // 
+// 등록된 리뷰 이미지 클릭 → 확대
+    $(document).on('click', '.image_preview_area img', function(e){
+    e.preventDefault(); e.stopPropagation();
+    const $imgs = $(this).closest('.image_preview_area').find('img');
+    openLightbox($imgs, $imgs.index(this));
+    });
+
 }
 // 별점 초기화
 function initStarRatings() {
@@ -238,3 +246,73 @@ function initStarRatings() {
 $(document).on('click', '.file_label, .file_upload', function(e) {
         e.stopPropagation();
     });
+
+//1028 이미지 확대 //
+// lb = lightbox == enlarge image
+
+function ensureLightboxDOM(){
+  let $lb = $('#lightbox');
+  if ($lb.length) return $lb;
+  $lb = $(`
+    <div id="lightbox" class="lightbox off" aria-hidden="true">
+      <div class="lightbox_inner" role="dialog" aria-label="이미지 확대 보기">
+        <button type="button" class="lightbox_close" aria-label="닫기">×</button>
+        <img class="lightbox_img" alt="확대 이미지">
+        <button type="button" class="lightbox_prev" aria-label="이전">‹</button>
+        <button type="button" class="lightbox_next" aria-label="다음">›</button>
+      </div>
+    </div>
+  `);
+  $('body').append($lb);
+
+  // 닫기(배경/버튼/ESC)
+  $lb.on('click', function(e){
+    if (e.target === this) closeLightbox();
+  });
+  $lb.find('.lightbox_close').on('click', closeLightbox);
+  $(document).on('keydown.lightbox', function(e){
+    if ($('#lightbox').hasClass('on') && e.key === 'Escape') closeLightbox();
+    if ($('#lightbox').hasClass('on') && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      e.preventDefault();
+      if (e.key === 'ArrowLeft') navLightbox(-1);
+      if (e.key === 'ArrowRight') navLightbox(1);
+    }
+  });
+
+  // 이전/다음
+  $lb.find('.lightbox_prev').on('click', ()=> navLightbox(-1));
+  $lb.find('.lightbox_next').on('click', ()=> navLightbox(1));
+
+  return $lb;
+}
+
+function openLightbox($imgs, idx){
+  const $lb = ensureLightboxDOM();
+  $lb.data({ list: $imgs, idx: idx });
+  updateLightboxView();
+  $lb.removeClass('off').addClass('on').attr('aria-hidden','false');
+}
+
+function closeLightbox(){
+  const $lb = $('#lightbox');
+  $lb.removeClass('on').addClass('off').attr('aria-hidden','true');
+}
+
+function navLightbox(step){
+  const $lb = $('#lightbox');
+  const $imgs = $lb.data('list'); let idx = $lb.data('idx') || 0;
+  idx = Math.min(Math.max(idx + step, 0), $imgs.length - 1);
+  $lb.data('idx', idx);
+  updateLightboxView();
+}
+
+function updateLightboxView(){
+  const $lb   = $('#lightbox');
+  const $imgs = $lb.data('list') || $();
+  const idx   = $lb.data('idx') || 0;
+  const src   = $imgs.eq(idx).attr('src');
+  $lb.find('.lightbox_img').attr('src', src);
+  $lb.find('.lightbox_prev').toggle(idx > 0);
+  $lb.find('.lightbox_next').toggle(idx < $imgs.length - 1);
+}
+    //1028 이미지 확대 //

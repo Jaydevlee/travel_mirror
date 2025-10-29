@@ -149,3 +149,35 @@ body {margin: 0 auto;padding: 0;width: 1400px;}
   border-radius: 6px;
   display: block;
  }
+
+ /*1028 이미지 확대*/
+.lightbox{ 
+  position: fixed; inset: 0; 
+  background: rgba(0,0,0,.7);
+  display: none;                 /* .on일 때만 보이게 */
+  align-items: center; justify-content: center;
+  z-index: 9999;
+}
+.lightbox.on{ display: flex !important; }
+.lightbox_inner{
+  position: relative;
+  max-width: 90vw; max-height: 90vh;
+}
+.lightbox_img{
+  max-width: 90vw; max-height: 90vh;
+  object-fit: contain; border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+.lightbox_close, .lightbox_prev, .lightbox_next{
+  position: absolute; border: 0; cursor: pointer;
+  background: rgba(0,0,0,.5); color:#fff;
+  font-size: 28px; line-height: 1; padding: 8px 12px; border-radius: 10px;
+}
+.lightbox_close{ top: 8px; right: 8px; }
+.lightbox_prev{ left: -52px; top: 50%; transform: translateY(-50%); }
+.lightbox_next{ right: -52px; top: 50%; transform: translateY(-50%); }
+
+/* 미리보기 이미지에 손가락 커서 */
+.image_preview_area img{ cursor: zoom-in; }
+
+ /*1028 이미지 확대*/
