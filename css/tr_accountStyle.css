@@ -44,7 +44,8 @@
 
 
 
-.tr_signUpcontainer p{
+.tr_signUpcontainer p,
+.tr_resetContainer p{
   height: 16px;  /* 입력폼 움직임 방지 */
   line-height: 16px;
   font-size: 12px;
@@ -186,15 +187,18 @@ a{
 
 
 
-/* -------------------계정찾기 -------------------- */
+/* -------------------계정찾기(비밀번호 재설정 포함) -------------------- */
 /* 계정 찾기 전체 레이아웃 */
-.tr_findaccount{
+.tr_findaccount, 
+.tr_resetPw{
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
 }
-.tr_findContainer{
+
+.tr_findContainer,
+.tr_resetContainer{
   border: solid rgba(255, 255, 255, 0.2) 1px;
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(10px); /* 배경 블러 */
@@ -209,7 +213,8 @@ a{
 }
 
 /* 계정 찾기 form 스타일 */
-.tr_findContainer form{
+.tr_findContainer form,
+.tr_resetContainer form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -217,7 +222,9 @@ a{
 }
 /* 계정 찾기 항목 스타일 */
 .tr_findId,
-.tr_findPw{
+.tr_findPw,
+.tr_resetPwInput,
+.tr_resetPwVerInput{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -227,7 +234,8 @@ a{
 /* 계정 찾기 input 스타일 */
 .email_findId,
 .id_findPw,
-.email_findPw{
+.email_findPw,
+.trInput{
   border: solid #ccc 1px;
   width: 350px;
   height: 50px;
@@ -238,7 +246,8 @@ a{
 .id_findPw{
   margin-bottom: 1rem;
 }
-.tr_findContainer button{
+.tr_findContainer button,
+.tr_resetContainer button{
   width: 25%;
   height: 50px;
   background-color: #fff;
@@ -251,7 +260,12 @@ a{
   cursor: pointer;
   transition: all 0.25s ease ;
 }
-.tr_findContainer button:hover{
+#tr_resetPwBtn{
+  width: 350px !important;
+  margin-left: 0%;
+}
+.tr_findContainer button:hover,
+.tr_resetContainer button:hover{
   background-color: #00bfa5;
   color: #fff;
 }
