@@ -85,7 +85,7 @@ tr_formPw.on("submit", (e) => {
     // 아이디와 이메일을 세션에 저장
     sessionStorage.setItem('resetId', inputId);
     sessionStorage.setItem('resetEmail', inputEmail);
-    location.href = "tr_resetPassword.html";
+    location.href = "resetPassword.jsp";
   } else {
     alert("입력하신 아이디와 이메일이 일치하는 비밀번호가 없습니다.");
   }
@@ -176,7 +176,7 @@ tr_formPw.on("submit", (e) => {
     sessionStorage.removeItem('resetId');
     sessionStorage.removeItem('resetEmail');
 
-    location.href = "firstPage.html"; //로그인 페이지 이동
+    location.href = "firstPage.jsp"; //로그인 페이지 이동
     }
 });
 }

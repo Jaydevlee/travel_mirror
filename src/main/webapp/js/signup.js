@@ -188,7 +188,7 @@ form.on('submit', (e) => {
     alert("회원가입이 완료되었습니다!");
 
     // 회원가입 후 마이페이지 이동 
-    window.location.href = '/mypage.html';;
+    window.location.href = '/mypage.jsp';
 }
 });
 });

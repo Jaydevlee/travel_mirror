@@ -54,7 +54,7 @@ $(document).ready(function() {
       sessionStorage.setItem('isLoggedIn', 'true');
       sessionStorage.setItem('loginUser', savedUser.id);
       
-      window.location.href = 'mypage.html';
+      window.location.href = 'mypage.jsp';
     } else {
       alert("아이디 또는 비밀번호가 올바르지 않습니다.");
     }
