@@ -12,9 +12,7 @@
 </head>
 <body>
   <div id="container">
-    <div id="header">
-      <h2>My page</h2>
-    </div>
+	<%@ include file="header.jsp" %>
     <div id="body">
       <!--지도 영역 -->
       <div id="map"></div>
