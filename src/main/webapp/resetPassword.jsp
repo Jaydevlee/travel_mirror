@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,14 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>비밀번호 재설정</title>
   <script src="js/jquery-3.7.1.min.js"></script>
-  <link rel="stylesheet" href="css/tr_accountStyle.css">
+  <link rel="stylesheet" href="css/accountStyle.css">
 </head>
 <body class="tr_resetPw">
   <div class="tr_resetContainer">
     <h2>비밀번호 재설정</h2>
-    <form id="tr_resetForm">
+    <form action="process_resetPw.jsp" id="tr_resetForm">
+    <input type="hidden" name="id" value="<%= request.getParameter("id") %>">
       <div class="tr_resetPwInput">
-        <input type="password" id="tr_newPw" class="trInput" placeholder="새 비밀번호(영대소문자, 숫자 및 특수문자 포함 7~20자)">
+        <input type="password" name="tr_newPw" id="tr_newPw" class="trInput" placeholder="새 비밀번호(영대소문자, 숫자 및 특수문자 포함 7~20자)">
         <p id="tr_resultNewPw"></p> <!-- 새 비밀번호 유효성검사 -->
       </div>
       <div class="tr_resetPwVerInput">

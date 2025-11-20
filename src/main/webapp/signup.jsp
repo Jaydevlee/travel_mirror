@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,30 +6,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>회원가입</title>
   <script src='js/jquery-3.7.1.min.js'></script>
-  <link rel="stylesheet" href="css/tr_accountStyle.css">
+  <link rel="stylesheet" href="css/accountStyle.css">
 </head>
 <body class="tr_create">
   <div class="tr_signUpcontainer">
+  	<div class="titleArea">
     <h1>회원가입</h1>
+    <h2>Sign UP</h2>
+    <p>막상 여행 계획을 짜보려하니 복잡하셨죠? travel과 함께 편리하게 여행계획을 해보세요</p>
+    </div>
       <div class="tr_signUp">
-        <form>
+        <form action="process_signup.jsp" method="post">
           <div class="idInput">   <!-- 아이디 -->
-            <input type="text" id="tr_id" class="trInput" placeholder="아이디(영문자, 숫자포함5~15자)" required>
+            <input type="text" id="tr_id" name="tr_id" class="trInput" placeholder="아이디(영문자, 숫자포함5~15자)" required>
             <button type="button" id="dupCheck">중복확인</button>
              <!-- 중복확인 버튼 iput안에 -->
             <p id="resultId"></p> <!-- id 유효성검사 -->
           </div>
           <div class="pwInput">    <!-- 비밀번호 -->
-            <input type="password" id="tr_pw" class="trInput" placeholder="비밀번호(영대소문자, 숫자 및 특수문자 포함 7~20자)">
+            <input type="password" id="tr_pw" name="tr_pw" class="trInput" placeholder="비밀번호(영대소문자, 숫자 및 특수문자 포함 7~20자)">
             <p id="resultPw"></p> <!-- pw 유효성검사 -->
             </div>
           <div class="pwVerInput">  <!-- 비밀번호 확인 -->
-            <input type="password" id="tr_pwVer" class="trInput" placeholder="비밀번호 확인">
-            <p id="resultPwVer"></p> <!-- pw 유효성검사 -->
+            <input type="password" id="tr_pwVer" name="tr_pwVer" class="trInput" placeholder="비밀번호 확인">
+            <p id="resultPwVer"></p> <!-- pw 확인 검사 -->
+          </div>
+          <div class="nameInput">  
+            <input type="text" id="tr_name" name="tr_name" class="trInput" placeholder="이름">
+            <p id="resultName"></p> <!-- name 유효성검사 -->
           </div>
           <div class="emailInput"> <!-- 이메일 -->
-            <input type="email" id="tr_email" class="trInput" placeholder="이메일">
+            <input type="email" id="tr_email" name="tr_email" class="trInput" placeholder="이메일">
             <p id="resultEmail"></p> <!-- email 유효성검사 -->
+          </div>
+          <div class="phoneInput">
+            <input type="text" id="tr_phone" name="tr_phone" class="trInput" placeholder="휴대폰 번호('-'제외 숫자만 입력)">
+            <p id="resultPhone"></p> <!-- phone 유효성검사 -->
           </div>
           <div class="tr_terms">
             <input type="checkbox" id="tr_check" name="agree" value="agree"><label for="tr_check">

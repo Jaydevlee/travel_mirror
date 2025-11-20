@@ -57,17 +57,24 @@ dupCheck.on('click', () => {
     return;
   }
 
-//기존 회원가입된 정보 가져오기
-const users = JSON.parse(localStorage.getItem('users')) || [];
-
-const isDuplicate = users.some(user => user.id === tr_id.val());
-if(isDuplicate){
-  alert("이미 사용중인 아이디입니다.");
-  isIdChecked = false;
-} else {
-   alert("사용가능한 아이디입니다.");
-  isIdChecked = true;
-  }
+//기존 회원가입된 정보 가져오기(DB에서 가져오기)
+$.ajax({
+	url:"dup_check.jsp",
+	type: "post",
+	data: {tr_id: tr_id.val()},
+	success: function(response){
+		if(response.trim() === "duplicate"){
+			alert("이미 사용중인 아이디입니다.");
+			isIdChecked = false;
+		} else {
+			alert("사용 가능한 아이디입니다.");
+			isIdChecked = true;
+		}
+	},
+	error: function(){
+		alert("서버 오류가 발생했습니다.");
+	}
+})
 });
 
 // --------------------------------------------------------------------------------
@@ -107,6 +114,24 @@ function verifyPw(){
 tr_pwVer.on('input', verifyPw);
 
 // --------------------------------------------------------------------------------
+const tr_name = $('#tr_name');
+const resultName = $("#resultName");
+const nameReg= /^[A-Za-z가-힣]+$/; 
+function nameCheck(){  
+  if(nameReg.test(tr_name.val())){
+    resultName.html("");
+    resultName.css("color", "");
+    return true;
+  } else {
+    resultName.html("이름에 숫자를 포함할 수 없습니다.");
+    resultName.css("color", "#A50000");
+    return false;
+  }
+};
+tr_name.on('input', nameCheck);
+
+
+// --------------------------------------------------------------------------------
 
 //email 유효성 검사
 const tr_email = $('#tr_email');  //이메일 입력창 지정
@@ -124,7 +149,23 @@ function emailCheck(){
   }
 };
 tr_email.on('input', emailCheck);
-
+// --------------------------------------------------------------------------------
+	//phone 유효성 검사
+	const tr_phone = $('#tr_phone');  //이메일 입력창 지정
+	const resultPhone = $("#resultPhone");  //이메일 유효성 결과 표시
+	const phoneReg = /^01[016789]\d{7,8}$/;     //email정규식
+	function phoneCheck(){
+	  if(phoneReg.test(tr_phone.val())){
+	    resultPhone.html("");
+	    resultPhone.css("color", "");
+	    return true;
+	  } else {
+	    resultPhone.html("전화번호가 올바르지 않아요!");
+	    resultPhone.css("color", "#A50000");
+	    return false;
+	  }
+	};
+	tr_phone.on('input', phoneCheck);
 // --------------------------------------------------------------------------------
 
 //약관 팝업
@@ -140,7 +181,7 @@ openBtn.on("click", (e) => {
 closeBtn.on("click", () => {
   modal.css("display", "none");
 })
-//모달 바깥 클릭 시 닫기
+//모달 바깥 클릭 시 닫기s
 $(window).on("click", (e) => {
   if (e.target === modal) {
     modal.css("display", "none");
@@ -149,46 +190,22 @@ $(window).on("click", (e) => {
 
 // --------------------------------------------------------------------------------
 
-//회원가입버튼 이벤트
+//회원가입버튼 이벤트 DB연결로 인한여 삭제 예정 localsession 다지워라
 const form = $('form');
-form.on('submit', (e) => {
-  e.preventDefault();
-  let terms = $('#tr_check');
-  
+form.on('submit', () => {
+
   if(!isIdChecked){  //중복확인 하지 않고 버튼 누를 때 이벤트
     alert("아이디 중복확인을 해주세요.");
-    return;
+    return false;
   }
-  if(!terms.prop('checked')){ //약관에 동의하지 않았을 때 이벤트
+  if(!$('#tr_check').prop('checked')){ //약관에 동의하지 않았을 때 이벤트
     alert("필수 이용약관에 동의해주세요.");
-    return;
+    return false;
   }
-  if(idCheck() && pwCheck() && verifyPw() && emailCheck()){     
-    //회원정보 저장 변수
-    let users = JSON.parse(localStorage.getItem('users')) || []; //const 사용X
-    //배열 형태로 보정
-    if(!Array.isArray(users)){
-      users = [];
-    }
-    //회원정보
-    const userData = {
-      id: tr_id.val(),
-      pw: tr_pw.val(),
-      email: tr_email.val()
-    };
-
-    users.push(userData);
-
-    // 로컬 스토리지에 회원 정보 저장
-    localStorage.setItem('users', JSON.stringify(users));
-
-    // 세션 스토리지에 로그인 상태 유지 (사용자가 로그인한 상태로 처리)
-    sessionStorage.setItem('isLoggedIn', 'true');
-
-    alert("회원가입이 완료되었습니다!");
-
-    // 회원가입 후 마이페이지 이동 
-    window.location.href = '/mypage.jsp';
-}
+  if(!idCheck() || !pwCheck() || !verifyPw() || !emailCheck()){     
+    alert("입력값을 다시 확인해주세요.");
+		return false;
+	}
+	return true;
 });
 });
