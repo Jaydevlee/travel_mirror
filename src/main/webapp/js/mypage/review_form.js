@@ -1,26 +1,92 @@
-// 리뷰 작성 폼
-function createWriteForm(lat, lng, placeName, placeName2,address, currentIndex) {
-    const trId = `${lat}_${lng}_${Date.now()}`;
-    const $li = $(`
-        <li data-mode="write" data-unique-id="${trId}">
+// 그룹 폼 생성
+function createGroupForm() {
+    const groupId = `group_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    const $groupLi = $(`
+        <li class="group_form" data-mode="group-write" data-group-id="${groupId}">
             <div class="card">
                 <div class="card_head">
                     <div class="card_title">
                         <h2>
-                            <input type="text" name="tr_subject" id="tr_subject_${lat}_${lng}" class="tr_subject" value="${placeName}" placeholder="장소명을 입력하세요.">
-                            <input type="hidden" name="tr_placeName" id="tr_placeName" class="tr_placeName" value="${placeName2}">
+                            <input type="text" name="group_title" class="group_title_input" placeholder="여행 제목을 입력하세요" value="">
                         </h2>
+                        <div class="date_range_area">
+                            <label>여행 기간:</label>
+                            <input type="date" name="start_date" class="start_date" required>
+                            <span>~</span>
+                            <input type="date" name="end_date" class="end_date" required>
+                        </div>
+                    </div>
+                    <div class="head_right">
+                        <div class="expend_btn_area">
+                            <button type="button">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='white'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E" width="80" alt="접기">
+                            </button>
+                        </div>
+                        <div class="btn_area">
+                            <button type="button" class="menu_btn">⋮</button>
+                            <ul class="btn_ul off">
+                                <li><button type="button" class="btn_delete_group">삭제</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card_body on">
+                    <ul class="group_reviews">
+                        <!-- 리뷰 폼들이 여기에 추가됨 -->
+                    </ul>
+                    <div class="group_action_area" style="text-align: right; padding: 10px;">
+                        <button type="button" class="btn_complete_group" style="padding: 10px 20px; background-color: #41E9C2; color: #fff; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">여행 계획 완료</button>
+                    </div>
+                </div>
+            </div>
+        </li>
+    `);
+    
+    $(".review_list").prepend($groupLi);
+    
+    // 현재 작성 중인 그룹 ID 설정
+    if (window.setCurrentGroupId) {
+        window.setCurrentGroupId(groupId);
+    }
+    
+    // 검색창에 포커스
+    if (window.focusSearchInput) {
+        window.focusSearchInput();
+    }
+    
+    return groupId;
+}
+
+// 그룹 내부에 리뷰 폼 생성
+function createReviewFormInGroup(lat, lng, placeName, placeName2, address, markerIndex, groupId) {
+    const trId = `${lat}_${lng}_${Date.now()}`;
+    const $li = $(`
+        <li data-mode="write" data-unique-id="${trId}" data-marker-index="${markerIndex}">
+            <div class="card">
+                <div class="card_head">
+                    <div class="card_title">
+                        <div style="display: flex; align-items: center;margin-top:1rem;">
+                            <span class="marker_index">${markerIndex}</span>
+                            <h2 style="flex: 1; margin: 0;">
+                                <input type="text" name="tr_subject" id="tr_subject_${lat}_${lng}" class="tr_subject" value="${placeName}" placeholder="장소명을 입력하세요.">
+                                <input type="hidden" name="tr_placeName" id="tr_placeName" class="tr_placeName" value="${placeName2}">
+                            </h2>
+                        </div>
                         <div class="addr_area">
                             <input type="text" name="tr_addr" id="tr_addr_${lat}_${lng}" class="tr_addr" value="${address}" disabled>
                         </div>
                     </div>
-                    <div class="expend_btn_area">
-                        <button type="button">
-                            <img src="img/icon/down.png" width="40" alt="펼치기">
-                        </button>
+                    <div class="head_right">
+                        <div class="expend_btn_area">
+                            <button type="button">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='white'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E" width="80" alt="접기">
+                            </button>
+	                        <button type="button" class="btn_close_review" title="닫기">✕</button>
+                        </div>
                     </div>
                 </div>
-                <div class="card_body off">
+                <div class="card_body on">
                     <div class="content_write_area">
                         <form class="tr_starForm" autocomplete="off">
                             <div>
@@ -40,9 +106,9 @@ function createWriteForm(lat, lng, placeName, placeName2,address, currentIndex) 
                         </div>
                         <div class="file_area">
                             <label for="file_upload_${trId}" class="file_label" multiple>
-                                <img src="img/icon/input_icon.png" alt="업로드 버튼 이미지" width="10px">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='25' fill='%23666'%3E%3Cpath d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/%3E%3C/svg%3E" alt="업로드 버튼 이미지" width="25px">
                             </label>
-                            <input type="file" id="file_upload_${trId}" class="file_upload" multiple>
+                            <input type="file" id="file_upload_${trId}" class="file_upload" multiple accept="image/*">
                         </div>
                         <div class="write_btn_area btn">
                             <button type="button" class="btn_submit">작성</button>
@@ -54,93 +120,48 @@ function createWriteForm(lat, lng, placeName, placeName2,address, currentIndex) 
         </li>
     `);
     
-    $li.data('location', {lat, lng, currentIndex});
-    $(".review_list").prepend($li);
-}
-
-// 1026 같은 장소는 한 카드로 묶고(place_group), 그 카드 안에서 별점으로 필터링// 
-//같은 장소 키 추가 
-function makePlaceId(location) {
-    if (!location) return '';
-        // 위도/경도 소수점 4자리로 반올림해서 "같은 장소"를 안정적으로 식별.
-        // 소수점 4자리 반올림해서 같은 장소는 같은 placeId 생성.
-    const r4 = n => Math.round(Number(n) * 1e4) / 1e4;
-    return `${r4(location.lat)}_${r4(location.lng)}`;
+    $li.data('location', {lat, lng, currentIndex: markerIndex});
+    $li.data('groupId', groupId);
+    
+    // 해당 그룹의 리뷰 목록에 추가
+    const $group = $(`.review_list > li[data-group-id="${groupId}"]`);
+    if ($group.length) {
+        $group.find('.group_reviews').append($li);
     }
-
-// 1026 새그룹 카드에 별점별 구분되서 나오게 수정
-function ensurePlaceGroup(review) {
-    const pid = review.placeId || '';
-    let $group = $(`.review_list > li.place_group[data-place-id="${pid}"]`);
-    if ($group.length) return $group;
-
-// 새 그룹 카드 생성 (lat/lng/data-place-id 저장)
-  $group = $(`
-    <li class="place_group" data-place-id="${pid}"
-        data-lat="${review.location?.lat || ''}"
-        data-lng="${review.location?.lng || ''}">
-      <div class="card group_card">
-        <div class="card_head">
-          <div class="card_title">
-            <h2 class="group_title">${review.tr_placeName}</h2>
-            <div class="addr_area"><span class="tr_addr">${review.tr_address}</span></div>
-          </div>
-
-          <!-- 오른쪽에 별점필터 & 펼치기 -->
-            <!-- 별점을 어디 다른곳에 옮기고 싶다면 여기서 바꾸기! 그리고 handler에서 rating filter, css에서 head right, rating filter 같이 바꾸기  -->
-
-          <div class="head_right">
-
-            <div class="rating_filter">
-              <button type="button" data-star="all" class="active">전체</button>
-              <button type="button" data-star="5">★5</button>
-              <button type="button" data-star="4">★4</button>
-              <button type="button" data-star="3">★3</button>
-              <button type="button" data-star="2">★2</button>
-              <button type="button" data-star="1">★1</button>
-            </div>
-
-            <div class="expend_btn_area">
-              <button type="button"><img src="img/icon/down.png" width="40" alt="펼치기"></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card_body on">
-        <!-- 개별 리뷰 view가 한 그룹에 보이게 착착 -->
-          <ul class="group_reviews"></ul>
-        </div>
-      </div>
-    </li>
-  `);
-  console.log(review.location);
-
-  $(".review_list").prepend($group);
-  return $group;
 }
-
-// 전역에서 접근 가능하게
-    window.makePlaceId = makePlaceId;
-    window.ensurePlaceGroup = ensurePlaceGroup;
 
 // 리뷰 보기 폼
-// 리뷰 보기 폼 수정 1026 //
 function createViewForm(review) {
-const $li = $(`
-    <li data-mode="view" data-review-id="${review.id}"
-        data-place-id="${review.placeId || ''}" data-rating="${review.tr_ratingVal}"> 
+    const markerIndexDisplay = review.markerIndex ? `<span class="marker_index">${review.markerIndex}</span>` : '';
+    
+    const $li = $(`
+        <li data-mode="view" data-review-id="${review.id}"
+            data-place-id="${review.placeId || ''}" data-rating="${review.tr_ratingVal}"
+            data-marker-index="${review.markerIndex || ''}"> 
             <div class="card">
                 <div class="card_head">
                     <div class="card_title">
-                        <h2>${review.tr_subject}</h2>
+                        <div style="display: flex; align-items: center;">
+                            ${markerIndexDisplay}
+                            <h2 style="flex: 1; margin: 0;">${review.tr_subject}</h2>
+                        </div>
                         <div class="addr_area">
                             <span class="tr_addr">${review.tr_address}</span>
                         </div>
                     </div>
-                    <div class="expend_btn_area">
-                        <button type="button">
-                            <img src="img/icon/down.png" width="40" alt="펼치기">
-                        </button>
+                    <div class="head_right">
+                        <div class="expend_btn_area">
+                            <button type="button">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='white'%3E%3Cpath d='M7 14l5-5 5 5z'/%3E%3C/svg%3E" width="80" alt="펼치기">
+                            </button>
+                        </div>
+                        <div class="btn_area">
+                            <button type="button" class="menu_btn">⋮</button>
+                            <ul class="btn_ul off">
+                                <li><button type="button" class="btn_edit">수정</button></li>
+                                <li><button type="button" class="btn_delete">삭제</button></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="card_body on">
@@ -148,13 +169,6 @@ const $li = $(`
                         <div class="view_head">
                             <div class="rating_display">
                                 <span class="stars">${'★'.repeat(review.tr_ratingVal)}${'☆'.repeat(5-review.tr_ratingVal)}</span>
-                            </div>
-                            <div class="btn_area">
-                                <button type="button" class="menu_btn">⋮</button>
-                                <ul class="btn_ul off">
-                                    <li><button type="button" class="btn_edit">수정</button></li>
-                                    <li><button type="button" class="btn_delete">삭제</button></li>
-                                </ul>
                             </div>
                         </div>
                         <div class="content_view_area">
@@ -181,23 +195,29 @@ const $li = $(`
 // 리뷰 수정 폼
 function createEditForm(review) {
     const uniqueId = `edit_${review.id}`;
+    const markerIndexDisplay = review.markerIndex ? `<span class="marker_index">${review.markerIndex}</span>` : '';
     
     const $mod = $(`
-        <li data-mode="edit" data-review-id="${review.id}" data-unique-id="${uniqueId}">
+        <li data-mode="edit" data-review-id="${review.id}" data-unique-id="${uniqueId}" data-marker-index="${review.markerIndex || ''}">
             <div class="card">
                 <div class="card_head">
                     <div class="card_title">
-                        <h2>
-                            <input type="text" name="tr_subject" class="tr_subject" value="${review.tr_subject}">
-                        </h2>
+                        <div style="display: flex; align-items: center;">
+                            ${markerIndexDisplay}
+                            <h2 style="flex: 1; margin: 0;">
+                                <input type="text" name="tr_subject" class="tr_subject" value="${review.tr_subject}">
+                            </h2>
+                        </div>
                         <div class="addr_area">
                             <input type="text" name="tr_addr" class="tr_addr" value="${review.tr_address}" disabled>
                         </div>
                     </div>
-                    <div class="expend_btn_area">
-                        <button type="button">
-                            <img src="img/icon/up.png" width="40" alt="접기">
-                        </button>
+                    <div class="head_right">
+                        <div class="expend_btn_area">
+                            <button type="button">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='white'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E" width="80" alt="접기">
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="card_body on">
@@ -221,11 +241,11 @@ function createEditForm(review) {
                         ${review.images && review.images.length > 0 ? `
                         <div class="existing_images">
                             <strong>기존 이미지:</strong>
-                            <div class="image_list">
+                            <div class="image_list" style="display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0;">
                                 ${review.images.map((img, idx) => `
-                                    <div class="image_item" data-index="${idx}">
+                                    <div class="image_item" data-index="${idx}" style="position: relative;">
                                         <img src="${img}" alt="기존 이미지" style="max-width:100px; height:auto; border-radius:8px;">
-                                        <button type="button" class="btn_remove_img" data-index="${idx}">×</button>
+                                        <button type="button" class="btn_remove_img" data-index="${idx}" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-weight: bold;">×</button>
                                     </div>
                                 `).join('')}
                             </div>
@@ -233,7 +253,7 @@ function createEditForm(review) {
                         ` : ''}
                         <div class="file_area">
                             <label for="file_upload_${uniqueId}" class="file_label">
-                                <img src="img/icon/input_icon.png" alt="업로드 버튼 이미지" width="10px">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='25' fill='%23666'%3E%3Cpath d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/%3E%3C/svg%3E" alt="업로드 버튼 이미지" width="25px">
                             </label>
                             <input type="file" id="file_upload_${uniqueId}" class="file_upload" multiple accept="image/*">
                         </div>
@@ -254,12 +274,83 @@ function createEditForm(review) {
 }
 
 // 저장된 리뷰 불러오기
-// 1026 수정 // 저장된 리뷰 로딩시 같은 장소별로 로딩 //
 function loadReviews() {
-  const reviews = ReviewStorage.getAll();       // 리뷰 생성(제목(장소)별로)
-  reviews.forEach(function(review) {
-    const $viewLi = createViewForm(review);
-    const $group = ensurePlaceGroup(review);    // 새로운 장소에 대한 그룹 생성
-    $group.find('.group_reviews').append($viewLi);  // each 그룹당 내부에 쌓이게 하기
-  });
+    const reviews = ReviewStorage.getAll();
+    
+    // 그룹별로 리뷰 분류
+    const groupedReviews = {};
+    reviews.forEach(review => {
+        const groupId = review.groupId || 'default';
+        if (!groupedReviews[groupId]) {
+            groupedReviews[groupId] = [];
+        }
+        groupedReviews[groupId].push(review);
+    });
+    
+    // 각 그룹별로 표시
+    Object.keys(groupedReviews).forEach(groupId => {
+        const groupReviews = groupedReviews[groupId];
+        if (groupReviews.length > 0) {
+            const firstReview = groupReviews[0];
+            
+            // 그룹 정보가 있으면 그룹 폼 생성
+            if (firstReview.groupTitle) {
+                const $groupLi = createSavedGroupForm(firstReview);
+                groupReviews.forEach(review => {
+                    const $viewLi = createViewForm(review);
+                    $groupLi.find('.group_reviews').append($viewLi);
+                });
+            }
+        }
+    });
+    
+    // 마커 복원
+    if (window.restoreMarkersForReviews) {
+        window.restoreMarkersForReviews(reviews);
+    }
 }
+
+// 저장된 그룹 폼 생성
+function createSavedGroupForm(reviewData) {
+    const groupId = reviewData.groupId;
+    
+    const $groupLi = $(`
+        <li class="group_form" data-mode="group-view" data-group-id="${groupId}">
+            <div class="card">
+                <div class="card_head">
+                    <div class="card_title">
+                        <h2>${reviewData.groupTitle}</h2>
+                        <div class="date_range_area" style="color: #fff;">
+                            <span>여행 기간: ${reviewData.startDate} ~ ${reviewData.endDate}</span>
+                        </div>
+                    </div>
+                    <div class="head_right">
+                        <div class="expend_btn_area">
+                            <button type="button">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='white'%3E%3Cpath d='M7 14l5-5 5 5z'/%3E%3C/svg%3E" width="80" alt="펼치기">
+                            </button>
+                        </div>
+                        <div class="btn_area">
+                            <button type="button" class="menu_btn">⋮</button>
+                            <ul class="btn_ul off">
+                                <li><button type="button" class="btn_delete_group">삭제</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card_body on">
+                    <ul class="group_reviews">
+                        <!-- 리뷰들이 여기에 추가됨 -->
+                    </ul>
+                </div>
+            </div>
+        </li>
+    `);
+    
+    $(".review_list").prepend($groupLi);
+    return $groupLi;
+}
+
+// 전역에서 접근 가능하게
+window.createGroupForm = createGroupForm;
+window.createReviewFormInGroup = createReviewFormInGroup;

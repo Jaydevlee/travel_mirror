@@ -6,21 +6,27 @@
   <meta charset="UTF-8">
   <title>My Page</title>
   <link rel="stylesheet" href="css/mypage_stlye.css">
-  <!-- <script src="js/jquery-3.7.1.min.js"></script>
-  <script src="js/mypage/api_key.js"></script>
-  <script src="js/mypage.js"></script> -->
 </head>
 <body>
   <div id="container">
-	<%@ include file="header.jsp" %>
+		
     <div id="body">
       <!--지도 영역 -->
       <div id="map"></div>
+      
       <!--후기 영역-->
-      <!--검색창-->
-      <div class="search_frame">
-        <div class="search_area">
-          <input id="address_search" type="text" placeholder="주소 또는 장소를 검색하세요">
+      <div class="button_search_container">
+        <!--검색창-->
+        <div class="search_frame">
+          <div class="search_area">
+            <input id="address_search" type="text" placeholder="주소 또는 장소를 검색하세요 (Enter 또는 검색 버튼 클릭)">
+            <button type="button" id="btn_search" class="btn_search">검색</button>
+          </div>
+        </div>
+        
+        <!-- 리뷰 작성 버튼 -->
+        <div class="create_group_btn_area">
+          <button type="button" id="btn_create_group" class="btn_create_group">여행 리뷰 작성하기</button>
         </div>
       </div>
       <form>

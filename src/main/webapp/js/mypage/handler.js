@@ -14,11 +14,64 @@ function paintStars($stars, $hidden, score) {
     $hidden.val(score);
 }
 
+// 파일을 Base64로 변환
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
+}
+
 // 전역 접근을 위해 window에 등록
 window.paintStars = paintStars;
+window.fileToBase64 = fileToBase64;
 
 // 이벤트 핸들러 초기화
 function initUIHandlers() {
+    // 여행 리뷰 작성 버튼
+    $(document).on('click', '#btn_create_group', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // 이미 작성 중인 그룹이 있는지 확인
+        const existingGroup = $('.review_list > li[data-mode="group-write"]');
+        if (existingGroup.length > 0) {
+            alert('이미 작성 중인 여행 계획이 있습니다. 먼저 완료하거나 삭제해주세요.');
+            return;
+        }
+        
+        createGroupForm();
+    });
+    
+    // 여행 계획 완료 버튼
+    $(document).on('click', '.btn_complete_group', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const $group = $(this).closest('li.group_form');
+        handleGroupComplete($group);
+    });
+    
+    // 그룹 삭제 버튼
+    $(document).on('click', '.btn_delete_group', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const $group = $(this).closest('li.group_form');
+        
+        if (handleGroupDelete($group)) {
+            alert('삭제되었습니다.');
+        }
+    });
+    
+    // 리뷰 닫기 버튼 (X)
+    $(document).on('click', '.btn_close_review', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const $li = $(this).closest('li[data-mode="write"]');
+        handleReviewClose($li);
+    });
+    
     // 리뷰 작성 완료
     $(document).on('click', '.btn_submit', function(e) {
         e.preventDefault();
@@ -91,10 +144,21 @@ function initUIHandlers() {
         const $cardHead = $(this).closest('.card_head');
         const $cardBody = $cardHead.siblings('.card_body');
         
+        // 카드를 접을 때 열려있는 메뉴도 함께 닫기
+        if ($cardBody.hasClass('on')) {
+            $cardHead.find('.btn_ul').removeClass('on').addClass('off');
+        }
+        
         $cardBody.toggleClass('on off');
         
         const $img = $(this).find('button img');
-        $img.attr('src', $cardBody.hasClass('on') ? 'img/icon/up.png' : 'img/icon/down.png');
+        
+        // SVG 이미지 토글
+        if ($cardBody.hasClass('on')) {
+            $img.attr('src', "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='white'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+        } else {
+            $img.attr('src', "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='white'%3E%3Cpath d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
+        }
     });
 
     // 별점 클릭
@@ -126,7 +190,6 @@ function initUIHandlers() {
         const $writeArea = $(input).closest('.content_write_area');
         const $starForm = $writeArea.find('.tr_starForm').first();
 
-        // 별점과 미리보기를 같은 행에 배치
         let $row = $writeArea.find('.tr_starRow');
         if (!$row.length) {
             $row = $('<div class="tr_starRow"></div>');
@@ -154,13 +217,14 @@ function initUIHandlers() {
         for (const file of files) {
             if (!file.type || !file.type.startsWith('image/')) continue;
             
+            if (file.size > 5 * 1024 * 1024) {
+                alert(`${file.name}은(는) 5MB를 초과합니다.`);
+                continue;
+            }
+            
             try {
                 const base64 = await fileToBase64(file);
-                const $img = $(
-                    `<img alt="첨부 이미지 미리보기"
-                        src="${base64}"
-                        style="max-width:100%; height:auto; display:block; border-radius:8px; margin-top:6px;">`
-                );
+                const $img = $(`<img alt="첨부 이미지 미리보기" src="${base64}" style="max-width:100%; height:auto; display:block; border-radius:8px; margin-top:6px;">`);
                 $preview.append($img);
             } catch (error) {
                 console.error('이미지 변환 오류:', error);
@@ -172,13 +236,17 @@ function initUIHandlers() {
 
     // 리뷰 클릭 시 지도 이동
     $(document).on('click', '.review_list li[data-review-id]', function(e) {
+        if ($(e.target).closest('button, .btn_area').length > 0) {
+            return;
+        }
+        
         e.preventDefault();
         e.stopPropagation();
 
         const reviewId = $(this).data('review-id');
         const review = ReviewStorage.getById(reviewId);
         
-        if (review) {
+        if (review && window.moveToReviewLocation) {
             moveToReviewLocation(review);
         }
     });
@@ -190,50 +258,25 @@ function initUIHandlers() {
         }
     });
 
-    // // 1026 별점 필터 동작 추가 //
-
-    // 장소(같은 주소)그룹 별 별점 필터
-    $(document).on('click', '.place_group .rating_filter button', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const $btn = $(this);
-        const star = $btn.data('star'); 
-        const $group = $btn.closest('.place_group');
-        const $list    = $group.find('.group_reviews');     
-        const $reviews = $list.find('> li[data-mode="view"]'); 
-
-    // 버튼 전체, 각 별점 별로 all, 별1,2,3,4,5 
-        $btn.addClass('active').siblings().removeClass('active');
-
-        if (star === 'all') {
-            $reviews.show();
-        } else {
-            const s = parseInt(star, 10);
-            $reviews.each(function() {
-            const r = parseInt($(this).data('rating'), 10);
-            $(this).toggle(r === s);
-            });
-        }
-    // 해당 별점에 리뷰가 없다면 안내 메시지 표시하기
-        let $empty = $list.children('li.no_rating_msg');
-            if (!$empty.length) {
-            $empty = $('<li class="no_rating_msg" aria-live="polite">해당 별점 리뷰가 없습니다.</li>').hide();
-            $list.append($empty);
-        }
-        const hasVisible = $reviews.filter(':visible').length > 0;
-        $empty.toggle(!hasVisible);
-        $group.show();
-});
-// 1028 이미지 확대 // 
-// 등록된 리뷰 이미지 클릭 → 확대
+    // 등록된 리뷰 이미지 클릭 → 확대
     $(document).on('click', '.image_preview_area img', function(e){
-    e.preventDefault(); e.stopPropagation();
-    const $imgs = $(this).closest('.image_preview_area').find('img');
-    openLightbox($imgs, $imgs.index(this));
+        e.preventDefault(); 
+        e.stopPropagation();
+        const $imgs = $(this).closest('.image_preview_area').find('img');
+        openLightbox($imgs, $imgs.index(this));
     });
 
+    // 날짜 입력 필드 클릭 시 달력 열기
+    $(document).on('click', 'input[type="date"]', function() {
+        try {
+            this.showPicker();
+        } catch(e) {
+            // showPicker를 지원하지 않는 브라우저
+            this.focus();
+        }
+    });
 }
+
 // 별점 초기화
 function initStarRatings() {
     $('.tr_starForm').each(function() {
@@ -243,76 +286,73 @@ function initStarRatings() {
         paintStars($stars, $hidden, 0);
     });
 }
+
 $(document).on('click', '.file_label, .file_upload', function(e) {
-        e.stopPropagation();
+    e.stopPropagation();
+});
+
+// 이미지 확대 기능
+function ensureLightboxDOM(){
+    let $lb = $('#lightbox');
+    if ($lb.length) return $lb;
+    $lb = $(`
+        <div id="lightbox" class="lightbox off" aria-hidden="true">
+            <div class="lightbox_inner" role="dialog" aria-label="이미지 확대 보기">
+                <button type="button" class="lightbox_close" aria-label="닫기">×</button>
+                <img class="lightbox_img" alt="확대 이미지">
+                <button type="button" class="lightbox_prev" aria-label="이전">‹</button>
+                <button type="button" class="lightbox_next" aria-label="다음">›</button>
+            </div>
+        </div>
+    `);
+    $('body').append($lb);
+
+    $lb.on('click', function(e){
+        if (e.target === this) closeLightbox();
+    });
+    $lb.find('.lightbox_close').on('click', closeLightbox);
+    $(document).on('keydown.lightbox', function(e){
+        if ($('#lightbox').hasClass('on') && e.key === 'Escape') closeLightbox();
+        if ($('#lightbox').hasClass('on') && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+            e.preventDefault();
+            if (e.key === 'ArrowLeft') navLightbox(-1);
+            if (e.key === 'ArrowRight') navLightbox(1);
+        }
     });
 
-//1028 이미지 확대 //
-// lb = lightbox == enlarge image
+    $lb.find('.lightbox_prev').on('click', ()=> navLightbox(-1));
+    $lb.find('.lightbox_next').on('click', ()=> navLightbox(1));
 
-function ensureLightboxDOM(){
-  let $lb = $('#lightbox');
-  if ($lb.length) return $lb;
-  $lb = $(`
-    <div id="lightbox" class="lightbox off" aria-hidden="true">
-      <div class="lightbox_inner" role="dialog" aria-label="이미지 확대 보기">
-        <button type="button" class="lightbox_close" aria-label="닫기">×</button>
-        <img class="lightbox_img" alt="확대 이미지">
-        <button type="button" class="lightbox_prev" aria-label="이전">‹</button>
-        <button type="button" class="lightbox_next" aria-label="다음">›</button>
-      </div>
-    </div>
-  `);
-  $('body').append($lb);
-
-  // 닫기(배경/버튼/ESC)
-  $lb.on('click', function(e){
-    if (e.target === this) closeLightbox();
-  });
-  $lb.find('.lightbox_close').on('click', closeLightbox);
-  $(document).on('keydown.lightbox', function(e){
-    if ($('#lightbox').hasClass('on') && e.key === 'Escape') closeLightbox();
-    if ($('#lightbox').hasClass('on') && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
-      e.preventDefault();
-      if (e.key === 'ArrowLeft') navLightbox(-1);
-      if (e.key === 'ArrowRight') navLightbox(1);
-    }
-  });
-
-  // 이전/다음
-  $lb.find('.lightbox_prev').on('click', ()=> navLightbox(-1));
-  $lb.find('.lightbox_next').on('click', ()=> navLightbox(1));
-
-  return $lb;
+    return $lb;
 }
 
 function openLightbox($imgs, idx){
-  const $lb = ensureLightboxDOM();
-  $lb.data({ list: $imgs, idx: idx });
-  updateLightboxView();
-  $lb.removeClass('off').addClass('on').attr('aria-hidden','false');
+    const $lb = ensureLightboxDOM();
+    $lb.data({ list: $imgs, idx: idx });
+    updateLightboxView();
+    $lb.removeClass('off').addClass('on').attr('aria-hidden','false');
 }
 
 function closeLightbox(){
-  const $lb = $('#lightbox');
-  $lb.removeClass('on').addClass('off').attr('aria-hidden','true');
+    const $lb = $('#lightbox');
+    $lb.removeClass('on').addClass('off').attr('aria-hidden','true');
 }
 
 function navLightbox(step){
-  const $lb = $('#lightbox');
-  const $imgs = $lb.data('list'); let idx = $lb.data('idx') || 0;
-  idx = Math.min(Math.max(idx + step, 0), $imgs.length - 1);
-  $lb.data('idx', idx);
-  updateLightboxView();
+    const $lb = $('#lightbox');
+    const $imgs = $lb.data('list'); 
+    let idx = $lb.data('idx') || 0;
+    idx = Math.min(Math.max(idx + step, 0), $imgs.length - 1);
+    $lb.data('idx', idx);
+    updateLightboxView();
 }
 
 function updateLightboxView(){
-  const $lb   = $('#lightbox');
-  const $imgs = $lb.data('list') || $();
-  const idx   = $lb.data('idx') || 0;
-  const src   = $imgs.eq(idx).attr('src');
-  $lb.find('.lightbox_img').attr('src', src);
-  $lb.find('.lightbox_prev').toggle(idx > 0);
-  $lb.find('.lightbox_next').toggle(idx < $imgs.length - 1);
+    const $lb   = $('#lightbox');
+    const $imgs = $lb.data('list') || $();
+    const idx   = $lb.data('idx') || 0;
+    const src   = $imgs.eq(idx).attr('src');
+    $lb.find('.lightbox_img').attr('src', src);
+    $lb.find('.lightbox_prev').toggle(idx > 0);
+    $lb.find('.lightbox_next').toggle(idx < $imgs.length - 1);
 }
-    //1028 이미지 확대 //
