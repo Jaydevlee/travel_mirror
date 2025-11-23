@@ -9,7 +9,7 @@
 </head>
 <body>
   <div id="container">
-		
+	<%@ include file="header.jsp" %>
     <div id="body">
       <!--지도 영역 -->
       <div id="map"></div>
