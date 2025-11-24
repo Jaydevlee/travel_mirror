@@ -43,9 +43,8 @@ try {
 	src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script src="../js/countryData.js"></script>
-
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
+<!-- 국기 아이콘 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
 
 <style>
 .select2-results__option span {
