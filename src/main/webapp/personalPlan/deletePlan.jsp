@@ -4,7 +4,7 @@
 <%@ page import="com.personalPlan.dao.TravelDAO" %>
 
 <%
-    // 파라미터 받기 
+    // 파라미터 받기  
     String planNoStr = request.getParameter("planNo");
     String resultMsg = "fail";
 

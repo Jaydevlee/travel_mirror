@@ -14,7 +14,7 @@
             TravelDAO dao = new TravelDAO();
             int travelNo = Integer.parseInt(travelNoStr);
             
-            // 여행 정보 삭제 (FK 설정에 따라 하위 일정도 자동 삭제됨)
+            // 여행 정보 삭제 (FK 설정에 따라 하위 일정도 자동 삭제됨) 
             int result = dao.deleteTravelInfo(conn, travelNo);
             
             if (result > 0) resultMsg = "success";

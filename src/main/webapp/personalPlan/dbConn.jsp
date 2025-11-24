@@ -4,7 +4,7 @@
 
     request.setCharacterEncoding("UTF-8");
 
-    // DB 연결 정보 (mac)
+    // DB 연결 정보 (mac) 
     //String url = "jdbc:oracle:thin:@localhost:1521:xe";
     //String dbId = "SYSTEM";
    // String dbPw = "";

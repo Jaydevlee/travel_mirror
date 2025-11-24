@@ -9,7 +9,7 @@
 <%@ page import="com.personalPlan.dto.TravelPlanDTO" %>
 
 <%
-    // 1. 파라미터 받기 (URL에 있는 travelNo)
+    // 1. 파라미터 받기 (URL에 있는 travelNo) 
     String paramNo = request.getParameter("travelNo");
     
     // travelNo가 없으면 목록으로 튕겨내기 (유효성 검사)

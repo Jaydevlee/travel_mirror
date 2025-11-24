@@ -8,7 +8,7 @@
 <%
     request.setCharacterEncoding("UTF-8");
 
-    // 파라미터 받기
+    // 파라미터 받기 
     String planNoStr = request.getParameter("planNo"); // PK
     String category = request.getParameter("category");
     String title = request.getParameter("title");

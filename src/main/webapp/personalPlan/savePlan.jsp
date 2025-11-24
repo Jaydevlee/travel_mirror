@@ -8,7 +8,7 @@
 <%
     request.setCharacterEncoding("UTF-8");
 
-    // 데이터 받기
+    // 데이터 받기 
     String travelNoStr = request.getParameter("travelNo");
     String dayNoStr = request.getParameter("dayNo");
     String category = request.getParameter("category");

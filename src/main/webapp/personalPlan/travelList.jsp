@@ -7,7 +7,7 @@
 <%@ page import="com.personalPlan.dto.TravelInfoDTO"%>
 
 <%
-	// DB에서 여행 목록 가져오기
+	// DB에서 여행 목록 가져오기 
 	Connection conn = null;
 	TravelDAO dao = new TravelDAO();
 	List<TravelInfoDTO> list = null;

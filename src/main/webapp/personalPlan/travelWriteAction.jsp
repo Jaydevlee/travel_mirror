@@ -25,7 +25,7 @@
         Date start = Date.valueOf(startDateStr);
         Date end = Date.valueOf(endDateStr);
 
-        // DTO에 값 채우기
+        // DTO에 값 채우기 
         dto.setTitle(title);
         dto.setCountry(country);
         dto.setCompanion(companion);
