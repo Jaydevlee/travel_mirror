@@ -1,26 +1,45 @@
-<%@ page contentType="text/html; charset=utf-8" %>
-<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+<%@ page contentType="text/html; charset=utf-8"  language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="java.sql.*" %>
+<%@ include file="dbconn.jsp" %>
  
-<sql:setDataSource  var="dataSource" url="jdbc:oracle:thin:@localhost:1521:xe"
- 	driver="oracle.jdbc.driver.OracleDriver" user="travel" password="travel1234"/>
+<%
+	request.setCharacterEncoding("UTF-8");
+	String id=request.getParameter("id_findPw");
+	String email=request.getParameter("email_findPw");
+	PreparedStatement pstmt=null;
+	ResultSet rs=null;
 
-<sql:query var="rs" dataSource="${dataSource}">
-	SELECT * FROM tr_member WHERE tr_mem_id=? AND tr_mem_email=?
-	<sql:param value="${param.id_findPw}"/>
-	<sql:param value="${param.email_findPw}"/> 	
-</sql:query>
-
-<c:choose>
-	<c:when test="${rs.rowCount > 0}">
-	<script>
-		location.href="resetPassword.jsp?id=${rs.rows[0].tr_mem_id}";
+try{
+	String sql="SELECT tr_mem_password FROM tr_member WHERE tr_mem_email=? AND tr_mem_id=?";
+	pstmt=conn.prepareStatement(sql);
+	pstmt.setString(1, email);
+	pstmt.setString(2, id);
+	rs=pstmt.executeQuery();
+	if(rs.next()){
+%>
+	<script type="text/javascript">
+		location.href="resetPassword.jsp?id=<%=id %>";
 	</script>
-	</c:when>
-	<c:otherwise>
-		<script>
-			alert("아이디 또는 비밀번호가 일치하지 않습니다.");
-			history.back();
-		</script>
-	</c:otherwise>
-</c:choose>
+<%
+} else {
+%>
+	<script type="text/javascript">
+		alert("해당아이디와 일치하는 비밀번호가 없습니다.");	
+		history.back();
+	</script>
+
+<%
+}
+} catch(SQLException ex) {
+	out.println("오류가 발생했습니다.<br>");
+out.println("SQLException: " + ex.getMessage());
+	} finally {
+	if(rs!=null)
+	rs.close();
+	if(pstmt!=null)
+	pstmt.close();
+	if(conn!=null)
+	conn.close();
+	}
+%>
