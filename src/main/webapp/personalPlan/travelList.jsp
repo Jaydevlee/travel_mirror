@@ -7,19 +7,19 @@
 <%@ page import="com.personalPlan.dto.TravelInfoDTO"%>
 
 <%
-	// DB에서 여행 목록 가져오기 
-	Connection conn = null;
-	TravelDAO dao = new TravelDAO();
-	List<TravelInfoDTO> list = null;
+// DB에서 여행 목록 가져오기 
+Connection conn = null;
+TravelDAO dao = new TravelDAO();
+List<TravelInfoDTO> list = null;
 
-	try {
-		conn = DBConnection.getConnection();
-		list = dao.selectTravelList(conn);
-	} catch (Exception e) {
-		e.printStackTrace();
-	} finally {
-		DBConnection.close(conn);
-	}
+try {
+	conn = DBConnection.getConnection();
+	list = dao.selectTravelList(conn);
+} catch (Exception e) {
+	e.printStackTrace();
+} finally {
+	DBConnection.close(conn);
+}
 %>
 
 <!DOCTYPE html>
@@ -30,27 +30,32 @@
 
 <link rel="stylesheet" href="../css/travelList.css">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link
+	href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+	rel="stylesheet" />
 <script src="../js/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script src="../js/countryData.js"></script>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"/>
+<!-- 국기 아이콘 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
 
 <style>
-    .select2-results__option span {
-        display: inline-flex;
-        align-items: center;
-    }
-    .fi {
-        margin-right: 8px;
-        font-size: 1.2em;  
-    }
+.select2-results__option span {
+	display: inline-flex;
+	align-items: center;
+}
+
+.fi {
+	margin-right: 8px;
+	font-size: 1.2em;
+}
 </style>
 </head>
 <body>
@@ -73,11 +78,11 @@
 					String bgClass = "bg-default";
 					String country = dto.getCountry();
 					if (country.contains("일본"))
-						bgClass = "bg-japan";
+				bgClass = "bg-japan";
 					else if (country.contains("유럽") || country.contains("프랑스") || country.contains("영국"))
-						bgClass = "bg-europe";
+				bgClass = "bg-europe";
 					else if (country.contains("바다") || country.contains("휴양"))
-						bgClass = "bg-sea";
+				bgClass = "bg-sea";
 			%>
 			<div class="plan-card" data-country="<%=dto.getCountry()%>"
 				onclick="location.href='makeAPlan.jsp?travelNo=<%=dto.getTravelNo()%>'">
@@ -93,7 +98,8 @@
 					<div>
 						<div class="card-title"><%=dto.getTitle()%></div>
 						<div class="card-meta">
-							📍 <%=dto.getCountry()%>
+							📍
+							<%=dto.getCountry()%>
 						</div>
 						<div class="card-meta">
 							<%
@@ -101,23 +107,31 @@
 							if (mate == null || mate.equals("null")) {
 								mate = "미정";
 							} else {
-								if (mate.contains("나홀로") && !mate.contains("🚶")) mate += " 🚶";
-								else if (mate.contains("연인") && !mate.contains("💑")) mate += " 💑";
-								else if (mate.contains("친구") && !mate.contains("👭")) mate += " 👭";
-								else if (mate.contains("가족") && !mate.contains("👨‍👩‍👧‍👦")) mate += " 👨‍👩‍👧‍👦";
-								else if (mate.contains("반려동물") && !mate.contains("🐕")) mate += " 🐕";
+								if (mate.contains("나홀로") && !mate.contains("🚶"))
+									mate += " 🚶";
+								else if (mate.contains("연인") && !mate.contains("💑"))
+									mate += " 💑";
+								else if (mate.contains("친구") && !mate.contains("👭"))
+									mate += " 👭";
+								else if (mate.contains("가족") && !mate.contains("👨‍👩‍👧‍👦"))
+									mate += " 👨‍👩‍👧‍👦";
+								else if (mate.contains("반려동물") && !mate.contains("🐕"))
+									mate += " 🐕";
 							}
 							%>
-							👥 <%=mate%>
+							👥
+							<%=mate%>
 						</div>
 					</div>
 					<div class="card-date">
-						<%=dto.getStartDate()%> ~ <%=dto.getEndDate()%>
+						<%=dto.getStartDate()%>
+						~
+						<%=dto.getEndDate()%>
 					</div>
 				</div>
 			</div>
 			<%
-				}
+			}
 			}
 			%>
 		</div>
@@ -125,7 +139,8 @@
 
 	<div id="init-modal-overlay" class="modal-overlay">
 		<div class="modal-window">
-			<div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+			<div
+				style="display: flex; justify-content: space-between; margin-bottom: 20px;">
 				<h3 style="margin: 0;">여행 정보 입력</h3>
 				<button onclick="closeInitModal()"
 					style="border: none; background: none; font-size: 24px; cursor: pointer;">×</button>
@@ -133,20 +148,19 @@
 
 			<form action="travelWriteAction.jsp" method="post">
 				<div class="input-group">
-					<label>여행 제목</label> 
-					<input type="text" name="title" placeholder="예: 3박 4일 도쿄 먹방" required>
+					<label>여행 제목</label> <input type="text" name="title"
+						placeholder="예: 3박 4일 도쿄 먹방" required>
 				</div>
 
 				<div class="input-group">
-					<label>여행 국가</label> 
-					<select id="select-country" name="country" style="width: 100%;">
+					<label>여행 국가</label> <select id="select-country" name="country"
+						multiple="multiple" style="width: 100%;">
 						<option></option>
 					</select>
 				</div>
 
 				<div class="input-group">
-					<label>누구와 함께?</label> 
-					<select name="companion">
+					<label>누구와 함께?</label> <select name="companion">
 						<option value="나홀로">나홀로 🚶</option>
 						<option value="친구와">친구와 👭</option>
 						<option value="연인과">연인과 💑</option>
@@ -158,8 +172,9 @@
 				<div class="input-group">
 					<label>여행 기간</label>
 					<div style="display: flex; gap: 10px;">
-						<input type="text" name="startDate" class="date-picker" placeholder="가는 날" required> 
-						<input type="text" name="endDate" class="date-picker" placeholder="오는 날" required>
+						<input type="text" name="startDate" class="date-picker"
+							placeholder="가는 날" required> <input type="text"
+							name="endDate" class="date-picker" placeholder="오는 날" required>
 					</div>
 				</div>
 
@@ -201,7 +216,7 @@
 		$(document).ready(function() {
 			$('#select-country').select2({
 				data : countryList, // countryData.js 데이터
-				placeholder : "여행할 국가를 검색하세요",
+				placeholder : "여행할 국가를 검색하세요(다중 선택 가능)",
 				allowClear : true,
 				width : '100%',
 				dropdownParent : $('#init-modal-overlay'),
@@ -212,11 +227,28 @@
 
 		// 달력 (Flatpickr)
 		document.addEventListener('DOMContentLoaded', function() {
-			flatpickr(".date-picker", {
-				locale : "ko",
-				dateFormat : "Y-m-d"
-			});
-		});
+    
+    const endPicker = flatpickr("input[name='endDate']", {
+        locale : "ko",
+        dateFormat : "Y-m-d"
+    });
+
+    
+    flatpickr("input[name='startDate']", {
+        locale : "ko",
+        dateFormat : "Y-m-d",
+        onChange: function(selectedDates, dateStr, instance) {
+            
+            if (selectedDates.length > 0) {
+                
+                endPicker.set('minDate', dateStr);
+                
+                // 달력 내가 선택한 일정쯤으로 점프
+                endPicker.jumpToDate(selectedDates[0]);
+            }
+        }
+    });
+});
 
 		// 여행 삭제 
 		function deleteTravel(event, travelNo) {
