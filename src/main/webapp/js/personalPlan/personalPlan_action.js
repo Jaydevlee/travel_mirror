@@ -172,23 +172,46 @@ function showInputForm(titlePrefix, day, category, icon, labels, existingData = 
                 <label style="display:block; font-weight:bold; margin-bottom:5px;">${labels.l} (장소)</label>
                 <input type="text" id="input-location" value="${locVal}" placeholder="장소 검색 또는 입력" style="width:100%; padding:8px;">
             </div>
-            <div style="margin-bottom:15px;">
-                <label style="display:block; font-weight:bold; margin-bottom:5px;">비용 (원)</label>
-                <input type="number" id="input-cost" value="${costVal}" placeholder="0" style="width:100%; padding:8px;">
-            </div>
-            <button onclick="saveToDB(${day}, '${category}')" style="width:100%; padding:10px; background:#333; color:white; border:none; cursor:pointer;">
-                ${existingData ? '수정 완료' : '저장하기'}
-            </button>
+			<div style="margin-bottom:15px;">
+			                <label style="display:block; font-weight:bold; margin-bottom:5px;">비용 (원)</label>
+			                <input type="number" id="input-cost" value="${costVal}" placeholder="0" style="width:100%; padding:8px;">
+			            </div>
+
+			            <div style="margin-bottom:15px;">
+			                <label style="display:block; font-weight:bold; margin-bottom:5px;">메모</label>
+			                <textarea id="input-memo" placeholder="메모" 
+			                    style="width:100%; height:60px; padding:8px; resize:none; border:1px solid #ddd;"></textarea>
+			            </div>
+			            <button onclick="saveToDB(${day}, '${category}')" style="width:100%; padding:10px; background:#333; color:white; border:none; cursor:pointer;">
+			                ${existingData ? '수정 완료' : '저장하기'}
+			            </button>
         </div>
     `;
 
-	flatpickr(".time-picker", {
+	const endPicker = flatpickr("#input-end-time", {
 		enableTime: true,
 		dateFormat: "Y-m-d H:i",
 		time_24hr: false,
 		locale: "ko",
 		minDate: travelStartDate,
 		maxDate: travelEndDate
+	});
+
+	flatpickr("#input-start-time", {
+		enableTime: true,
+		dateFormat: "Y-m-d H:i",
+		time_24hr: false,
+		locale: "ko",
+		minDate: travelStartDate,
+		maxDate: travelEndDate,
+		onChange: function(selectedDates, dateStr, instance) {
+			if (selectedDates.length > 0) {
+				endPicker.set('minDate', dateStr);
+
+				// 종료일 달력을 시작일이 있는 달로 점프시킴
+				endPicker.jumpToDate(selectedDates[0]);
+			}
+		}
 	});
 }
 
