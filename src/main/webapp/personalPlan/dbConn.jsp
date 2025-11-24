@@ -9,7 +9,7 @@
     //String dbId = "SYSTEM";
    // String dbPw = ""; 
 
-    // DB 연결 정보 (window)    
+    // DB 연결 정보 (window)     
     String url = "jdbc:oracle:thin:@localhost:1521:xe";
     String dbId = "scott";
     String dbPw = "tiger";
