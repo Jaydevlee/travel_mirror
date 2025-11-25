@@ -9,11 +9,13 @@
   <link rel="stylesheet" href="css/accountStyle.css">
 </head>
 <body class="tr_create">
+<jsp:include page="header.jsp" />
+	<div class="tr_mainContainer">
   <div class="tr_signUpcontainer">
   	<div class="titleArea">
     <h1>회원가입</h1>
     <h2>Sign UP</h2>
-    <p>막상 여행 계획을 짜보려하니 복잡하셨죠? travel과 함께 편리하게 여행계획을 해보세요</p>
+    <p>막상 여행 계획을 짜려니 복잡하셨죠?<br> travel과 함께 편리하게 여행계획을 해보세요</p>
     </div>
       <div class="tr_signUp">
         <form action="process_signup.jsp" method="post">
@@ -50,6 +52,7 @@
           <button type="submit" id="signUpBtn">회원가입</button>
         </form>
       </div>  
+  </div>
   </div>
    <!-- 약관 모달 -->
     <div id="tr_termsModal" class="modal">
