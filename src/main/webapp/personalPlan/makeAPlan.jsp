@@ -19,6 +19,8 @@ if (paramNo == null || paramNo.equals("")) {
 
 int travelNo = Integer.parseInt(paramNo);
 Connection conn = null;
+//로그인된 아이디 가져오기
+String trMemId=(String) session.getAttribute("sessionId");
 TravelDAO dao = new TravelDAO();
 TravelInfoDTO info = null;
 List<TravelPlanDTO> planList = null;
@@ -26,7 +28,7 @@ List<TravelPlanDTO> planList = null;
 // DB 조회
 try {
 	conn = DBConnection.getConnection();
-	List<TravelInfoDTO> allList = dao.selectTravelList(conn);
+	List<TravelInfoDTO> allList = dao.selectTravelList(conn, trMemId);
 	for (TravelInfoDTO dto : allList) {
 		if (dto.getTravelNo() == travelNo) {
 	info = dto;

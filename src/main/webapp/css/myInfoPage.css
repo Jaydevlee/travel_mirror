@@ -1,37 +1,58 @@
 .tr_myInfoPage {
-  display: flex;
+	margin: 0;
+	min-height: 100vh;
+	padding: 0;
+  }
+  
+main{
+	display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  background-color: #f5f7fa;
 }
+
+
 .tr_myInfoContainer{
   border: solid rgba(255, 255, 255, 0.2) 1px;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px); /* 배경 블러 */
-  -webkit-backdrop-filter: blur(10px); /* Safari 호환 */
+  background: #f5f7fa;
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  width: 700px;
-  gap: 20px;
-  padding: 20px;
-  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.5);
+  grid-template-columns: 1fr 1.5fr;
+  width: 1300px;
+  min-height: calc(100% - 80px);
   border-radius: 5px;
 }
 
 /* 프로필 사진 영역 */
 .leftSection{
-  display: flex;
+  position:relative;
+  width: 100%;
+  border-right: solid 1px #ccc;
+  box-shadow: 5px 1px 5px #ccc;
+}
+
+/*왼쪽 내용 위치 조절*/
+.leftProfileSection{
+	position:absolute;
+	left: 180px;
+	top: 130px;
+	display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 1rem;
-  width: 100%;
 }
 
-img{
-	width: 100px;
-	height: 100px;
-	border-radius: 50px;
+.leftSection h2 {
+	font-size: 45px;
+}
+
+.leftSection p{
+	font-size: 25px;
+}
+
+.tr_profilePic{
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
 }
 
 #changePicBtn{
@@ -40,20 +61,36 @@ img{
 
 /* 정보 표시부분 스타일 */
 .rightSection{
-  display: flex;
+  position: relative;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 1rem;
   width: 100%;
-  gap: 30px;
+  gap: 40px;
+  min-height: 900px;
 }
-.myProfile,
-.myTravel{
+
+.myProfile{
+	position: absolute;
+	top: 100px;
+	left: 150px;
 	border: #ccc 1px solid;
 	border-radius: 5px;
-	width: 450px;
+	width: 500px;
 	background-color: white;
-	box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.5);
+	box-sizing: border-box;
+}
+
+.myTravel{
+	position: absolute;
+	top: 400px;
+	left: 150px;
+	border: #ccc 1px solid;
+	border-radius: 5px;
+	width: 500px;
+	background-color: white;
+	box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.5);
 	box-sizing: border-box;
 }
 
@@ -69,6 +106,7 @@ img{
 
 h3{
 	margin: 0;
+	font-size: 25px;
 }
 
 ul, li{
@@ -76,10 +114,13 @@ ul, li{
 	border-top: 1px solid #ccc;
 	margin: 0;
 	padding: 0;
+	border-radius: 0 0 5px 5px;
+	
 }
 li{
-	height: 35px;
-	padding: 5px;
+	padding: 10px;
+	font-size: 25px;
+	height: 40px;
 }
 
 /* 회원 정보 수정 페이지로 이동버튼 */

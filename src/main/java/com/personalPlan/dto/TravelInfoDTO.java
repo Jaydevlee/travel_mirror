@@ -11,13 +11,14 @@ public class TravelInfoDTO {
  private String companion;   // COMPANION
  private int totalBudget;       // TOTAL_BUDGET
  private Date createdAt;       // CREATED_AT
+ private String trMemId;	//회원 아이디, 로그인한 계정의 계획을 표시하기 위함
 
  // 기본 생성자
  public TravelInfoDTO() {}
 
  // 전체 필드 생성자 
  public TravelInfoDTO(int travelNo, String title, String country, Date startDate, 
-		 Date endDate, String companion, int totalBudget, Date createdAt) {
+		 Date endDate, String companion, int totalBudget, Date createdAt, String trMemId) {
      this.travelNo = travelNo;
      this.title = title;
      this.country = country;
@@ -26,6 +27,7 @@ public class TravelInfoDTO {
      this.companion = companion;
      this.totalBudget = totalBudget;
      this.createdAt = createdAt;
+     this.trMemId = trMemId;
  }
 
  public int getTravelNo() { return travelNo; }
@@ -51,6 +53,9 @@ public class TravelInfoDTO {
 
  public Date getCreatedAt() { return createdAt; }
  public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+
+ public String getTrMemId() {return trMemId; }
+ public void setTrMemId(String trMemId) {this.trMemId = trMemId;}
 
  @Override
  public String toString() {

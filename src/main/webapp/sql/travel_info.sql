@@ -32,5 +32,11 @@ CREATE TABLE TRAVEL_INFO (
     TOTAL_BUDGET    NUMBER DEFAULT 0,         
     
     -- 생성일
-    CREATED_AT      DATE DEFAULT SYSDATE      
+    CREATED_AT      DATE DEFAULT SYSDATE,      
+    
+    --회원 아이디
+    TR_MEM_ID       VARCHAR2(20)
 );
+
+
+ALTER TABLE TRAVEL_INFO ADD tr_mem_id VARCHAR2(20 BYTE);

@@ -20,3 +20,13 @@ CREATE SEQUENCE tr_member_seq
 
 -- 회원번호 삭제
 DROP SEQUENCE TR_MEMBER_SEQ;
+
+--회원정보 삭제
+TRUNCATE TABLE TR_MEMBER;
+
+-- 회원테이블 구조 확인
+DESC TR_MEMBER;
+
+
+-- 회원 테이블 확인
+SELECT * FROM TR_MEMBER;
