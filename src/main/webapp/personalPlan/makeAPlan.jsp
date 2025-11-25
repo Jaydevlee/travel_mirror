@@ -10,28 +10,22 @@
 <%@ page import="com.personalPlan.dto.TravelPlanDTO"%>
 
 <%
-// 1. 파라미터 받기 (URL에 있는 travelNo) 
+// 파라미터 확인
 String paramNo = request.getParameter("travelNo");
-
-// travelNo가 없으면 목록으로 튕겨내기 (유효성 검사)
 if (paramNo == null || paramNo.equals("")) {
 	response.sendRedirect("travelList.jsp");
 	return;
 }
 
 int travelNo = Integer.parseInt(paramNo);
-
-// 2. DB 데이터 조회 준비
 Connection conn = null;
 TravelDAO dao = new TravelDAO();
+TravelInfoDTO info = null;
+List<TravelPlanDTO> planList = null;
 
-TravelInfoDTO info = null; // 여행 기본 정보 (제목, 날짜 등)
-List<TravelPlanDTO> planList = null; // 세부 일정 리스트
-
+// DB 조회
 try {
 	conn = DBConnection.getConnection();
-
-	// (1) 여행 기본 정보 가져오기
 	List<TravelInfoDTO> allList = dao.selectTravelList(conn);
 	for (TravelInfoDTO dto : allList) {
 		if (dto.getTravelNo() == travelNo) {
@@ -39,8 +33,6 @@ try {
 	break;
 		}
 	}
-
-	// (2) 세부 일정 가져오기
 	planList = dao.selectPlanList(conn, travelNo);
 	if (planList == null)
 		planList = new ArrayList<>();
@@ -51,7 +43,6 @@ try {
 	DBConnection.close(conn);
 }
 
-// 데이터가 없으면 목록으로
 if (info == null) {
 	response.sendRedirect("travelList.jsp");
 	return;
@@ -78,67 +69,59 @@ if (info == null) {
 	src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-    // 1. 기본 정보 전달 (이게 있어야 JS가 날짜를 계산해서 Day 버튼을 만듭니다!)
-    window.serverTravelNo = "<%=info.getTravelNo()%>";
-    window.serverTitle = "<%=info.getTitle().replace("\"", "\\\"")%>";
-    window.serverStartDate = "<%=info.getStartDate()%>"; // YYYY-MM-DD
-    window.serverEndDate = "<%=info.getEndDate()%>";     // YYYY-MM-DD
-    window.serverMate = "<%=info.getCompanion()%>";
-    
-    // 2. 세부 일정 리스트 (DB에 저장된 일정 불러오기)
-    window.serverPlanList = [
-    <%if (planList != null) {
+        window.serverTravelNo = "<%=info.getTravelNo()%>";
+        window.serverTitle = "<%=info.getTitle().replace("\"", "\\\"")%>";
+        window.serverStartDate = "<%=info.getStartDate()%>"; 
+        window.serverEndDate = "<%=info.getEndDate()%>";
+        window.serverMate = "<%=info.getCompanion()%>";
+        
+        window.serverPlanList = [
+        <%if (planList != null) {
 	for (int i = 0; i < planList.size(); i++) {
 		TravelPlanDTO p = planList.get(i);
-
-		// 날짜/시간 처리 (Timestamp -> String)
 		String startStr = (p.getStartTime() != null) ? p.getStartTime().toString() : "";
 		String endStr = (p.getEndTime() != null) ? p.getEndTime().toString() : "";
-
-		// .0 (초 단위) 제거 및 포맷팅
 		if (startStr.length() > 16)
 			startStr = startStr.substring(0, 16);
 		if (endStr.length() > 16)
 			endStr = endStr.substring(0, 16);%>
-        {
-            planNo: <%=p.getPlanNo()%>,
-            day: <%=p.getDayNo()%>,  /* JS에서는 day로 사용 */
-            category: "<%=p.getCategory()%>",
-            title: "<%=p.getTitle().replace("\"", "\\\"")%>",
-            startTime: "<%=startStr%>", 
-            endTime: "<%=endStr%>",
-            bookingNo: "<%=(p.getBookingNo() == null) ? "" : p.getBookingNo()%>",
-            location: "<%=(p.getLocation() == null) ? "" : p.getLocation().replace("\"", "\\\"")%>",
-            cost: <%=p.getCost()%>
-        }<%=(i < planList.size() - 1) ? "," : ""%> /* 마지막 콤마 제거 */
-    <%}
+            {
+                planNo: <%=p.getPlanNo()%>,
+                day: <%=p.getDayNo()%>,  
+                category: "<%=p.getCategory()%>",
+                title: "<%=p.getTitle().replace("\"", "\\\"")%>",
+                startTime: "<%=startStr%>", 
+                endTime: "<%=endStr%>",
+                bookingNo: "<%=(p.getBookingNo() == null) ? "" : p.getBookingNo()%>",
+                location: "<%=(p.getLocation() == null) ? "" : p.getLocation().replace("\"", "\\\"")%>",
+                cost: <%=p.getCost()%>
+            }<%=(i < planList.size() - 1) ? "," : ""%> 
+        <%}
 }%>
-    ];
-
-    console.log("DB 데이터 로드 완료:", window.serverPlanList); 
-</script>
-
+        ];
+    </script>
 </head>
 <body>
 
 	<div class="header">
-		<h2 onclick="location.href='travelList.jsp'" style="cursor: pointer;">
-			✈️ My 여행계획</h2>
+		<h2 onclick="location.href='travelList.jsp'">✈️ My 여행계획</h2>
 	</div>
 
 	<div class="container">
-
 		<aside class="left-sidebar">
 			<div class="travel-info-box">
-				<h3><%=info.getTitle()%></h3>
+				<div class="info-header">
+					<h3><%=info.getTitle()%></h3>
+					<button onclick="openTravelEditModal()" class="btn-icon-edit"
+						title="여행 정보 수정">✏️</button>
+				</div>
 				<p>
 					📍
 					<%=info.getCountry()%></p>
 				<p>
-					📅
-					<%=info.getStartDate()%>
-					~
-					<%=info.getEndDate()%></p>
+					📅 <span id="disp-start-date"><%=info.getStartDate()%></span> ~ <span
+						id="disp-end-date"><%=info.getEndDate()%></span>
+				</p>
 
 				<%
 				String mate = info.getCompanion();
@@ -168,19 +151,24 @@ if (info == null) {
 
 			<button class="sidebar-footer-btn btn-budget"
 				onclick="openBudgetModal()">💸 가계부 보기</button>
-				
 			<button class="sidebar-footer-btn btn-check"
 				onclick="openChecklistModal()">✅ 체크리스트</button>
-
 			<button class="sidebar-footer-btn btn-total"
 				onclick="openAllPlanModal()">🗓 전체 일정 보기</button>
 		</aside>
 
 		<main class="right-main">
 			<section class="map-area">
-				<div id="map"
-					style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #888;">
-					🗺️ 지도 로딩중... (map.js)</div>
+				<div id="map-controls" class="map-controls-container">
+					<input id="pac-input" class="map-search-input" type="text"
+						placeholder="장소 검색 (예: 에펠탑)">
+					<div class="map-checkbox-wrapper">
+						<input type="checkbox" id="show-hotel-check" checked
+							onchange="toggleAccommodation()" class="map-checkbox"> <label
+							for="show-hotel-check" class="map-checkbox-label">숙소 표시</label>
+					</div>
+				</div>
+				<div id="map" class="map-loading">🗺️ 지도 로딩중...</div>
 			</section>
 
 			<section class="makeAplan">
@@ -190,12 +178,10 @@ if (info == null) {
 	</div>
 
 	<div id="modal-overlay" class="modal-overlay">
-		<div class="modal-window">
-			<div
-				style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-				<h3 id="modal-title" style="margin: 0;">일정 추가</h3>
-				<button onclick="closeModal()"
-					style="border: none; background: none; font-size: 24px; cursor: pointer;">×</button>
+		<div class="modal-window" style="width: 400px;">
+			<div class="modal-header">
+				<h3 id="modal-title">일정 추가</h3>
+				<button onclick="closeModal()" class="btn-close-modal">×</button>
 			</div>
 			<ul id="modal-list" class="option-list"></ul>
 		</div>
@@ -203,80 +189,91 @@ if (info == null) {
 
 	<div id="budget-modal" class="modal-overlay">
 		<div class="modal-window" style="width: 500px;">
-			<div
-				style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-				<h3 style="margin: 0;">💸 여행 가계부</h3>
-				<button onclick="closeBudgetModal()"
-					style="border: none; background: none; font-size: 24px; cursor: pointer;">×</button>
+			<div class="modal-header">
+				<h3>💸 여행 가계부</h3>
+				<button onclick="closeBudgetModal()" class="btn-close-modal">×</button>
 			</div>
-			<div style="text-align: center; margin-bottom: 20px;">
-				<span style="font-size: 18px; color: #333;">총 비용: </span> <span
-					id="total-budget-display"
-					style="font-size: 24px; font-weight: bold; color: #3b82f6;">0원</span>
+			<div class="budget-total-area">
+				<span class="budget-total-label">총 비용: </span> <span
+					id="total-budget-display" class="budget-total-amount">0원</span>
 			</div>
-			<div id="budget-segment-summary"></div>
-			<div
-				style="max-height: 300px; overflow-y: auto; border-top: 1px solid #eee; margin-top: 10px;">
-				<table style="width: 100%; border-collapse: collapse;">
+			<div class="budget-table-container">
+				<table class="budget-table">
 					<tbody id="budget-list-body"></tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 
-	<div id="checklist-modal"
-		style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center;">
-		<div
-			style="background: white; width: 400px; max-height: 80vh; border-radius: 10px; padding: 20px; overflow-y: auto; display: flex; flex-direction: column;">
-			<h3
-				style="margin-top: 0; border-bottom: 2px solid #333; padding-bottom: 10px;">✅
-				체크리스트</h3>
-
-			<div style="display: flex; gap: 5px; margin-bottom: 15px;">
-				<input type="text" id="new-check-item"
-					placeholder="준비물 입력 (예: 여권, 충전기)"
-					style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-				<button onclick="addCheckItem()"
-					style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">추가</button>
+	<div id="checklist-modal" class="modal-overlay">
+		<div class="modal-window">
+			<div class="modal-header">
+				<h3>✅ 체크리스트</h3>
 			</div>
 
-			<ul id="checklist-ul"
-				style="list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto;">
-			</ul>
+			<div class="checklist-input-group">
+				<input type="text" id="new-check-item" class="checklist-input"
+					placeholder="준비물 입력">
+				<button onclick="addCheckItem()" class="btn-checklist-add">추가</button>
+			</div>
+			<ul id="checklist-ul" class="checklist-ul"></ul>
 
-			<button onclick="closeChecklistModal()"
-				style="margin-top: 15px; width: 100%; padding: 10px; background: #ddd; border: none; border-radius: 5px; cursor: pointer;">닫기</button>
+			<button onclick="closeChecklistModal()" class="btn-checklist-close">닫기</button>
 		</div>
 	</div>
 
-	<div id="all-plan-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center;">
-    <div class="modal-window" style="background: white; width: 800px; height: 90vh; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden;">
-        
-        <div style="padding: 15px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; background: white;">
-            <h3 style="margin: 0;">🗺️ 전체 여행 경로 & 일정</h3>
-            <div>
-                <button onclick="printAllPlan()" style="cursor: pointer; padding: 5px 10px; margin-right: 5px;">🖨️ 인쇄</button>
-                <button onclick="closeAllPlanModal()" style="border: none; background: none; font-size: 20px; cursor: pointer;">✖</button>
-            </div>
-        </div>
+	<div id="all-plan-modal" class="modal-overlay">
+		<div class="modal-window all-plan-window">
+			<div class="all-plan-header-area">
+				<h3>🗺️ 전체 여행 경로 & 일정</h3>
+				<div>
+					<button onclick="printAllPlan()" class="btn-modal-submit"
+						style="width: auto; padding: 5px 10px; margin: 0;">🖨️ 인쇄</button>
+					<button onclick="closeAllPlanModal()" class="btn-close-modal">✖</button>
+				</div>
+			</div>
+			<div id="modal-map-area"></div>
+			<div id="all-plan-content"></div>
+		</div>
+	</div>
 
-        <div id="modal-map-area" style="width: 100%; height: 40%;"></div>
+	<div id="travel-edit-modal" class="modal-overlay">
+		<div class="modal-window" style="width: 400px;">
+			<div class="modal-header">
+				<h3>여행 정보 수정</h3>
+				<button onclick="closeTravelEditModal()" class="btn-close-modal">×</button>
+			</div>
+			<div style="margin-bottom: 15px;">
+				<label class="modal-label">여행 제목</label> <input type="text"
+					id="edit-travel-title" class="modal-input-text">
+			</div>
+			<div style="margin-bottom: 15px;">
+				<label class="modal-label">누구와 함께?</label> <select
+					id="edit-travel-mate" class="modal-select">
+					<option value="나홀로">나홀로 🚶</option>
+					<option value="연인과">연인과 💑</option>
+					<option value="친구와">친구와 👭</option>
+					<option value="가족과">가족과 👨‍👩‍👧‍👦</option>
+					<option value="반려동물과">반려동물과 🐕</option>
+				</select>
+			</div>
+			<div style="margin-bottom: 20px;">
+				<label class="modal-label">여행 기간</label>
+				<div style="display: flex; gap: 10px;">
+					<input type="date" id="edit-start-date" class="modal-input-date">
+					<span style="align-self: center;">~</span> <input type="date"
+						id="edit-end-date" class="modal-input-date">
+				</div>
+			</div>
+			<button onclick="submitTravelEdit()" class="btn-modal-submit">수정
+				완료</button>
+		</div>
+	</div>
 
-        <div id="all-plan-content" style="flex: 1; overflow-y: auto; padding: 20px; background: #f5f7fa;">
-            </div>
-    </div>
-</div>
-
-	<script src="../js/mypage/api_key.js"></script>
 	<script src="../js/countryData.js"></script>
-	<script src="../js/mypage/map.js"></script>
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdoGjJDp1c2WPiM8zSdTJbHx5OUBhyFY8&libraries=places&language=ko"></script>
 	<script src="../js/personalPlan/personalPlan_action.js"></script>
-
-
-	<script src="../js/mypage/review_form.js"></script>
-	<script src="../js/mypage/review_action.js"></script>
-	<script src="../js/mypage/handler.js"></script>
-	<script src="../js/mypage/main.js"></script>
 
 </body>
 </html>
