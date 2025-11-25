@@ -1,25 +1,32 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ page import="java.sql.*" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.member.dao.*" %>
+<%@ page import="com.member.dto.*" %>
 <%@ include file="dbconn.jsp" %>
 
 <!-- sessionId 가져오기 -->
 <% 
 	String id=(String) session.getAttribute("sessionId"); 
-	PreparedStatement pstmt=null;
-	int rs;
+	TravelMemberDTO dto = new TravelMemberDTO();
 	
+	dto.setMemId(id);
+	TravelDeleteMemDAO dao = new TravelDeleteMemDAO();
 	try{
-		String sql="DELETE FROM tr_member WHERE tr_mem_id=?";
-		pstmt=conn.prepareStatement(sql);
-		pstmt.setString(1, id);
-		rs=pstmt.executeUpdate();
+		int result = dao.deleteMem(conn, dto);
 		
-		if(rs>0){
+		if(result > 0){
+			session.invalidate();
 %>
 	<script type="text/javascript">
 		 alert("탈퇴되었습니다.");
 		 location.href="firstPage.jsp";
+		</script>
+<%
+		} else {
+%>
+	<script type="text/javascript">
+		 alert("탈퇴실패.");
+		 history.back();
 		</script>
 <% 
 	}
@@ -27,8 +34,6 @@
 		out.println("오류가 발생했습니다.<br>");
 		out.println("SQLException : " + ex.getMessage());
 	} finally {
-		if(pstmt!=null)
-			pstmt.close();
 		if(conn!=null)
 			conn.close();
 	}

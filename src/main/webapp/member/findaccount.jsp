@@ -6,8 +6,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>계정 찾기</title>
-  <link rel="stylesheet" href="css/accountStyle.css">
-  <script src='js/jquery-3.7.1.min.js'></script>
+  <link rel="stylesheet" href="../css/accountStyle.css">
+  <script src='../js/jquery-3.7.1.min.js'></script>
 </head>
 <body class="tr_findaccount">
   <div class="tr_findContainer">
@@ -31,6 +31,6 @@
       <button type="submit" id="tr_findPwBtn">비밀번호 찾기</button>
     </form>
   </div>
-  <script src="js/findaccount.js"></script>
+  <script src="../js/findaccount.js"></script>
 </body>
 </html>

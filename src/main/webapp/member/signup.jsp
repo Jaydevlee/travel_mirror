@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>회원가입</title>
-  <script src='js/jquery-3.7.1.min.js'></script>
-  <link rel="stylesheet" href="css/accountStyle.css">
+  <script src='../js/jquery-3.7.1.min.js'></script>
+  <link rel="stylesheet" href="../css/accountStyle.css">
 </head>
 <body class="tr_create">
-<jsp:include page="header.jsp" />
+<jsp:include page="/header.jsp" />
 	<div class="tr_mainContainer">
   <div class="tr_signUpcontainer">
   	<div class="titleArea">
@@ -127,6 +127,6 @@
           </ol>  
       </div>
     </div>
-  <script src="js/signup.js"></script>
+  <script src="../js/signup.js"></script>
 </body>
 </html>

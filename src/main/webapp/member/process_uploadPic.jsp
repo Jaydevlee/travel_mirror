@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="java.sql.*"%>
+<%@ page import="com.member.dao.*" %>
+<%@ page import="com.member.dto.*" %>
 <%@ page import="com.oreilly.servlet.*" %>
 <%@ page import="com.oreilly.servlet.multipart.*" %>
 <%@ page import="java.util.*" %>
@@ -18,27 +20,25 @@
 	
 	String id = multi.getParameter("userId");
 	
-	PreparedStatement pstmt=null;
-	ResultSet rs=null;
+	TravelMemberDTO dto = new TravelMemberDTO();
+	dto.setMemId(id);
+	dto.setMemFileName(fileName);
+	TravelUpdateMemDAO dao = new TravelUpdateMemDAO();
 	
 	try{
-			String sql="UPDATE tr_member SET tr_mem_pic=? WHERE tr_mem_id=?";
-			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, fileName);
-			pstmt.setString(2, id);
-			pstmt.executeUpdate();		
+		int result = dao.changePic(conn, dto);
+		if(result > 0){
 %>
 	<script type="text/javascript">
 	 alert("프로필 사진이 변경되었습니다.");
 	</script>
 	<%
 	response.sendRedirect("myInfoPage.jsp");
-	} catch(SQLException ex){
+	}
+		} catch(SQLException ex){
 		out.println("프로필사진 변경에 실패했습니다.<br>");
 		out.println("SQLException : " + ex.getMessage());
 	} finally {
-		if(pstmt!=null)
-			pstmt.close();
 		if(conn!=null)
 			conn.close();
 	}
