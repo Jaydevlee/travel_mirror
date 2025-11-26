@@ -9,7 +9,7 @@ public class TravelSignUpDAO {
 					+ "VALUES(tr_member_seq.NEXTVAL, ?, ?, ?, ?, ?, ?)";
 		
 		//시퀀스 번호 받아오기
-		String[] returnCols= {"tr_mem_no"};
+		String[] returnCols= {"tr_mem_no"}; //INSERT문에서 생성된 칼럼 중에서 시퀀스 번호 TR_MEM_NO를 받아오기
 		PreparedStatement pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, dto.getMemId());
 		pstmt.setString(2, dto.getMemPw());
@@ -20,7 +20,7 @@ public class TravelSignUpDAO {
 		
 		int result=pstmt.executeUpdate();
 		
-		// 생성된 회원번호 가져오기
+		// 생성된 회원번호(시퀀스) 가져오기
 		ResultSet rs= pstmt.getGeneratedKeys();
 		if(rs.next()) {
 			dto.setMemNo(rs.getInt(1));

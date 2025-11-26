@@ -27,25 +27,28 @@
     alert("회원 정보를 찾을 수 없습니다.");
     location.href="login.jsp";
 	</script>
- <% return; } %>
+ <% 
+ 	return; 
+ 	} 
+	 request.setAttribute("mem", dto);%>
     <h1>회원정보 수정</h1>
     <!-- 회원 탈퇴 부분 -->
     <a href='deleteMem.jsp'>회원 탈퇴</a>
     <form action="process_update.jsp" method="post" id="updateForm">
       <div class="tr_pwUpdate">
-        <input type="password" id="tr_newPw" name="tr_newPw" class="tr_newPw" value="<%=dto.getMemPw() %>" placeholder="새 비밀번호 입력">
+        <input type="password" id="tr_newPw" name="tr_newPw" class="tr_newPw" value="${mem.memPw}" placeholder="새 비밀번호 입력">
         <p id="resultNewPw"></p> <!-- 새 pw 유효성검사 -->
       </div>
       <div class="tr_pwUpdateVer">
-        <input type="password" id="tr_newPwVer" name="tr_newPwVer" class="tr_newPwVer" placeholder="새 비밀번호 입력">
+        <input type="password" id="tr_newPwVer" name="tr_newPwVer" class="tr_newPwVer" placeholder="새 비밀번호 입력(기존 비밀번호를 유지하려면 기존 비밀번호 입력))">
         <p id="resultNewPwVer"></p> <!-- 새 pw 일치여부 확인 -->
       </div>
       <div class="tr_emailUpdate">
-        <input type="email" id="tr_newEmail" name="tr_newEmail" class="tr_newEmail" value="<%=dto.getMemEmail() %>" placeholder="새 이메일 입력">
+        <input type="email" id="tr_newEmail" name="tr_newEmail" class="tr_newEmail" value="${mem.memEmail}" placeholder="새 이메일 입력">
         <p id="resultNewEmail"></p> <!-- 새 email 유효성검사 -->
       </div>
       <div class="tr_phoneUpdate">
-        <input type="text" id="tr_newPhone" name="tr_newPhone" class="tr_newPhone" value="<%=dto.getMemPhone() %>" placeholder="휴대폰 번호('-'제외 숫자만 입력)">
+        <input type="text" id="tr_newPhone" name="tr_newPhone" class="tr_newPhone" value="${mem.memPhone}" placeholder="휴대폰 번호('-'제외 숫자만 입력)">
         <p id="resultNewPhone"></p> <!-- phone 유효성검사 -->
       </div>
       <button type="submit" id="updateBtn"> 회원 정보 수정</button>

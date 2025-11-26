@@ -14,8 +14,8 @@ public class DBConnection {
 
             // DB 연결 정보 
             String url = "jdbc:oracle:thin:@localhost:1521:xe";
-            String id = "scott";
-            String pw = "tiger";
+            String id = "travel";
+            String pw = "travel1234";
 
             conn = DriverManager.getConnection(url, id, pw);
 
