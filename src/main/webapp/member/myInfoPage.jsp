@@ -7,6 +7,7 @@
 <%@ page import="com.personalPlan.dao.TravelDAO" %>
 <%@ page import="com.personalPlan.dto.TravelInfoDTO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="admin.Hyphen" %>
 <%@ include file="dbconn.jsp" %>
 
 <html lang="ko">
@@ -76,9 +77,9 @@
 				<a href="updateMem.jsp"><h3>내 프로필&raquo;</h3></a>
 			</div>
 			<ul class="profileBox">
-				<li>아이디: "${mem.memId}"</li>
-				<li>이메일: "${mem.memEmail}"</li>
-				<li>전화번호: "${mem.memPhone}"</li>
+				<li>아이디: ${mem.memId}</li>
+				<li>이메일: ${mem.memEmail}</li>
+				<li>전화번호: <%=Hyphen.formatPhoneNumber(dto.getMemPhone())%></li>
 			</ul>
 		</div>
 <div class="myTravel">
