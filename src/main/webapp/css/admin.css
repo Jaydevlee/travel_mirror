@@ -1,0 +1,37 @@
+#updateMemberForm{
+	width : 600px;
+	height : 1000px;
+	margin: auto;
+	margin-top: 100px;
+}
+.updateMemberForm1{
+	width: 500px;
+	height : 50px;
+	margin: auto;
+	margin-bottom:20px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+.subject1{
+	width:150px;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+.subject2{
+	width:350px;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+label{
+	text-align:center;
+}
+#list{
+	width:1000px;
+	box-sizing:border-box;
+	margin: auto;
+}
