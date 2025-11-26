@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="css/accountStyle.css">
 </head>
 <body class="tr_resetPw">
+<jsp:include page="/header.jsp" />
   <div class="tr_resetContainer">
     <h2>비밀번호 재설정</h2>
     <form action="process_resetPw.jsp" id="tr_resetForm">
