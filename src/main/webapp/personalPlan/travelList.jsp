@@ -6,14 +6,25 @@
 <%@ page import="com.personalPlan.dto.TravelInfoDTO"%>
 
 <%
-    // DB에서 여행 목록 가져오기 
+    // 세션에서 로그인한 아이디 가져오기 (sessionId)
+    String memberId = (String) session.getAttribute("sessionId");
+
+    // 로그인 안 했으면 로그인 페이지로 보내기
+    if (memberId == null) {
+        response.sendRedirect("../login/login.jsp"); 
+        return;
+    }
+
     Connection conn = null;
     TravelDAO dao = new TravelDAO();
     List<TravelInfoDTO> list = null;
     
     try {
         conn = DBConnection.getConnection();
-        list = dao.selectTravelList(conn);
+        
+        // 내 아이디(memberId)를 넣어서 '내 여행만' 조회하기
+        list = dao.selectMyTravelList(conn, memberId);
+        
     } catch (Exception e) {
         e.printStackTrace();
     } finally {

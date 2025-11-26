@@ -8,19 +8,25 @@
 
 <%
     request.setCharacterEncoding("UTF-8");
-
     String title = request.getParameter("title");
     String country = request.getParameter("country");
     String companion = request.getParameter("companion");
     String startDateStr = request.getParameter("startDate");
     String endDateStr = request.getParameter("endDate");
-
     int result = 0;
     
     try {
         Connection conn = DBConnection.getConnection();
         TravelDAO dao = new TravelDAO();
         TravelInfoDTO dto = new TravelInfoDTO();
+
+
+        String memberId = (String) session.getAttribute("sessionId"); 
+
+        if (memberId == null) {
+            out.println("<script>alert('로그인이 필요한 서비스입니다.'); location.href='../login/login.jsp';</script>");
+            return;
+        }
 
         Date start = Date.valueOf(startDateStr);
         Date end = Date.valueOf(endDateStr);
@@ -32,14 +38,17 @@
         dto.setStartDate(start);
         dto.setEndDate(end);
         
+        // 로그인한 아이디를 DTO에 담아야 '내 여행'으로 저장됨
+        dto.setTrMemId(memberId);
+
         // DAO를 통해 DB에 저장 (INSERT)
         result = dao.insertTravelInfo(conn, dto);
         
         DBConnection.close(conn);
-        
+
     } catch (Exception e) {
         e.printStackTrace();
-        result = -1; 
+        result = -1;
     }
 %>
 

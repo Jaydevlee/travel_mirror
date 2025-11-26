@@ -1,5 +1,3 @@
-// travelReview.js
-
 // 장소 선택 (왼쪽 사이드바 클릭)
 function selectPlace(element) {
     const reviewNo = element.getAttribute('data-review-no');

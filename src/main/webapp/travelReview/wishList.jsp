@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
 <%@ page import="java.util.List, java.sql.Connection, com.common.DBConnection, com.travelReview.dao.ReviewDAO, com.travelReview.dto.ReviewDTO"%>
 
 <%

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.sql.Connection"%>
@@ -25,24 +24,22 @@ List<TravelPlanDTO> planList = null;
 
 // DB 조회
 try {
-	conn = DBConnection.getConnection();
-	List<TravelInfoDTO> allList = dao.selectTravelList(conn);
-	for (TravelInfoDTO dto : allList) {
-		if (dto.getTravelNo() == travelNo) {
-	info = dto;
-	break;
-		}
-	}
-	planList = dao.selectPlanList(conn, travelNo);
-	if (planList == null)
-		planList = new ArrayList<>();
+    conn = DBConnection.getConnection();
+    
+    // 여행 정보 조회
+    info = dao.selectTravelInfo(conn, travelNo);
+    
+    // 일정 리스트 조회
+    planList = dao.selectPlanList(conn, travelNo);
+    if (planList == null) planList = new ArrayList<>();
 
 } catch (Exception e) {
-	e.printStackTrace();
+    e.printStackTrace();
 } finally {
-	DBConnection.close(conn);
+    DBConnection.close(conn);
 }
 
+// 여행 정보가 없으면 목록으로
 if (info == null) {
 	response.sendRedirect("travelList.jsp");
 	return;
@@ -74,6 +71,7 @@ if (info == null) {
         window.serverStartDate = "<%=info.getStartDate()%>"; 
         window.serverEndDate = "<%=info.getEndDate()%>";
         window.serverMate = "<%=info.getCompanion()%>";
+        window.currentUserId = "<%= (String)session.getAttribute("sessionId") != null ? (String)session.getAttribute("sessionId") : "" %>";
         
         window.serverPlanList = [
         <%if (planList != null) {

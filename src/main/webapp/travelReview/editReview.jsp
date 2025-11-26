@@ -22,7 +22,7 @@
     try {
         conn = DBConnection.getConnection();
         
-        // 1. 리뷰 내용 가져오기 (DAO 사용)
+        // 리뷰 내용 가져오기 (DAO 사용)
         ReviewDTO review = dao.selectReview(conn, reviewNo);
         if(review != null) {
             content = review.getContent();
@@ -30,7 +30,7 @@
             planNo = review.getPlanNo();
         }
 
-        // 2. 기존 사진 리스트 가져오기 (DAO 사용)
+        // 기존 사진 리스트 가져오기 (DAO 사용)
         List<ReviewMediaDTO> dtos = dao.selectMediaList(conn, reviewNo);
         
         // DTO 데이터를 Map으로 변환 (기존 HTML 코드 수정을 최소화하기 위함)
