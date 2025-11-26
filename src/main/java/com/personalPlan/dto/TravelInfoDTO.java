@@ -11,7 +11,8 @@ public class TravelInfoDTO {
  private String companion;   // COMPANION
  private int totalBudget;       // TOTAL_BUDGET
  private Date createdAt;       // CREATED_AT
-
+ private String trMemId;
+ 
  // 기본 생성자
  public TravelInfoDTO() {}
 
@@ -51,6 +52,16 @@ public class TravelInfoDTO {
 
  public Date getCreatedAt() { return createdAt; }
  public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+ 
+ 
+
+ public String getTrMemId() {
+	return trMemId;
+}
+
+ public void setTrMemId(String trMemId) {
+	this.trMemId = trMemId;
+ }
 
  @Override
  public String toString() {

@@ -18,8 +18,8 @@ public class TravelDAO {
 		int result = 0;
 		PreparedStatement pstmt = null;
 
-		String sql = "INSERT INTO TRAVEL_INFO (TRAVEL_NO, TITLE, COUNTRY, START_DATE, END_DATE, COMPANION) "
-				+ "VALUES (SEQ_TRAVEL_INFO_NO.NEXTVAL, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO TRAVEL_INFO (TRAVEL_NO, TITLE, COUNTRY, START_DATE, END_DATE, COMPANION, TR_MEM_ID) "
+	            + "VALUES (SEQ_TRAVEL_INFO_NO.NEXTVAL, ?, ?, ?, ?, ?, ?)";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -29,6 +29,7 @@ public class TravelDAO {
 			pstmt.setDate(3, info.getStartDate());
 			pstmt.setDate(4, info.getEndDate());
 			pstmt.setString(5, info.getCompanion());
+			pstmt.setString(6, info.getTrMemId());
 
 			result = pstmt.executeUpdate();
 
@@ -41,15 +42,16 @@ public class TravelDAO {
 	}
 
 	// 여행 정보 목록 보기 (SELECT)
-		public List<TravelInfoDTO> selectTravelList(Connection conn) {
-			List<TravelInfoDTO> list = new ArrayList<>();
-			PreparedStatement pstmt = null;
-			ResultSet rset = null;
+	public List<TravelInfoDTO> selectTravelList(Connection conn, String memId) {
+	    List<TravelInfoDTO> list = new ArrayList<>();
+	    PreparedStatement pstmt = null;
+	    ResultSet rset = null;
 
-			String sql = "SELECT * FROM TRAVEL_INFO ORDER BY START_DATE ASC";
+	    String sql = "SELECT * FROM TRAVEL_INFO WHERE TR_MEM_ID = ? ORDER BY START_DATE ASC";
 
 			try {
 				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, memId);
 				rset = pstmt.executeQuery();
 
 				while (rset.next()) {
@@ -62,6 +64,7 @@ public class TravelDAO {
 					info.setEndDate(rset.getDate("END_DATE"));
 					info.setTotalBudget(rset.getInt("TOTAL_BUDGET"));
 					info.setCompanion(rset.getString("COMPANION")); 
+					info.setTrMemId(rset.getString("TR_MEM_ID"));
 
 					list.add(info);
 				}
@@ -139,7 +142,6 @@ public class TravelDAO {
 				plan.setTitle(rset.getString("TITLE"));
 				plan.setCategory(rset.getString("CATEGORY"));
 
-				// 꺼낼 때도 Timestamp
 				plan.setStartTime(rset.getTimestamp("START_TIME"));
 				plan.setEndTime(rset.getTimestamp("END_TIME"));
 
@@ -242,4 +244,74 @@ public class TravelDAO {
 		}
 		return result;
 	}
+	
+	// 내 여행만 가져오기
+	public List<TravelInfoDTO> selectMyTravelList(Connection conn, String memberId) {
+        List<TravelInfoDTO> list = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        ResultSet rset = null;
+
+        // WHERE TR_MEM_ID = ? 조건으로 내 것만 가져옴
+        String sql = "SELECT * FROM TRAVEL_INFO WHERE TR_MEM_ID = ? ORDER BY START_DATE ASC";
+
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, memberId); // 세션 아이디 바인딩
+            rset = pstmt.executeQuery();
+
+            while (rset.next()) {
+                TravelInfoDTO info = new TravelInfoDTO();
+                info.setTravelNo(rset.getInt("TRAVEL_NO"));
+                info.setTitle(rset.getString("TITLE"));
+                info.setCountry(rset.getString("COUNTRY"));
+                info.setStartDate(rset.getDate("START_DATE"));
+                info.setEndDate(rset.getDate("END_DATE"));
+                info.setTotalBudget(rset.getInt("TOTAL_BUDGET"));
+                info.setCompanion(rset.getString("COMPANION"));
+                info.setTrMemId(rset.getString("TR_MEM_ID")); // DTO에 trMemId 필드가 있어야 함
+
+                list.add(info);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if(rset!=null) rset.close(); if(pstmt!=null) pstmt.close(); } catch(Exception e){}
+        }
+        return list;
+    }
+	
+	// 여행 번호(PK)로 여행 정보 1개만 상세 조회하기
+    public TravelInfoDTO selectTravelInfo(Connection conn, int travelNo) {
+        TravelInfoDTO info = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        String sql = "SELECT * FROM TRAVEL_INFO WHERE TRAVEL_NO = ?";
+
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, travelNo);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                info = new TravelInfoDTO();
+                info.setTravelNo(rs.getInt("TRAVEL_NO"));
+                info.setTitle(rs.getString("TITLE"));
+                info.setCountry(rs.getString("COUNTRY"));
+                info.setStartDate(rs.getDate("START_DATE"));
+                info.setEndDate(rs.getDate("END_DATE"));
+                info.setTotalBudget(rs.getInt("TOTAL_BUDGET"));
+                info.setCompanion(rs.getString("COMPANION"));
+                info.setTrMemId(rs.getString("TR_MEM_ID"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(rs != null) rs.close();
+                if(pstmt != null) pstmt.close();
+            } catch(Exception e) {}
+        }
+        return info;
+    }
 }

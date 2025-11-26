@@ -1,5 +1,3 @@
-// travelReviewDetail.js - 상세 보기 페이지 기능
-
 // 위시리스트(찜하기) 토글 함수
 function toggleWish(reviewNo) {
     $.ajax({
