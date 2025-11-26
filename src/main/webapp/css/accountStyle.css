@@ -1,158 +1,157 @@
-/* -------------------회원가입 -------------------- */
-/* 회원가입 body */
-.tr_create{ 
+/* ------------------- 회원가입 -------------------- */
+
+/* 전체 페이지 기본 스타일 */
+.tr_create { 
   margin: 0;
   padding: 0;
-  height: 100%;
+  min-height: 100vh;
   font-family: 'Noto Sans KR', sans-serif;
+  background-color: #f5f7fa;
 }
 
-
-.tr_mainContainer{
-	display: flex;
+/* 중앙 정렬 */
+.tr_mainContainer {
+  display: flex;
   justify-content: center;
-  align-items: center;
-  background-color: #f5f7fa;
-  height: 100vh;
+  align-items: flex-start;
+  padding: 60px 0;
+  min-height: 100vh;
+}
+
+/* 회원가입 전체 컨테이너 */
+.tr_signUpcontainer {
+  width: 1200px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-sizing: border-box;
   overflow: hidden;
 }
 
-/* 회원가입 container */
-.tr_signUpcontainer{
-  border: solid rgba(255, 255, 255, 0.2) 1px;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px); /* 배경 블러 */
-  -webkit-backdrop-filter: blur(10px); /* Safari 호환 */
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.5);
-  width: 1300px;
-  height: 90vh;
-  border-radius: 5px;
-}
-
-/* 제목 영역 */
-.titleArea{
-	display: flex;
+/* ---------------- 제목 영역 ---------------- */
+.titleArea {
+  background: #ffffff;
+  padding: 60px 30px;
+  border-right: 1px solid #e0e0e0;
+  box-shadow: 4px 0 10px rgba(0,0,0,0.05);
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin-bottom: 1rem;
-	height: 100%;
-	border-right: solid 1px #ccc;
-	box-shadow: 5px 1px 5px #ccc;
+  align-items: flex-start;
 }
 
 .titleArea h1, 
-.titleArea h2{
-	margin-bottom: 0;
-	background: linear-gradient(130deg, #00bfa5 45%, #BF5AC8 55%);
+.titleArea h2 {
+  margin: 0;
+  background: linear-gradient(130deg, #00bfa5 45%, #BF5AC8 55%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.titleArea h2{
-	margin-top: 0;
+.titleArea h1 {
+  font-size: 38px;
+  margin-bottom: 8px;
 }
 
-.titleArea p{
-	text-align: center;
+.titleArea h2 {
+  font-size: 20px;
+  margin-bottom: 15px;
 }
 
-/* 회원가입 form 스타일 */
+.titleArea p {
+  font-size: 15px;
+  color: #555;
+}
+
+/* ---------------- form 영역 ---------------- */
 .tr_signUp form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-top: 10%;
+  align-items: flex-start;
+  padding: 40px 40px;
 }
 
-.trInput{
+/* input 공통 */
+.trInput {
   border: solid #ccc 1px;
-  width: 350px;
-  height: 50px;
-  margin-bottom: 1em;
+  width: 100%;
+  max-width: none;
+  height: 48px;
+  margin-bottom: 12px;
+  padding: 0 12px;
+  border-radius: 6px;
   box-sizing: border-box;
-  padding: 0 10px;
-  border-radius: 5px;
+  font-size: 15px;
 }
-.trInput_mail{
+
+.trInput_mail {
   margin-bottom: 0;
 }
 
-
-.tr_signUp p{
-  height: 16px;  /* 입력폼 움직임 방지 */
-  line-height: 16px;
+.tr_signUp p {
+  height: 16px;
   font-size: 12px;
-  padding-left: 10px;
+  padding-left: 5px;
+  color: #999;
   margin-top: 0;
 }
 
-
-
-#resultPw{
-  font-size: 11px; /* pw 유효성 검사 폰트크기 조절 */
-}
-
-a{
-  color: black;
-  text-decoration: none;
-}
-/* 회원가입 버튼 */
-#signUpBtn{
-  width: 350px;
-  height: 50px;
-  background-color: #fff;
-  border: #00bfa5 solid 2px;
-  border-radius: 5px;
-  box-sizing: border-box;
-  color: #00bfa5;
-  margin-bottom: 2em;
-  cursor: pointer;
-  margin-top: 1em;
-  transition: all 0.25s ease;
-}
-
-#signUpBtn:hover{
-  background-color: #00bfa5;
-  color: #fff;
-}
-
-
-/* 중복확인버튼 */
+/* ---------------- 중복확인 버튼 영역 ---------------- */
 .idInput {
   position: relative;
-  width: 350px;
+  width: 100%;
+  max-width: none;
 }
+
 .idInput input {
   width: 100%;
-  padding-right: 100px; 
+  padding-right: 100px;
 }
 
 .idInput button {
   position: absolute;
   right: 0;
   top: 0;
-  height: 50px;
+  height: 48px;
   width: 90px;
   background: #fff;
   border: #00bfa5 solid 2px !important;
-  border-radius: 5px;
+  border-radius: 6px;
   color: #00bfa5;
-  border: none;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: 0.25s;
 }
 
 .idInput button:hover {
   background: #00bfa5;
-  border: none;
   color: #fff;
 }
 
+/* ---------------- 회원가입 버튼 ---------------- */
+#signUpBtn {
+  width: 100%;
+  max-width: none;
+  height: 52px;
+  background-color: #fff;
+  border: #00bfa5 solid 2px;
+  border-radius: 6px;
+  color: #00bfa5;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 15px;
+  transition: 0.25s;
+}
 
-/* 약관 영역 */
+#signUpBtn:hover {
+  background-color: #00bfa5;
+  color: #fff;
+}
+
+/* ---------------- 약관 모달 ---------------- */
+
 .modal {
   display: none;
   position: fixed;
@@ -161,10 +160,10 @@ a{
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow-y: auto;
   background-color: rgba(0, 0, 0, 0.6);
-  box-sizing: border-box;
 }
+
 /* 모달 본문 */
 .modal-content {
   background-color: #fff;
@@ -176,9 +175,9 @@ a{
   max-height: 85vh;
   overflow-y: auto;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  box-sizing: border-box;
   line-height: 1.7;
 }
+
 /* 닫기 버튼 */
 .close {
   color: #aaa;
@@ -192,253 +191,279 @@ a{
 }
 
 /* 모달 내부 텍스트 스타일 */
-/* 제목부분 */
 .modal-content h4 {
-  display: block;
-  clear: both;
   margin-top: 35px;
   margin-bottom: 12px;
   font-size: 16px;
   font-weight: 600;
-  line-height: 1.5;
   color: #333;
 }
-/* 문단 */
+
 .modal-content p {
   line-height: 1.8;
   margin: 8px 0 20px;
   font-size: 14px;
-  word-break: keep-all;
 }
-/* 목록 */ 
+
 .modal-content ol {
   margin: 10px 0 20px 25px;
   padding: 0;
-  line-height: 1.8;
 }
 
 .modal-content li {
   font-size: 14px;
-  margin-bottom: 10px;   
+  margin-bottom: 10px;
 }
 
-/* -------------------회원가입 -------------------- */
+/* -------------------회원가입 끝 -------------------- */
 
 
 
 /* -------------------계정찾기(비밀번호 재설정 포함) -------------------- */
-/* 계정 찾기 전체 레이아웃 */
+/* ------------------- 계정 찾기 / 비밀번호 재설정 공통 ------------------- */
+
+/* 전체 배경 */
 .tr_findaccount, 
-.tr_resetPw{
+.tr_resetPw {
   margin: 0;
   padding: 0;
   min-height: 100vh;
   font-family: 'Noto Sans KR', sans-serif;
+  background-color: #f5f7fa;
 }
 
+/* 중앙 배치 */
 .tr_findMainContainer,
-.tr_resetMainContainer{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background-color: #f5f7fa;
-	min-height: 100vh;
-}
-
-.tr_findContainer,
-.tr_resetContainer{
-  border: solid rgba(255, 255, 255, 0.2) 1px;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px); /* 배경 블러 */
-  -webkit-backdrop-filter: blur(10px); /* Safari 호환 */
-  width: 500px;
+.tr_resetMainContainer {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
+  align-items: flex-start;
+  padding: 60px 0;
+  min-height: 100vh;
 }
 
-/* 계정 찾기 form 스타일 */
+/* 메인 카드 */
+.tr_findContainer,
+.tr_resetContainer {
+  width: 500px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 40px 40px 50px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* 제목 */
+.tr_findContainer h2,
+.tr_resetContainer h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 25px 0;
+  text-align: left;
+}
+
+/* form 전체 레이아웃 */
 .tr_findContainer form,
 .tr_resetContainer form {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;   /* 왼쪽 정렬 */
   width: 100%;
 }
-/* 계정 찾기 항목 스타일 */
+
+/* input 감싸는 그룹 */
 .tr_findId,
 .tr_findPw,
 .tr_resetPwInput,
-.tr_resetPwVerInput{
+.tr_resetPwVerInput {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-bottom: 1rem;
   width: 100%;
+  margin-bottom: 16px;
 }
-/* 계정 찾기 input 스타일 */
+
+/* input 스타일 */
 .email_findId,
 .id_findPw,
-.email_findPw,
-.trInput{
+.email_findPw {
   border: solid #ccc 1px;
-  width: 350px;
-  height: 50px;
-  padding: 0 10px;
+  width: 100%;          /* 전체 폭 */
+  height: 48px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-size: 15px;
   box-sizing: border-box;
-  border-radius: 5px;
 }
-.id_findPw{
+
+.id_findPw {
   margin-bottom: 1rem;
 }
 
-.tr_resetContainer p{
-  height: 16px;  /* 입력폼 움직임 방지 */
-  line-height: 16px;
+/* 비밀번호 재설정 유효성 메시지 */
+.tr_resetContainer p {
+  height: 16px;
   font-size: 12px;
-  padding-left: 10px;
-  margin-top: 0;
+  color: #999;
+  margin: 0 0 10px 2px;
 }
 
+/* 버튼 공통 */
 .tr_findContainer button,
-.tr_resetContainer button{
-  width: 25%;
-  height: 50px;
+.tr_resetContainer button {
+  width: 100%;            /* 전체 폭 */
+  height: 52px;
   background-color: #fff;
-  border: #00bfa5 solid 2px;
-  border-radius: 5px;
-  box-sizing: border-box;
+  border: 2px solid #00bfa5;
+  border-radius: 6px;
   color: #00bfa5;
-  margin-bottom: 2em;
-  margin-left: 220px;
+  font-size: 16px;
   cursor: pointer;
-  transition: all 0.25s ease ;
+  margin-top: 10px;
+  transition: all 0.25s ease;
 }
-#tr_resetPwBtn{
-  width: 350px !important;
-  margin-left: 0%;
+
+/* 비밀번호 재설정 버튼 */
+#tr_resetPwBtn {
+  width: 100% !important;
 }
+
+/* hover */
 .tr_findContainer button:hover,
-.tr_resetContainer button:hover{
+.tr_resetContainer button:hover {
   background-color: #00bfa5;
   color: #fff;
 }
-/* -------------------계정찾기 -------------------- */
+
+/* ------------------- 계정찾기 끝 ------------------- */
 
 
 
 /* ------------------ 정보 수정 -------------------- */
-/* 정보 수정 전체 레이아웃 */
- .tr_updateMem{
+
+/* 전체 레이아웃 */
+.tr_updateMem {
   margin: 0;
   padding: 0;
   min-height: 100vh;
   font-family: 'Noto Sans KR', sans-serif;
+  background-color: #f5f7fa;
 }
 
-.tr_updateMainContainer{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background-color: #f5f7fa;
-	min-height: 100vh;
-}
-
-.tr_updateContainer{
-  border: solid rgba(255, 255, 255, 0.2) 1px;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px); /* 배경 블러 */
-  -webkit-backdrop-filter: blur(10px); /* Safari 호환 */
-  width: 500px;
+/* 페이지 중앙 배치 */
+.tr_updateMainContainer {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 0;
+  min-height: 100vh;
+}
+
+/* 카드 컨테이너 */
+.tr_updateContainer {
+  width: 500px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 40px 40px 50px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* 제목 (왼쪽 정렬) */
+.tr_updateContainer h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 25px 0;
+  text-align: left;
+}
+
+/* 회원탈퇴 버튼 - 오른쪽 상단 */
+.tr_updateContainer > a {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+
+  width: 80px;
+  height: 30px;
+  color: #ff4d4d;
+  text-align: center;
+  display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.5);
+
+  border: #ff4d4d solid 2px;
   border-radius: 5px;
+  background-color: #fff;
+
+  transition: all 0.25s ease;
+  font-size: 14px;
 }
 
-/* 정보 수정 form 스타일 */
+.tr_updateContainer a:hover {
+  background-color: #ff4d4d;
+  color: #fff;
+}
+
+/* form 전체 */
 .tr_updateContainer form {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; /* 왼쪽 정렬 */
   width: 100%;
 }
-/* 정보 수정 항목 스타일 */
+
+/* 항목 그룹 */
 .tr_pwUpdate,
 .tr_pwUpdateVer,
 .tr_emailUpdate,
-.tr_phoneUpdate{
+.tr_phoneUpdate {
   display: flex;
   flex-direction: column;
-  align-items: center;
   margin-bottom: 1rem;
   width: 100%;
 }
-/* 정보 수정 input 스타일 */
+
+/* input 스타일 */
 .tr_newPw,
 .tr_newPwVer,
 .tr_newEmail,
-.tr_newPhone{
+.tr_newPhone {
   border: solid #ccc 1px;
-  width: 350px;
-  height: 50px;
-  padding: 0 10px;
-  box-sizing: border-box;
+  width: 100%;       /* 가득 채우기 */
+  height: 48px;
+  padding: 0 12px;
   border-radius: 5px;
-  margin-bottom: 1em;
+  box-sizing: border-box;
+  margin-bottom: 6px;
+  font-size: 15px;
 }
 
-.tr_updateContainer p{
-  height: 16px;  /* 입력폼 움직임 방지 */
-  line-height: 16px;
+/* 유효성 p */
+.tr_updateContainer p {
+  height: 16px;
   font-size: 12px;
-  padding-left: 10px;
-  margin-top: 0;
+  color: #999;
+  margin: 0 0 10px 2px;
 }
 
-/*정보 수정 버튼*/
-#updateBtn{
-  width: 350px;
-  height: 50px;
+/* 정보 수정 버튼 */
+#updateBtn {
+  width: 100%;
+  height: 52px;
   background-color: #fff;
   border: #00bfa5 solid 2px;
   border-radius: 5px;
-  box-sizing: border-box;
   color: #00bfa5;
-  margin-bottom: 2em;
   cursor: pointer;
-  margin-top: 1em;
+  font-size: 15px;
+  margin-top: 10px;
   transition: all 0.25s ease;
 }
 
-#updateBtn:hover{
+#updateBtn:hover {
   background-color: #00bfa5;
   color: #fff;
 }
 
-/* 회원 탈퇴 */
-.tr_updateContainer > a{
-	width: 80px;
-	height: 30px;
-	color: #ff4d4d;
-	text-align: center;
-	border: #ff4d4d solid 2px;
-  border-radius: 5px;
-	margin-left: 270px;
-	margin-bottom: 10px;
-	background-color: #fff;
-	display: inline-block;
-	transition: all 0.25s ease;
-	box-sizing: border-box;
-}
-
-.tr_updateContainer  a:hover{
-  background-color: #ff4d4d;
-  color: #fff;
-}
-/* ------------------ 정보 수정 -------------------- */
+/* ------------------ 정보 수정 끝 -------------------- */
