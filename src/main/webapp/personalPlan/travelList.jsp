@@ -10,12 +10,10 @@
     Connection conn = null;
     TravelDAO dao = new TravelDAO();
     List<TravelInfoDTO> list = null;
-    //로그인된 아이디 가져오기
-    String trMemId=(String) session.getAttribute("sessionId");
     
     try {
         conn = DBConnection.getConnection();
-        list = dao.selectTravelList(conn, trMemId);
+        list = dao.selectTravelList(conn);
     } catch (Exception e) {
         e.printStackTrace();
     } finally {

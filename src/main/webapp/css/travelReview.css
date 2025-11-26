@@ -1,0 +1,154 @@
+@charset "UTF-8";
+
+/* 전체 레이아웃 (기존과 동일) */
+body {
+    margin: 0; padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f5f7fa;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.header {
+    background: white; padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    z-index: 100; flex-shrink: 0;
+}
+.header h2 { margin: 0; font-size: 20px; color: #333; cursor: pointer; }
+
+.container {
+    display: flex; flex: 1;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+}
+
+/* 왼쪽 사이드바 (장소 목록) */
+.left-sidebar {
+    width: 350px;
+    background: white;
+    border-right: 1px solid #ddd;
+    display: flex; flex-direction: column;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.02);
+    z-index: 10;
+}
+
+.sidebar-title {
+    font-size: 18px; font-weight: bold; color: #1e293b;
+    margin-bottom: 15px; padding-bottom: 10px;
+    border-bottom: 2px solid #333;
+}
+
+/* 장소 카드 스타일 */
+.place-item {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center;
+}
+.place-item:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+.place-item.active { border: 2px solid #3b82f6; background-color: #eff6ff; }
+
+.place-icon { font-size: 24px; margin-right: 15px; }
+.place-info { flex: 1; }
+.place-name { font-weight: bold; font-size: 15px; color: #333; }
+.place-day { font-size: 12px; color: #888; margin-top: 2px; }
+.review-status { font-size: 12px; color: #10b981; font-weight: bold; display: none; }
+.place-item.reviewed .review-status { display: block; } /* 리뷰 완료 시 표시 */
+
+/* 오른쪽 메인 (리뷰 작성 폼)*/
+.right-main {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    display: flex; flex-direction: column; align-items: center;
+}
+
+.review-form-card {
+    background: white;
+    width: 100%; max-width: 800px;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+}
+
+.form-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+.form-place-name { font-size: 24px; font-weight: bold; margin: 0; color: #333; }
+.form-place-date { color: #888; margin-top: 5px; }
+
+/* 별점 스타일 */
+.star-rating {
+    display: flex; justify-content: center; gap: 10px;
+    margin-bottom: 30px;
+}
+.star {
+    font-size: 40px; color: #ddd; cursor: pointer; transition: color 0.2s;
+}
+.star.filled { color: #f59e0b; /* 금색 */ }
+
+/* 입력 폼 공통 */
+.input-label { display: block; font-weight: bold; margin-bottom: 10px; color: #333; }
+.review-textarea {
+    width: 100%; height: 150px;
+    padding: 15px;
+    border: 1px solid #ddd; border-radius: 8px;
+    font-size: 15px; resize: none;
+    box-sizing: border-box;
+}
+.review-textarea:focus { outline: none; border-color: #3b82f6; }
+
+/* 사진 업로드 & 미리보기 */
+.file-upload-wrapper { margin-top: 20px; margin-bottom: 30px; }
+.file-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid #ddd; border-radius: 6px;
+    background: #f8f9fa; cursor: pointer; font-size: 14px;
+}
+.file-btn:hover { background: #e9ecef; }
+.image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+.preview-box {
+    position: relative; width: 100%; padding-top: 100%; /* 1:1 비율 */
+    border-radius: 8px; overflow: hidden; border: 1px solid #eee;
+}
+.preview-box img {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%; object-fit: cover;
+}
+.btn-remove-img {
+    position: absolute; top: 5px; right: 5px;
+    background: rgba(0,0,0,0.5); color: white;
+    border: none; border-radius: 50%;
+    width: 20px; height: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 12px;
+}
+
+/* 저장 버튼 */
+.btn-save-review {
+    width: 100%; padding: 15px;
+    background: #333; color: white;
+    border: none; border-radius: 8px;
+    font-size: 16px; font-weight: bold; cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-save-review:hover { background: #000; }
+
+/* 안내 메시지 (초기 화면) */
+.empty-state {
+    text-align: center; color: #888; margin-top: 100px;
+}
+.empty-icon { font-size: 60px; margin-bottom: 20px; display: block; opacity: 0.3; }

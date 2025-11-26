@@ -17,10 +17,9 @@ public class TravelDAO {
 	public int insertTravelInfo(Connection conn, TravelInfoDTO info) {
 		int result = 0;
 		PreparedStatement pstmt = null;
-		
-		//로그인한 계정의 아이디로 해당 여행계획 표시하기 위해 TR_MEM_ID추가
-		String sql = "INSERT INTO TRAVEL_INFO (TRAVEL_NO, TITLE, COUNTRY, START_DATE, END_DATE, COMPANION, TR_MEM_ID) "
-				+ "VALUES (SEQ_TRAVEL_INFO_NO.NEXTVAL, ?, ?, ?, ?, ?, ?)";
+
+		String sql = "INSERT INTO TRAVEL_INFO (TRAVEL_NO, TITLE, COUNTRY, START_DATE, END_DATE, COMPANION) "
+				+ "VALUES (SEQ_TRAVEL_INFO_NO.NEXTVAL, ?, ?, ?, ?, ?)";
 
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -30,8 +29,7 @@ public class TravelDAO {
 			pstmt.setDate(3, info.getStartDate());
 			pstmt.setDate(4, info.getEndDate());
 			pstmt.setString(5, info.getCompanion());
-			pstmt.setString(6, info.getTrMemId());
-			
+
 			result = pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -43,17 +41,15 @@ public class TravelDAO {
 	}
 
 	// 여행 정보 목록 보기 (SELECT)
-		public List<TravelInfoDTO> selectTravelList(Connection conn, String trMemId) {
+		public List<TravelInfoDTO> selectTravelList(Connection conn) {
 			List<TravelInfoDTO> list = new ArrayList<>();
 			PreparedStatement pstmt = null;
 			ResultSet rset = null;
-			
-			//로그인한 계정의 아이디로 해당 여행계획 표시하기 위해 TR_MEM_ID추가
-			String sql = "SELECT * FROM TRAVEL_INFO WHERE TR_MEM_ID=? ORDER BY START_DATE ASC";
+
+			String sql = "SELECT * FROM TRAVEL_INFO ORDER BY START_DATE ASC";
 
 			try {
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, trMemId);
 				rset = pstmt.executeQuery();
 
 				while (rset.next()) {
@@ -66,7 +62,6 @@ public class TravelDAO {
 					info.setEndDate(rset.getDate("END_DATE"));
 					info.setTotalBudget(rset.getInt("TOTAL_BUDGET"));
 					info.setCompanion(rset.getString("COMPANION")); 
-					info.setTrMemId(rset.getString("TR_MEM_ID"));
 
 					list.add(info);
 				}

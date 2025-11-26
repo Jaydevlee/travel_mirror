@@ -123,6 +123,8 @@ body {
 .btn-budget { background-color: #f59e0b; color: white; }
 .btn-check { background-color: #10b981; color: white; }
 .btn-total { background-color: #333; color: white; }
+.btn-review { background-color: #8e44ad; color: white; margin-top: 5px; }
+.btn-review:hover { background-color: #732d91; }
 
 /* 오른쪽 메인 콘텐츠 (Right Main) */
 .right-main {

@@ -19,8 +19,6 @@ if (paramNo == null || paramNo.equals("")) {
 
 int travelNo = Integer.parseInt(paramNo);
 Connection conn = null;
-//로그인된 아이디 가져오기
-String trMemId=(String) session.getAttribute("sessionId");
 TravelDAO dao = new TravelDAO();
 TravelInfoDTO info = null;
 List<TravelPlanDTO> planList = null;
@@ -28,7 +26,7 @@ List<TravelPlanDTO> planList = null;
 // DB 조회
 try {
 	conn = DBConnection.getConnection();
-	List<TravelInfoDTO> allList = dao.selectTravelList(conn, trMemId);
+	List<TravelInfoDTO> allList = dao.selectTravelList(conn);
 	for (TravelInfoDTO dto : allList) {
 		if (dto.getTravelNo() == travelNo) {
 	info = dto;
@@ -157,6 +155,10 @@ if (info == null) {
 				onclick="openChecklistModal()">✅ 체크리스트</button>
 			<button class="sidebar-footer-btn btn-total"
 				onclick="openAllPlanModal()">🗓 전체 일정 보기</button>
+
+			<button class="sidebar-footer-btn btn-review"
+				onclick="location.href='../travelReview/travelReview.jsp?travelNo=<%=info.getTravelNo()%>'">
+				📝 여행 후기 작성</button>
 		</aside>
 
 		<main class="right-main">

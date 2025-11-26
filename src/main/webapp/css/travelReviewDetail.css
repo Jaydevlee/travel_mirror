@@ -1,0 +1,126 @@
+@charset "UTF-8";
+
+html, body {
+    height: auto !important;     
+    overflow-y: auto !important;   
+    overflow-x: hidden;            
+}
+
+/* 컨테이너 높이 제한도 해제 */
+.container {
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;    
+}
+
+.detail-container {
+    max-width: 800px;
+    margin: 40px auto 100px auto; 
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* 헤더 영역 (장소, 별점, 작성자) */
+.detail-header {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.detail-dest {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.detail-rating {
+    color: #f59e0b;
+    font-size: 20px;
+    margin: 20px 0;
+}
+
+.detail-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+/* 본문 내용 */
+.detail-content {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 40px;
+    min-height: 100px;
+}
+
+/* 사진/동영상 영역 */
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.media-item {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.media-item img,
+.media-item video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* 버튼 그룹 */
+.btn-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 30px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.btn-basic {
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background: white;
+}
+
+.btn-danger {
+    color: white;
+    background: #ff6b6b;
+    border: none;
+}
+
+.btn-primary {
+    color: white;
+    background: #333;
+    border: none;
+}
+
+/* 위시리스트(저장) 버튼 */
+.btn-wish {
+    color: #e84393;
+    border-color: #e84393;
+}
+
+.btn-wish:hover {
+    background: #fff0f6;
+}
+
+.btn-wish.active {
+    background: #e84393;
+    color: white;
+}

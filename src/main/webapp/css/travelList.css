@@ -233,3 +233,38 @@ body {
 .btn-submit:hover {
     background-color: #000;
 }
+
+/* 사진을 감싸는 틀 (Container) */
+.card-image {
+    width: 100%;        /* 카드의 가로 너비에 꽉 차게 */
+    height: 180px;      
+    overflow: hidden;   /* 지정된 높이를 넘치는 이미지는 잘라냄 */
+    position: relative;
+    background-color: #f0f0f0; /* 이미지가 없을 때 보일 배경색 */
+}
+
+/* 실제 이미지 태그 (img) */
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    /* 이미지의 중심을 가운데로 맞춤 */
+    object-position: center; 
+    transition: transform 0.3s; /* 마우스 올렸을 때 부드러운 효과용 */
+}
+
+/* (선택사항) 마우스 올렸을 때 살짝 확대 효과 */
+.review-card:hover .card-image img {
+    transform: scale(1.05);
+}
+
+/* 이미지가 없을 때 대체 화면 */
+.no-image {
+    width: 100%;
+    height: 100%; /* 틀의 높이(180px)를 따라감 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+}

@@ -342,7 +342,7 @@ function showInputForm(titlePrefix, day, category, icon, labels, existingData = 
 
     // 날짜 시간 초기값 설정
     let dateStr = getDateByDay(day);
-    let startVal = dateStr + " 10:00";
+    let startVal = dateStr + " 00:00";
     let endVal = dateStr + " 12:00";
 
     if (existingData) {
@@ -417,21 +417,39 @@ function showInputForm(titlePrefix, day, category, icon, labels, existingData = 
     `;
 
     // 달력(Flatpickr) 설정
-    const endPicker = flatpickr("#input-end-time", {
-        enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: false, locale: "ko",
-        minDate: travelStartDate, maxDate: travelEndDate
-    });
-    flatpickr("#input-start-time", {
-        enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: false, locale: "ko",
-        minDate: travelStartDate, maxDate: travelEndDate,
-        onChange: function(selectedDates, dateStr, instance) {
-            if (selectedDates.length > 0) {
-                endPicker.set('minDate', dateStr);
-                endPicker.jumpToDate(selectedDates[0]);
-            }
-        }
-    });
-}
+	const minDateObj = new Date(travelStartDate);
+	    minDateObj.setHours(0, 0, 0, 0); 
+
+	    // 종료일의 시간을 23시 59분으로 설정
+	    const maxDateObj = new Date(travelEndDate);
+	    maxDateObj.setHours(23, 59, 59, 999);
+
+	    // 달력(Flatpickr) 설정 적용
+	    const endPicker = flatpickr("#input-end-time", {
+	        enableTime: true, 
+	        dateFormat: "Y-m-d H:i", 
+	        time_24hr: false, 
+	        locale: "ko",
+	        minDate: minDateObj, // 초기화된 날짜 사용
+	        maxDate: maxDateObj
+	    });
+
+	    flatpickr("#input-start-time", {
+	        enableTime: true, 
+	        dateFormat: "Y-m-d H:i", 
+	        time_24hr: false, 
+	        locale: "ko",
+	        minDate: minDateObj, // 초기화된 날짜 사용
+	        maxDate: maxDateObj,
+	        onChange: function(selectedDates, dateStr, instance) {
+	            if (selectedDates.length > 0) {
+
+	                endPicker.set('minDate', dateStr);
+	                
+	            }
+	        }
+	    });
+	}
 
 // DB 저장 (AJAX 호출)
 function saveToDB(day) {

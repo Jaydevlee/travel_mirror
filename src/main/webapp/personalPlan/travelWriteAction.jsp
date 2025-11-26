@@ -24,15 +24,13 @@
 
         Date start = Date.valueOf(startDateStr);
         Date end = Date.valueOf(endDateStr);
-				String trMemId = (String) session.getAttribute("sessionId");
-        
+
         // DTO에 값 채우기 
         dto.setTitle(title);
         dto.setCountry(country);
         dto.setCompanion(companion);
         dto.setStartDate(start);
         dto.setEndDate(end);
-        dto.setTrMemId(trMemId);
         
         // DAO를 통해 DB에 저장 (INSERT)
         result = dao.insertTravelInfo(conn, dto);

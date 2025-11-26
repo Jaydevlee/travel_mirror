@@ -1,0 +1,16 @@
+-- 리뷰 미디어 테이블 (사진 + 동영상 통합)
+CREATE TABLE TRAVEL_MEDIA (
+    MEDIA_NO      NUMBER          PRIMARY KEY,   -- 미디어 고유 번호
+    REVIEW_NO     NUMBER          NOT NULL,      -- 어떤 후기의 파일인지 (FK)
+    ORIGINAL_NAME VARCHAR2(255),                 -- 원본 파일명
+    SAVED_NAME    VARCHAR2(255),                 -- 서버 저장 파일명
+    FILE_TYPE     VARCHAR2(10)    DEFAULT 'IMAGE', -- ★ 추가됨: 'IMAGE' 또는 'VIDEO'
+    
+    CONSTRAINT FK_MEDIA_REVIEW FOREIGN KEY (REVIEW_NO) REFERENCES TRAVEL_REVIEW(REVIEW_NO) ON DELETE CASCADE
+);
+
+-- 시퀀스 생성
+CREATE SEQUENCE SEQ_MEDIA_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+-- 저장
+COMMIT;
