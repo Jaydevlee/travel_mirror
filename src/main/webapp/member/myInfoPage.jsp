@@ -22,7 +22,7 @@
 %>
     <script type="text/javascript">
         alert("로그인이 필요합니다.");
-        location.href="../login/login.jsp"; 
+        location.href="../firstPage.jsp"; 
     </script>
 <% 
         return;
@@ -78,7 +78,7 @@
 					        alt="프로필 사진" class="tr_profilePic" id="tr_profilePreview">
 					</c:otherwise>
 					</c:choose>
-			      <button type="button" id="changePicBtn">사진 변경</button>
+			      <button type="button" id="changePicBtn"></button>
 			      <form id="uploadProfileForm" action="process_uploadPic.jsp" method="post" enctype="multipart/form-data">
 			      	<input type="file" id="profilePicFile" name="profilePicFile" accept="image/*" style="display:none;">
 			      	 <input type="hidden" name="userId" value="<%=sessionId%>">

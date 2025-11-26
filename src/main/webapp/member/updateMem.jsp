@@ -13,6 +13,8 @@
     <script src='../js/jquery-3.7.1.min.js'></script>
 </head>
 <body class="tr_updateMem">
+	<jsp:include page="/header.jsp" />
+	<div class="tr_updateMainContainer">
   <div class="tr_updateContainer">
   <%
 	request.setCharacterEncoding("UTF-8");
@@ -25,7 +27,7 @@
 %>
 	<script>
     alert("회원 정보를 찾을 수 없습니다.");
-    location.href="login.jsp";
+    location.href="../firstPage.jsp";
 	</script>
  <% 
  	return; 
@@ -54,6 +56,7 @@
       <button type="submit" id="updateBtn"> 회원 정보 수정</button>
     </form>
  
+  </div>
   </div>
   <script src="../js/updateMem.js"></script>
 </body>

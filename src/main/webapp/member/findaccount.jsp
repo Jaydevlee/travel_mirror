@@ -11,6 +11,7 @@
 </head>
 <body class="tr_findaccount">
 <jsp:include page="/header.jsp" />
+	<div class="tr_findMainContainer">
   <div class="tr_findContainer">
     <h2>혹시 아이디/비밀번호를 잊으셨나요?</h2>
     <!-- 아이디 찾기 -->
@@ -31,6 +32,7 @@
       </div>
       <button type="submit" id="tr_findPwBtn">비밀번호 찾기</button>
     </form>
+  </div>
   </div>
   <script src="../js/findaccount.js"></script>
 </body>
