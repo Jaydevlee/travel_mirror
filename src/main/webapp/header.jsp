@@ -25,18 +25,26 @@ pageEncoding="UTF-8"%>
 <!-- 경로는 절대경로로 -->
 <aside id="side_menu">
     <ul id="link_menu">
-    	<li><%=rs.getString("tr_mem_name")%>님</li>
-        <li><a href="../personalPlan/travelList.jsp">여행계획 세우기</a></li>
-        <li><a href="../travelReview/reviewList.jsp">여행리뷰 보기</a></li>
+    	<c:choose>
+    		<c:when test="${empty sessionId}">
+		        <li><a href="../personalPlan/travelList.jsp">여행계획 세우기</a></li>
+		        <li><a href="../travelReview/reviewList.jsp">여행리뷰 보기</a></li>
+		    </c:when>
+		    <c:otherwise>
+		    	<li><%=rs.getString("tr_mem_name")%>님</li>
+		        <li><a href="../personalPlan/travelList.jsp">여행계획 세우기</a></li>
+		        <li><a href="../travelReview/reviewList.jsp">여행리뷰 보기</a></li>
+		    </c:otherwise>
+		</c:choose>
     </ul>
     <ul id="btn_menu">
     	<c:choose>
     		<c:when test="${empty sessionId}">
 		    	<li><a href="firstPage.jsp">로그인</a></li>
-		    	<li><a href="/member/signup.jsp">회원가입</a></li>    		
+		    	<li><a href="member/signup.jsp">회원가입</a></li>    		
     		</c:when>
     		<c:otherwise>
-    			<li><a href="updateMem.jsp">회원수정</a></li>
+    			<li><a href="member/updateMem.jsp">회원수정</a></li>
 		    	<li><a href="../logout/processlogout.jsp">로그아웃</a></li>
     		</c:otherwise>
     	</c:choose>
