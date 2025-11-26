@@ -6,6 +6,7 @@
 <%@ page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy" %>
 <%@ page import="com.personalPlan.dao.TravelDAO" %>
 <%@ page import="com.personalPlan.dto.TravelInfoDTO" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="dbconn.jsp" %>
 
 <html lang="ko">
@@ -28,13 +29,11 @@
 		String sessionId=(String) session.getAttribute("sessionId");
 		TravelSelectMemDAO memDao = new TravelSelectMemDAO();
 		TravelMemberDTO dto = memDao.selectMem(conn, sessionId);
-		String name = dto.getMemName();
-		String email = dto.getMemEmail();
-		String phone = dto.getMemPhone();
+		request.setAttribute("mem", dto);
 		String pic = dto.getMemFileName();
 		
 		TravelDAO dao = new TravelDAO();
-		List<TravelInfoDTO> myTravelList = dao.selectTravelList(conn, sessionId);
+		List<TravelInfoDTO> myTravelList = dao.selectTravelList(conn);
    if(dto.getMemId() == null){
 %>
 	<script type="text/javascript">
@@ -47,7 +46,16 @@
 	<div class="leftProfileSection">
   <h2>나의 계정</h2>
     <div class="tr_profileSection">
-      <img src="<%= (pic != null ? "../../travel/img/profile/" + pic : "../../travel/img/defaultprofile.jpg") %>" alt="프로필 사진" class="tr_profilePic" id="tr_profilePreview">
+		 <c:choose>
+		<c:when test="${empty mem.memFileName}">
+		   <img src="../../travel/img/defaultprofile.jpg" 
+		        alt="프로필 사진" class="tr_profilePic" id="tr_profilePreview">
+		</c:when>
+		<c:otherwise>
+		   <img src="../../travel/img/profile/${mem.memFileName}" 
+		        alt="프로필 사진" class="tr_profilePic" id="tr_profilePreview">
+		</c:otherwise>
+		</c:choose>
       <button type="button" id="changePicBtn">사진 변경</button>
       <form id="uploadProfileForm" action="process_uploadPic.jsp" method="post" enctype="multipart/form-data">
       	<input type="file" id="profilePicFile" name="profilePicFile" accept="image/*" style="display:none;">
@@ -56,7 +64,7 @@
     </div>
     <div class="tr_infoSection">
       <div class="tr_mem_id">
-        <p><strong><%= name%>님 반가워요!</strong></p>
+        <p><strong>"${mem.memName}"님 반가워요!</strong></p>
     </div>
  	</div>
  	</div>
@@ -69,9 +77,9 @@
 				<a href="updateMem.jsp"><h3>내 프로필&raquo;</h3></a>
 			</div>
 			<ul class="profileBox">
-				<li>아이디: <%=sessionId %></li>
-				<li>이메일: <%=email %></li>
-				<li>전화번호: <%=phone %></li>
+				<li>아이디: "${mem.memId}"</li>
+				<li>이메일: "${mem.memEmail}"</li>
+				<li>전화번호: "${mem.memPhone}"</li>
 			</ul>
 		</div>
 <div class="myTravel">
