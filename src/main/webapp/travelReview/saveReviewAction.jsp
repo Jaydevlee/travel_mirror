@@ -8,11 +8,14 @@
 
 <%
     // 로그인 체크 (세션에서 ID 가져오기 - TR_MEMBER 테이블 기준)
-    String memberId = (String) session.getAttribute("id");
-    
-    // 테스트용 (로그인 안 되어 있을 때 임시)
-    if (memberId == null) memberId = "testUser"; 
-
+    String memberId = (String) session.getAttribute("sessionId");
+System.out.println("현재 세션 ID 값: " + memberId);
+	
+if (memberId == null) {
+    out.print("로그인이 필요한 서비스입니다."); 
+    return;
+}
+	
     // 파일 저장 경로 설정
     String savePath = request.getServletContext().getRealPath("/uploads/review");
     File dir = new File(savePath);

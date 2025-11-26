@@ -20,7 +20,7 @@
 
         // 삭제할 파일명 조회 (서버에서 파일도 지우기 위해)
         List<String> fileNames = new ArrayList<>();
-        String sqlSelectFiles = "SELECT SAVED_NAME FROM REVIEW_MEDIA WHERE REVIEW_NO = ?";
+        String sqlSelectFiles = "SELECT SAVED_NAME FROM TRAVEL_MEDIA WHERE REVIEW_NO = ?";
         pstmt = conn.prepareStatement(sqlSelectFiles);
         pstmt.setInt(1, reviewNo);
         rs = pstmt.executeQuery();

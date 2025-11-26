@@ -38,7 +38,7 @@
         mediaList = dao.selectMediaList(conn, reviewNo);
 
         // 위시리스트 저장 여부 확인
-        String myId = (String) session.getAttribute("id");
+        String myId = (String) session.getAttribute("sessionId");
         // if(myId == null) myId = "testUser"; // 테스트용
         
         if (myId != null) {
@@ -56,7 +56,7 @@
     if (content != null) content = content.replace("\n", "<br>");
     
     // 내 글인지 확인 (수정/삭제 버튼 표시용)
-    String myId = (String) session.getAttribute("id");
+    String myId = (String) session.getAttribute("sessionId");
     // if(myId == null) myId = "testUser"; // 테스트용
     
     boolean isMyReview = (myId != null && myId.equals(review.getMemberId()));
