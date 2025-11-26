@@ -6,10 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>비밀번호 재설정</title>
   <script src="../js/jquery-3.7.1.min.js"></script>
-  <link rel="stylesheet" href="css/accountStyle.css">
+  <link rel="stylesheet" href="../css/accountStyle.css">
 </head>
 <body class="tr_resetPw">
 <jsp:include page="/header.jsp" />
+<div class="tr_resetMainContainer">
   <div class="tr_resetContainer">
     <h2>비밀번호 재설정</h2>
     <form action="process_resetPw.jsp" id="tr_resetForm">
@@ -24,6 +25,7 @@
       </div>
       <button type="submit" id="tr_resetPwBtn">비밀번호 재설정</button>
     </form>
+  </div>
   </div>
   <script src="../js/findaccount.js"></script>
 </body>

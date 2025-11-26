@@ -4,11 +4,51 @@
 <%@ page import="com.member.dao.*" %>
 <%@ page import="com.member.dto.*" %>
 <%@ page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy" %>
+<%@ page import="java.util.List" %>
 <%@ page import="com.personalPlan.dao.TravelDAO" %>
 <%@ page import="com.personalPlan.dto.TravelInfoDTO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="admin.Hyphen" %>
 <%@ include file="dbconn.jsp" %>
+
+<% 
+    request.setCharacterEncoding("utf-8");
+    
+    // 1. 세션에서 아이디 가져오기
+    String sessionId = (String) session.getAttribute("sessionId");
+
+    // 2. 로그인 안 했으면 튕겨내기
+    if(sessionId == null){
+%>
+    <script type="text/javascript">
+        alert("로그인이 필요합니다.");
+        location.href="../login/login.jsp"; 
+    </script>
+<% 
+        return;
+    }
+
+    // 3. 회원 정보 가져오기
+    TravelSelectMemDAO memDao = new TravelSelectMemDAO();
+    TravelMemberDTO dto = memDao.selectMem(conn, sessionId);
+    
+    // 회원 정보가 없으면 처리
+    if(dto.getMemId() == null){
+%>
+    <script type="text/javascript">
+        alert("회원 정보를 찾을 수 없습니다.");
+        location.href="../firstPage.jsp";
+    </script>
+<% 
+        return;
+    }
+    
+    request.setAttribute("mem", dto);
+    
+    // 4. 내 여행 리스트 가져오기
+    TravelDAO dao = new TravelDAO();
+    List<TravelInfoDTO> myTravelList = dao.selectMyTravelList(conn, sessionId); 
+%>
 
 <html lang="ko">
 <head>
@@ -22,84 +62,69 @@
 <body class="tr_myInfoPage">
 	<jsp:include page="/header.jsp" />
 	<main>
-  <div class="tr_myInfoContainer">
-
-  <!-- DB에서 회원 정보 가져오기 -->
-<% 
-		request.setCharacterEncoding("utf-8");
-		String sessionId=(String) session.getAttribute("sessionId");
-		TravelSelectMemDAO memDao = new TravelSelectMemDAO();
-		TravelMemberDTO dto = memDao.selectMem(conn, sessionId);
-		request.setAttribute("mem", dto);
-		
-		TravelDAO dao = new TravelDAO();
-		List<TravelInfoDTO> myTravelList = dao.selectTravelList(conn);
-   if(dto.getMemId() == null){
-%>
-	<script type="text/javascript">
-    alert("회원 정보를 찾을 수 없습니다.");
-    location.href="../firstPage.jsp";
-	</script>
- <% return; } 
- %>
-	<div class="leftSection">
-	<div class="leftProfileSection">
-  <h2>나의 계정</h2>
-    <div class="tr_profileSection">
-		 <c:choose>
-		<c:when test="${empty mem.memFileName}">
-		   <img src="../../travel/img/defaultprofile.jpg" 
-		        alt="프로필 사진" class="tr_profilePic" id="tr_profilePreview">
-		</c:when>
-		<c:otherwise>
-		   <img src="../../travel/img/profile/${mem.memFileName}" 
-		        alt="프로필 사진" class="tr_profilePic" id="tr_profilePreview">
-		</c:otherwise>
-		</c:choose>
-      <button type="button" id="changePicBtn">사진 변경</button>
-      <form id="uploadProfileForm" action="process_uploadPic.jsp" method="post" enctype="multipart/form-data">
-      	<input type="file" id="profilePicFile" name="profilePicFile" accept="image/*" style="display:none;">
-      	 <input type="hidden" name="userId" value="<%=sessionId%>">
-      </form>
-    </div>
-    <div class="tr_infoSection">
-      <div class="tr_mem_id">
-        <p><strong>"${mem.memName}"님 반가워요!</strong></p>
-    </div>
- 	</div>
- 	</div>
-	</div>
-
-	<!-- 오른쪽 내 정보 및 여행 계획 목록-->
-	<div class="rightSection">
-		<div class="myProfile">
-			<div class="title">
-				<a href="updateMem.jsp"><h3>내 프로필&raquo;</h3></a>
+	  <div class="tr_myInfoContainer">
+	
+		<div class="leftSection">
+			<div class="leftProfileSection">
+			  <h2>나의 계정</h2>
+			    <div class="tr_profileSection">
+					 <c:choose>
+					<c:when test="${empty mem.memFileName}">
+					   <img src="../../travel/img/defaultprofile.jpg" 
+					        alt="프로필 사진" class="tr_profilePic" id="tr_profilePreview">
+					</c:when>
+					<c:otherwise>
+					   <img src="../../travel/img/profile/${mem.memFileName}" 
+					        alt="프로필 사진" class="tr_profilePic" id="tr_profilePreview">
+					</c:otherwise>
+					</c:choose>
+			      <button type="button" id="changePicBtn">사진 변경</button>
+			      <form id="uploadProfileForm" action="process_uploadPic.jsp" method="post" enctype="multipart/form-data">
+			      	<input type="file" id="profilePicFile" name="profilePicFile" accept="image/*" style="display:none;">
+			      	 <input type="hidden" name="userId" value="<%=sessionId%>">
+			      </form>
+			    </div>
+			    
+			    <div class="tr_infoSection">
+			      <div class="tr_mem_id">
+			        <p><strong>"${mem.memName}"님 반가워요!</strong></p>
+			      </div>
+			 	</div>
+		 	</div>
+		</div>
+	
+		<div class="rightSection">
+			<div class="myProfile">
+				<div class="title">
+					<a href="updateMem.jsp"><h3>내 프로필&raquo;</h3></a>
+				</div>
+				<ul class="profileBox">
+					<li>아이디: ${mem.memId}</li>
+					<li>이메일: ${mem.memEmail}</li>
+					<li>전화번호: <%=Hyphen.formatPhoneNumber(dto.getMemPhone())%></li>
+				</ul>
 			</div>
-			<ul class="profileBox">
-				<li>아이디: ${mem.memId}</li>
-				<li>이메일: ${mem.memEmail}</li>
-				<li>전화번호: <%=Hyphen.formatPhoneNumber(dto.getMemPhone())%></li>
-			</ul>
+			
+			<div class="myTravel">
+		 		<div class="title">
+		 			<a href="../../travel/personalPlan/travelList.jsp"><h3>내 여행</h3></a>
+		 		</div>
+				<ul class="travelPlan">
+				<% if(myTravelList.size() == 0) { %>
+				    <li>등록된 여행이 없습니다.</li>
+				<% } else {
+				   for(TravelInfoDTO t : myTravelList) { %>
+				       <li>
+				       	<a href="../../travel/personalPlan/makeAPlan.jsp?travelNo=<%= t.getTravelNo() %>"><%= t.getTitle() %> - <%= t.getCountry() %></a>
+				       </li>
+				<% 
+				   } 
+				   } %>
+				</ul>
+			</div>
 		</div>
-<div class="myTravel">
- 		<div class="title">
- 				<a href="../../travel/personalPlan/travelList.jsp"><h3>내 여행</h3></a>
- 			</div>
-			<ul class="travelPlan">
-			<% if(myTravelList.size() == 0) { %>
-			    <li>등록된 여행이 없습니다.</li>
-			<% } else {
-			   for(TravelInfoDTO t : myTravelList) { %>
-			       <li>
-			       	<a href="../../travel/personalPlan/makeAPlan.jsp?travelNo=<%= t.getTravelNo() %>"><%= t.getTitle() %> - <%= t.getCountry() %></a>
-			       </li>
-			<% } 
-			   } %>
-			</ul>
-		</div>
-	</div>
-	</div>
+		
+	  </div>
 	</main>
   	<script src="../js/myInfoPage.js"></script>
 </body>

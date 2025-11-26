@@ -19,7 +19,7 @@
 %>
 	<script type="text/javascript">
 		 alert("탈퇴되었습니다.");
-		 location.href="firstPage.jsp";
+		 location.href="../firstPage.jsp";
 		</script>
 <%
 		} else {
