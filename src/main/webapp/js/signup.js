@@ -130,9 +130,9 @@ function emailCheck(){
 tr_email.on('input', emailCheck);
 // --------------------------------------------------------------------------------
 	//phone 유효성 검사
-	const tr_phone = $('#tr_phone');  //이메일 입력창 지정
-	const resultPhone = $("#resultPhone");  //이메일 유효성 결과 표시
-	const phoneReg = /^01[016789]\d{7,8}$/;     //email정규식
+	const tr_phone = $('#tr_phone');  //전화번호 입력창 지정
+	const resultPhone = $("#resultPhone");  //전화번호 유효성 결과 표시
+	const phoneReg = /^01[016789]\d{7,8}$/;     //전화번호정규식
 	function phoneCheck(){
 	  if(phoneReg.test(tr_phone.val())){
 	    resultPhone.html("");
@@ -181,7 +181,7 @@ form.on('submit', () => {
     alert("필수 이용약관에 동의해주세요.");
     return false;
   }
-  if(!idCheck() || !pwCheck() || !verifyPw() || !emailCheck()){     
+  if(!idCheck() || !pwCheck() || !verifyPw() || !emailCheck() || !phoneCheck()){     
     alert("입력값을 다시 확인해주세요.");
 		return false;
 	}

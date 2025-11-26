@@ -42,7 +42,7 @@
         <p id="resultNewPw"></p> <!-- 새 pw 유효성검사 -->
       </div>
       <div class="tr_pwUpdateVer">
-        <input type="password" id="tr_newPwVer" name="tr_newPwVer" class="tr_newPwVer" placeholder="새 비밀번호 입력(기존 비밀번호를 유지하려면 기존 비밀번호 입력))">
+        <input type="password" id="tr_newPwVer" name="tr_newPwVer" class="tr_newPwVer" placeholder="비밀번호 확인(기존 비밀번호를 유지하려면 기존 비밀번호 입력))">
         <p id="resultNewPwVer"></p> <!-- 새 pw 일치여부 확인 -->
       </div>
       <div class="tr_emailUpdate">

@@ -115,7 +115,7 @@
 				<% } else {
 				   for(TravelInfoDTO t : myTravelList) { %>
 				       <li>
-				       	<a href="../../travel/personalPlan/makeAPlan.jsp?travelNo=<%= t.getTravelNo() %>"><%= t.getTitle() %> - <%= t.getCountry() %></a>
+				       	<a class="travelListTitle" href="../../travel/personalPlan/makeAPlan.jsp?travelNo=<%= t.getTravelNo() %>"><%= t.getTitle() %> - <%= t.getCountry() %></a>
 				       </li>
 				<% 
 				   } 

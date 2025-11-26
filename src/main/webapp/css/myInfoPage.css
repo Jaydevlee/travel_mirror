@@ -78,8 +78,8 @@ main {
   border: none;
   display: inline-block;
   position: absolute;
-  right: 35px;
-  bottom: 35px;
+  right: 95px;
+  bottom: 130px;
   border-radius: 50%;
   background: url(../../travel/img/icon/changePic.png) center no-repeat;
   background-size: 60%;
