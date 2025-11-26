@@ -80,6 +80,7 @@
 <div class="d-flex flex-row-reverse" style="width:500px; margin:auto">
 	<button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("tr_mem_id")%>')">삭제</button>
 	<button type="submit" style="margin-right:10px" class="btn btn-primary">수정</button>
+	<a href="./admin_memberTravelInfo.jsp?id=<%=rs.getString("tr_mem_id")%>" class="btn btn-success" role="button" style="margin-right:10px">여행리뷰목록</a>
 </div>
 </form>
 </div>

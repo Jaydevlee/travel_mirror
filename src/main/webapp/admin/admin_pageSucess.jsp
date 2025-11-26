@@ -12,6 +12,14 @@
 <title>관리자 페이지</title>
 </head>
 <body >
+<script type="text/javascript">
+	function deleteConfirm(id) {
+		if (confirm("해당 회원을 삭제합니다!!") == true)
+			location.href =  "./admin_memberDelete.jsp?id=" + id;
+		else
+			return;
+	}
+</script>
 	<%@ include file="../menu.jsp"%>
 	<h1 class="text-center mt-5 mb-5">회원 목록</h1>
 	<div id = "list">

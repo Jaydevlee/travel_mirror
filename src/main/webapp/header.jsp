@@ -44,7 +44,7 @@ pageEncoding="UTF-8"%>
 		    	<li><a href="member/signup.jsp">회원가입</a></li>    		
     		</c:when>
     		<c:otherwise>
-    			<li><a href="member/updateMem.jsp">회원수정</a></li>
+    			<li><a href="../member/updateMem.jsp">회원수정</a></li>
 		    	<li><a href="../logout/processlogout.jsp">로그아웃</a></li>
     		</c:otherwise>
     	</c:choose>
