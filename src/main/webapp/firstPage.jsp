@@ -25,8 +25,8 @@
             <input type="password" name="tr_psw" id="tr_psw">
             <div id="psw_warring"></div>
             <div id="reg_box">
-                <p class="reg"><a href="signup.jsp">회원가입</a></p>
-                <p class="reg"><a href ="findaccount.jsp">아이디 / 비밀번호 찾기</a></p>
+                <p class="reg"><a href="member/signup.jsp">회원가입</a></p>
+                <p class="reg"><a href ="member/findaccount.jsp">아이디 / 비밀번호 찾기</a></p>
             </div>
             <button type="submit" id="login_btn">로그인</button>
         </form>

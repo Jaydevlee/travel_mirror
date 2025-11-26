@@ -4,7 +4,7 @@
 <head>
 <script>
 	alert("회원 로그인 성공");
-	location.href="../mypage.jsp";
+	location.href="../member/myInfoPage.jsp";
 </script>
 <title>로그인 성공</title>
 </head>

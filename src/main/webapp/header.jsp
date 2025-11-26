@@ -1,8 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="../member/dbconn.jsp"%>
+<%@ page import="java.sql.*" %>
 <%
-	String session_id=(String) session.getAttribute("sessionId");
+	String sessionId = (String) session.getAttribute("sessionId");
+
+	PreparedStatement pstmt = null;
+	ResultSet rs = null;
+	
+	String sql = "SELECT * FROM tr_member WHERE tr_mem_id = ?";
+	pstmt = conn.prepareStatement(sql);
+	pstmt.setString(1, sessionId);
+	rs = pstmt.executeQuery();
+	rs.next();
 %>
 <link rel="stylesheet" href="../../travel/css/header_style.css">
 <header id="header">
@@ -14,18 +25,19 @@ pageEncoding="UTF-8"%>
 <!-- 경로는 절대경로로 -->
 <aside id="side_menu">
     <ul id="link_menu">
-        <li><a href="#">여행계획 세우기</a></li>
-        <li><a href="#">여행리뷰 보기</a></li>
+    	<li><%=rs.getString("tr_mem_name")%>님</li>
+        <li><a href="../personalPlan/travelList.jsp">여행계획 세우기</a></li>
+        <li><a href="../travelReview/reviewList.jsp">여행리뷰 보기</a></li>
     </ul>
     <ul id="btn_menu">
     	<c:choose>
-    		<c:when test="${empty session_id}">
-		    	<li><a href="#">로그인</a></li>
-		    	<li><a href="#">회원가입</a></li>    		
+    		<c:when test="${empty sessionId}">
+		    	<li><a href="firstPage.jsp">로그인</a></li>
+		    	<li><a href="/member/signup.jsp">회원가입</a></li>    		
     		</c:when>
     		<c:otherwise>
-    			<li><a href="#">회원수정</a></li>
-		    	<li><a href="#">로그아웃</a></li>
+    			<li><a href="updateMem.jsp">회원수정</a></li>
+		    	<li><a href="../logout/processlogout.jsp">로그아웃</a></li>
     		</c:otherwise>
     	</c:choose>
     </ul>
