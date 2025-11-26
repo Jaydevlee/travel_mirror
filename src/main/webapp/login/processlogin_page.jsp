@@ -5,6 +5,10 @@
 	request.setCharacterEncoding("UTF-8");
 	String id = request.getParameter("tr_id");
 	String psw = request.getParameter("tr_psw");
+	
+	System.out.println(id);
+	System.out.println(psw);
+	
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	String sql = "SELECT * FROM tr_MEMBER where tr_mem_id = ?";

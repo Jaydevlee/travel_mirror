@@ -31,7 +31,7 @@
 		int cnt = Integer.parseInt(request.getParameter("cnt"));
 		PreparedStatement pstmt = null;
 	 	ResultSet rs = null;
-	 	String sql = "SELECT * from (SELECT ROW_NUMBER() OVER (ORDER BY tr_member_seq) AS rn, tr_member.* FROM tr_member where tr_mem_level=? or tr_mem_level=?) WHERE rn BETWEEN ? and ?";
+	 	String sql = "SELECT * from (SELECT ROW_NUMBER() OVER (ORDER BY tr_mem_no) AS rn, tr_member.* FROM tr_member where tr_mem_level=? or tr_mem_level=?) WHERE rn BETWEEN ? and ?";
 	 	pstmt = conn.prepareStatement(sql);
 	 	pstmt.setInt(1, 2);
 	 	pstmt.setInt(2, 3);
@@ -47,7 +47,7 @@
 	 	rs = pstmt.executeQuery();
 		for(int i = 0; i < 10; i++){
 			if(rs.next()){
-			if(rs.getInt("tr_mem_no") == 3){
+			if(rs.getInt("tr_mem_level") == 3){
 	%>
  		<tbody>
  			<tr>
@@ -83,7 +83,7 @@
 	</table>
 	<%
 	int memberNum = 0;
-	sql = "SELECT ROW_NUMBER() OVER (ORDER BY tr_member_seq) AS rn, tr_member.* from tr_member where tr_mem_level=? or tr_mem_level=?";
+	sql = "SELECT ROW_NUMBER() OVER (ORDER BY tr_mem_no) AS rn, tr_member.* from tr_member where tr_mem_level=? or tr_mem_level=?";
 	pstmt = conn.prepareStatement(sql);
 	pstmt.setInt(1, 2);
  	pstmt.setInt(2, 3);
