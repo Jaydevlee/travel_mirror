@@ -3,6 +3,7 @@ package com.travelReview.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -158,34 +159,44 @@ public class ReviewDAO {
         return isSaved;
     }
 
-    // 내가 찜한 목록 조회 (아이콘 표시를 위해 PLAN 테이블과 조인)
-    public List<ReviewDTO> selectMyWishlist(Connection conn, String memberId) {
+    
+ // 내가 찜한 리뷰 목록 가져오기 (썸네일 포함 )
+    public List<ReviewDTO> selectMyWishList(Connection conn, String userId) throws SQLException {
         List<ReviewDTO> list = new ArrayList<>();
-        String sql = "SELECT r.*, p.CATEGORY, " +
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        String sql = "SELECT r.*, " +
                      " (SELECT saved_name FROM travel_media m WHERE m.review_no = r.review_no AND ROWNUM = 1) as thumbnail " +
-                     "FROM TRAVEL_WISHLIST w " +
-                     "JOIN TRAVEL_REVIEW r ON w.review_no = r.review_no " +
-                     "JOIN TRAVEL_PLAN p ON r.plan_no = p.plan_no " +
-                     "WHERE w.tr_mem_id = ? " +
-                     "ORDER BY w.wish_no DESC";
+                     "FROM TRAVEL_REVIEW r " +
+                     "JOIN TRAVEL_WISHLIST w ON r.REVIEW_NO = w.REVIEW_NO " +
+                     "WHERE w.TR_MEM_ID = ? " +
+                     "ORDER BY w.WISH_NO DESC";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, memberId);
-            ResultSet rs = pstmt.executeQuery();
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, userId);
+            rs = pstmt.executeQuery();
+            
             while (rs.next()) {
                 ReviewDTO dto = new ReviewDTO();
                 dto.setReviewNo(rs.getInt("REVIEW_NO"));
+                dto.setTravelNo(rs.getInt("TRAVEL_NO"));
                 dto.setMemberId(rs.getString("TR_MEM_ID"));
                 dto.setDestination(rs.getString("DESTINATION"));
                 dto.setContent(rs.getString("CONTENT"));
                 dto.setRating(rs.getInt("RATING"));
-                dto.setThumbnail(rs.getString("thumbnail"));
-                dto.setCategory(rs.getString("CATEGORY")); // ★ 카테고리 저장
+                dto.setRegDate(rs.getDate("REG_DATE"));
+                
+                String thumb = rs.getString("thumbnail");
+                dto.setThumbnail(thumb);
+                
                 list.add(dto);
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } finally {
+            if(rs != null) rs.close();
+            if(pstmt != null) pstmt.close();
+        }
         return list;
     }
-    
-    
 }

@@ -157,6 +157,10 @@ if (info == null) {
 			<button class="sidebar-footer-btn btn-review"
 				onclick="location.href='../travelReview/travelReview.jsp?travelNo=<%=info.getTravelNo()%>'">
 				📝 여행 후기 작성</button>
+				
+				<button class="sidebar-footer-btn btn-wishlist"
+				 onclick="location.href='../travelReview/wishList.jsp'" >
+    					♥ 찜한 여행 보기 </button>
 		</aside>
 
 		<main class="right-main">

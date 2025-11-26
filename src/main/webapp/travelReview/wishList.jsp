@@ -2,8 +2,12 @@
 <%@ page import="java.util.List, java.sql.Connection, com.common.DBConnection, com.travelReview.dao.ReviewDAO, com.travelReview.dto.ReviewDTO"%>
 
 <%
-    String memberId = (String) session.getAttribute("id");
-    // if(memberId == null) memberId = "testUser";
+	String memberId = (String) session.getAttribute("sessionId");
+	   
+	if (memberId == null) {
+	    out.println("<script>alert('로그인이 필요합니다.'); location.href='../login/login.jsp';</script>");
+	    return;
+	}
 
     Connection conn = null;
     ReviewDAO dao = new ReviewDAO();
@@ -11,7 +15,7 @@
 
     try {
         conn = DBConnection.getConnection();
-        list = dao.selectMyWishlist(conn, memberId);
+        list = dao.selectMyWishList(conn, memberId);
     } catch(Exception e) { e.printStackTrace();
     } finally { DBConnection.close(conn); }
 %>
