@@ -11,6 +11,6 @@
 
     // DB 연결 정보 (window)      
     String url = "jdbc:oracle:thin:@localhost:1521:xe";
-    String dbId = "travel";
-    String dbPw = "travel1234";
+    String dbId = "scott";
+    String dbPw = "tiger";
 %>
