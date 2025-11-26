@@ -10,6 +10,7 @@
   <script src='../js/jquery-3.7.1.min.js'></script>
 </head>
 <body class="tr_findaccount">
+<jsp:include page="/header.jsp" />
   <div class="tr_findContainer">
     <h2>혹시 아이디/비밀번호를 잊으셨나요?</h2>
     <!-- 아이디 찾기 -->

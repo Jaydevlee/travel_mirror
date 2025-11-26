@@ -13,7 +13,7 @@ public class DBConnection {
             Class.forName("oracle.jdbc.driver.OracleDriver");
 
             // DB 연결 정보 
-            String url = "jdbc:oracle:thin:@localhost:1521:xe";
+            String url = "jdbc:oracle:thin:@192.168.0.141:1521:xe";
             String id = "scott";
             String pw = "tiger";
 

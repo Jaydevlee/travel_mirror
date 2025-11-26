@@ -30,7 +30,6 @@
 		TravelSelectMemDAO memDao = new TravelSelectMemDAO();
 		TravelMemberDTO dto = memDao.selectMem(conn, sessionId);
 		request.setAttribute("mem", dto);
-		String pic = dto.getMemFileName();
 		
 		TravelDAO dao = new TravelDAO();
 		List<TravelInfoDTO> myTravelList = dao.selectTravelList(conn);
@@ -38,7 +37,7 @@
 %>
 	<script type="text/javascript">
     alert("회원 정보를 찾을 수 없습니다.");
-    location.href="../../webapp/firstPage.jsp";
+    location.href="../firstPage.jsp";
 	</script>
  <% return; } 
  %>
