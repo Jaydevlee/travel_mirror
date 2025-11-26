@@ -50,7 +50,6 @@
 <!--스토리지는 공통으로 사용하기 때문에 외부로-->
 <script src="js/jquery-3.7.1.min.js"></script>
 <script src="js/storage.js"></script>
-
 <script src="js/mypage/api_key.js"></script>
 <script src="js/mypage/review_form.js"></script>
 <script src="js/mypage/review_action.js"></script>

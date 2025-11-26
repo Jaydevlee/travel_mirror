@@ -31,10 +31,10 @@
 		int cnt = Integer.parseInt(request.getParameter("cnt"));
 		PreparedStatement pstmt = null;
 	 	ResultSet rs = null;
-	 	String sql = "SELECT * from (SELECT ROW_NUMBER() OVER (ORDER BY seq_member) AS rn, member.* FROM member where num=? or num=?) WHERE rn BETWEEN ? and ?";
+	 	String sql = "SELECT * from (SELECT ROW_NUMBER() OVER (ORDER BY tr_member_seq) AS rn, tr_member.* FROM tr_member where tr_mem_level=? or tr_mem_level=?) WHERE rn BETWEEN ? and ?";
 	 	pstmt = conn.prepareStatement(sql);
-	 	pstmt.setString(1, "2");
-	 	pstmt.setString(2, "3");
+	 	pstmt.setInt(1, 2);
+	 	pstmt.setInt(2, 3);
 	 	if(request.getParameter("cnt") == null){
 	 	pstmt.setInt(3, count);
 	 	pstmt.setInt(4, count+10);
@@ -47,16 +47,16 @@
 	 	rs = pstmt.executeQuery();
 		for(int i = 0; i < 10; i++){
 			if(rs.next()){
-			if(rs.getInt("num") == 3){
+			if(rs.getInt("tr_mem_no") == 3){
 	%>
  		<tbody>
  			<tr>
  				<th scope="col"><%=rs.getInt("rn")%></th>
- 				<th scope="col"><%=rs.getString("id")%>(관리자계정)</th>
-				<th scope="col"><%=rs.getString("name")%></th>
-				<th scope="col"><%=rs.getString("email")%></th>
-				<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("phone"))%></th>
-				<th scope="col"><a href="./admin_memberUpdate.jsp?id=<%=rs.getString("id")%>" class="btn btn-success" role="button">수정</a><span> </span><button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("id")%>')">삭제</button></th>
+ 				<th scope="col"><%=rs.getString("tr_mem_id")%>(관리자계정)</th>
+				<th scope="col"><%=rs.getString("tr_mem_name")%></th>
+				<th scope="col"><%=rs.getString("tr_mem_email")%></th>
+				<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("tr_mem_phone"))%></th>
+				<th scope="col"><a href="./admin_memberUpdate.jsp?id=<%=rs.getString("tr_mem_id")%>" class="btn btn-success" role="button">수정</a><span> </span><button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("tr_mem_id")%>')">삭제</button></th>
  			</tr>
  		</tbody>
  		<%
@@ -65,11 +65,11 @@
  		<tbody>
  			<tr>
  				<th scope="col"><%=rs.getInt("rn")%></th>
- 				<th scope="col"><%=rs.getString("id")%></th>
-				<th scope="col"><%=rs.getString("name")%></th>
-				<th scope="col"><%=rs.getString("email")%></th>
-				<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("phone"))%></th>
-				<th scope="col"><a href="./admin_memberUpdate.jsp?id=<%=rs.getString("id")%>" class="btn btn-success" role="button">수정</a><span> </span><button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("id")%>')">삭제</button></th>
+ 				<th scope="col"><%=rs.getString("tr_mem_id")%></th>
+				<th scope="col"><%=rs.getString("tr_mem_name")%></th>
+				<th scope="col"><%=rs.getString("tr_mem_email")%></th>
+				<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("tr_mem_phone"))%></th>
+				<th scope="col"><a href="./admin_memberUpdate.jsp?id=<%=rs.getString("tr_mem_id")%>" class="btn btn-success" role="button">수정</a><span> </span><button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("tr_mem_id")%>')">삭제</button></th>
  			</tr>
  		</tbody>
  		
@@ -83,10 +83,10 @@
 	</table>
 	<%
 	int memberNum = 0;
-	sql = "SELECT ROW_NUMBER() OVER (ORDER BY seq_member) AS rn, member.* from member where num=? or num=?";
+	sql = "SELECT ROW_NUMBER() OVER (ORDER BY tr_member_seq) AS rn, tr_member.* from tr_member where tr_mem_level=? or tr_mem_level=?";
 	pstmt = conn.prepareStatement(sql);
-	pstmt.setString(1, "2");
- 	pstmt.setString(2, "3");
+	pstmt.setInt(1, 2);
+ 	pstmt.setInt(2, 3);
 	rs = pstmt.executeQuery();
 	while(rs.next()){
 		memberNum = rs.getInt("rn");
@@ -113,10 +113,10 @@
 
 <form method="get" action="processMember_search.jsp" class="d-flex mb-3 gap-1">
     <select name="searchType" class="form-select w-auto">
-        <option value="id">아이디</option>
-        <option value="name">이름</option>
-        <option value="email">이메일</option>
-        <option value="phone">전화번호</option>
+        <option value="tr_mem_id">아이디</option>
+        <option value="tr_mem_name">이름</option>
+        <option value="tr_mem_email">이메일</option>
+        <option value="tr_mem_phone">전화번호</option>
     </select>
     <span> </span>
     <input type="text" name="keyword" class="form-control w-auto" placeholder="검색어 입력">

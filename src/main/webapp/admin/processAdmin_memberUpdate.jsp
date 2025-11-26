@@ -13,13 +13,13 @@
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	
-	String sql = "SELECT * FROM member WHERE id = ?";
+	String sql = "SELECT * FROM tr_member WHERE tr_mem_id = ?";
 	pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, id);
 	rs = pstmt.executeQuery();
 	
 	if (rs.next()) {		
-			sql = "UPDATE member SET password=?, name=?, email=?, phone=? WHERE id=?";	
+			sql = "UPDATE tr_member SET tr_mem_password=?, tr_mem_name=?, tr_mem_email=?, tr_mem_phone=? WHERE tr_mem_id=?";	
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, password);
 			pstmt.setString(2, name);

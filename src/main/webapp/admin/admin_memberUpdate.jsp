@@ -22,7 +22,7 @@
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	
-	String sql = "SELECT * FROM member WHERE id = ?";
+	String sql = "SELECT * FROM tr_member WHERE tr_mem_id = ?";
 	pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, id);
 	rs = pstmt.executeQuery();
@@ -33,7 +33,7 @@
 		<label class="label1">아이디 : </label>
 	</div>
 	<div class="subject2">
-		<input type="text" name="id" class="form-control" value='<%=rs.getString("id")%>' readonly>
+		<input type="text" name="id" class="form-control" value='<%=rs.getString("tr_mem_id")%>' readonly>
 	</div>
 </div>
 <div class="updateMemberForm1">
@@ -41,7 +41,7 @@
 		<label class="label1">비밀번호 : </label>
 	</div>
 	<div class="subject2">
-		<input type="password" name="password" id="password" class="form-control" value='<%=rs.getString("password")%>'>
+		<input type="password" name="password" id="password" class="form-control" value='<%=rs.getString("tr_mem_password")%>'>
 	</div>
 </div>
 <div class="updateMemberForm1">
@@ -49,7 +49,7 @@
 		<label class="label1">비밀번호 확인 : </label>
 	</div>
 	<div class="subject2">
-		<input type="password" name="password_confirm" id="password_confirm" class="form-control" value='<%=rs.getString("password")%>'>
+		<input type="password" name="password_confirm" id="password_confirm" class="form-control" value='<%=rs.getString("tr_mem_password")%>'>
 	</div>
 </div>
 <div class="updateMemberForm1">
@@ -57,7 +57,7 @@
 		<label class="label1">이름 : </label>
 	</div>
 	<div class="subject2">
-		<input type="text" name="name" id="name" class="form-control" value='<%=rs.getString("name")%>' readonly>
+		<input type="text" name="name" id="name" class="form-control" value='<%=rs.getString("tr_mem_name")%>' readonly>
 	</div>
 </div>
 <div class="updateMemberForm1">
@@ -65,7 +65,7 @@
 		<label class="label1">이메일 : </label>
 	</div>
 	<div class="subject2">
-		<input type="text" name="email" id="email" class="form-control" value='<%=rs.getString("email")%>'>
+		<input type="text" name="email" id="email" class="form-control" value='<%=rs.getString("tr_mem_email")%>'>
 	</div>
 </div>
 <div class="updateMemberForm1">
@@ -73,7 +73,7 @@
 		<label class="label1">전화번호 : </label>
 	</div>
 	<div class="subject2">
-		<input type="text" name="phone" id="phone" class="form-control" value='<%=rs.getString("phone")%>'>
+		<input type="text" name="phone" id="phone" class="form-control" value='<%=rs.getString("tr_mem_phone")%>'>
 	</div>
 </div>
 <div class="d-flex flex-row-reverse" style="width:500px; margin:auto">

@@ -11,13 +11,13 @@
     PreparedStatement pstmt = null;
     ResultSet rs = null;
 
-    String sql = "SELECT * FROM member WHERE id = ?";
+    String sql = "SELECT * FROM tr_member WHERE tr_mem_id = ?";
     pstmt = conn.prepareStatement(sql);
     pstmt.setString(1, id);
     rs = pstmt.executeQuery();
 
     if (rs.next()) {
-        sql = "DELETE FROM member WHERE id = ?";
+        sql = "DELETE FROM tr_member WHERE tr_mem_id = ?";
         pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, id);
         int result = pstmt.executeUpdate();

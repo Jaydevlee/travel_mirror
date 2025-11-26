@@ -29,9 +29,9 @@ String searchType = request.getParameter("searchType");
 String keyword = request.getParameter("keyword");
 PreparedStatement pstmt = null;
 ResultSet rs = null;
-String sql = "SELECT * FROM MEMBER";
-if(searchType.equals("id")){
-	sql = "SELECT * FROM MEMBER Where id like ?";
+String sql = "SELECT * FROM tr_member";
+if(searchType.equals("tr_mem_id")){
+	sql = "SELECT * FROM tr_member Where tr_mem_id like ?";
 	pstmt = conn.prepareStatement(sql);
     pstmt.setString(1, "%" + keyword + "%");
     rs = pstmt.executeQuery();
@@ -39,11 +39,11 @@ if(searchType.equals("id")){
 %>
 	<tbody>
  			<tr>
- 				<th scope="col"><%=rs.getString("id")%></th>
-				<th scope="col"><%=rs.getString("name")%></th>
-				<th scope="col"><%=rs.getString("email")%></th>
-				<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("phone"))%></th>
-				<th scope="col"><a href="./admin_memberUpdate.jsp?id=<%=rs.getString("id")%>" class="btn btn-success" role="button">수정</a><span> </span><button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("id")%>')">삭제</button></th>
+ 				<th scope="col"><%=rs.getString("tr_mem_id")%></th>
+				<th scope="col"><%=rs.getString("tr_mem_name")%></th>
+				<th scope="col"><%=rs.getString("tr_mem_email")%></th>
+				<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("tr_mem_phone"))%></th>
+				<th scope="col"><a href="./admin_memberUpdate.jsp?id=<%=rs.getString("tr_mem_id")%>" class="btn btn-success" role="button">수정</a><span> </span><button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("tr_mem_id")%>')">삭제</button></th>
  			</tr>
  		</tbody>
 <%
@@ -51,8 +51,8 @@ if(searchType.equals("id")){
 }
 %>
 <%
-if(searchType.equals("name")){
-	sql = "SELECT * FROM MEMBER Where name like ?";
+if(searchType.equals("tr_mem_name")){
+	sql = "SELECT * FROM tr_member Where tr_mem_name like ?";
 	pstmt = conn.prepareStatement(sql);
     pstmt.setString(1, "%" + keyword + "%");
     rs = pstmt.executeQuery();
@@ -60,11 +60,11 @@ if(searchType.equals("name")){
 %>
 	<tbody>
  			<tr>
- 				<th scope="col"><%=rs.getString("id")%></th>
-				<th scope="col"><%=rs.getString("name")%></th>
-				<th scope="col"><%=rs.getString("email")%></th>
-				<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("phone"))%></th>
-				<th scope="col"><a href="./admin_memberUpdate.jsp?id=<%=rs.getString("id")%>" class="btn btn-success" role="button">수정</a><span> </span><button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("id")%>')">삭제</button></th>
+ 				<th scope="col"><%=rs.getString("tr_mem_id")%></th>
+				<th scope="col"><%=rs.getString("tr_mem_name")%></th>
+				<th scope="col"><%=rs.getString("tr_mem_email")%></th>
+				<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("tr_mem_phone"))%></th>
+				<th scope="col"><a href="./admin_memberUpdate.jsp?id=<%=rs.getString("tr_mem_id")%>" class="btn btn-success" role="button">수정</a><span> </span><button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("tr_mem_id")%>')">삭제</button></th>
  			</tr>
  		</tbody>
 <%
@@ -72,8 +72,8 @@ if(searchType.equals("name")){
 }
 %>
 <%
-if(searchType.equals("email")){
-	sql = "SELECT * FROM MEMBER Where email like ?";
+if(searchType.equals("tr_mem_email")){
+	sql = "SELECT * FROM tr_member Where tr_mem_email like ?";
 	pstmt = conn.prepareStatement(sql);
     pstmt.setString(1, "%" + keyword + "%");
     rs = pstmt.executeQuery();
@@ -81,11 +81,11 @@ if(searchType.equals("email")){
 %>
 	<tbody>
  			<tr>
- 				<th scope="col"><%=rs.getString("id")%></th>
-				<th scope="col"><%=rs.getString("name")%></th>
-				<th scope="col"><%=rs.getString("email")%></th>
-				<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("phone"))%></th>
-				<th scope="col"><a href="./admin_memberUpdate.jsp?id=<%=rs.getString("id")%>" class="btn btn-success" role="button">수정</a><span> </span><button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("id")%>')">삭제</button></th>
+ 				<th scope="col"><%=rs.getString("tr_mem_id")%></th>
+				<th scope="col"><%=rs.getString("tr_mem_name")%></th>
+				<th scope="col"><%=rs.getString("tr_mem_email")%></th>
+				<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("tr_mem_phone"))%></th>
+				<th scope="col"><a href="./admin_memberUpdate.jsp?id=<%=rs.getString("tr_mem_id")%>" class="btn btn-success" role="button">수정</a><span> </span><button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("tr_mem_id")%>')">삭제</button></th>
  			</tr>
  		</tbody>
 <%
@@ -94,8 +94,8 @@ if(searchType.equals("email")){
 
 %>
 <%
-if(searchType.equals("phone")){
-	sql = "SELECT * FROM MEMBER Where phone like ?";
+if(searchType.equals("tr_mem_phone")){
+	sql = "SELECT * FROM tr_member Where tr_mem_phone like ?";
 	pstmt = conn.prepareStatement(sql);
     pstmt.setString(1, "%" + keyword + "%");
     rs = pstmt.executeQuery();
@@ -103,11 +103,11 @@ if(searchType.equals("phone")){
 %>
 	<tbody>
  			<tr>
- 				<th scope="col"><%=rs.getString("id")%></th>
-				<th scope="col"><%=rs.getString("name")%></th>
-				<th scope="col"><%=rs.getString("email")%></th>
-				<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("phone"))%></th>
-				<th scope="col"><a href="./admin_memberUpdate.jsp?id=<%=rs.getString("id")%>" class="btn btn-success" role="button">수정</a><span> </span><button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("id")%>')">삭제</button></th>
+ 				<th scope="col"><%=rs.getString("tr_mem_id")%></th>
+				<th scope="col"><%=rs.getString("tr_mem_name")%></th>
+				<th scope="col"><%=rs.getString("tr_mem_email")%></th>
+				<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("tr_mem_phone"))%></th>
+				<th scope="col"><a href="./admin_memberUpdate.jsp?id=<%=rs.getString("tr_mem_id")%>" class="btn btn-success" role="button">수정</a><span> </span><button class="btn btn-danger" onclick="deleteConfirm('<%=rs.getString("tr_mem_id")%>')">삭제</button></th>
  			</tr>
  		</tbody>
 <%

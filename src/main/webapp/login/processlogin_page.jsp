@@ -7,17 +7,17 @@
 	String psw = request.getParameter("tr_psw");
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
-	String sql = "SELECT * FROM MEMBER where id = ?";
+	String sql = "SELECT * FROM tr_MEMBER where tr_mem_id = ?";
 	pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, id);
 	rs = pstmt.executeQuery();
 	
 	if(rs.next()){
-		if(psw.equals(rs.getString("password"))){
-			if(rs.getInt("num") == 3){
+		if(psw.equals(rs.getString("tr_mem_password"))){
+			if(rs.getInt("tr_mem_level") == 3){
 				session.setAttribute("sessionId", id);
 				response.sendRedirect("login_sucessAdmin.jsp");
-			} else if(rs.getInt("num") == 2) {
+			} else if(rs.getInt("tr_mem_level") == 2) {
 				session.setAttribute("sessionId", id);
 				response.sendRedirect("login_sucess.jsp");
 			} 
