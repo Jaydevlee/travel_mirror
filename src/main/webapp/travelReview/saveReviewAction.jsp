@@ -19,15 +19,15 @@ if (memberId == null) {
     // 파일 저장 경로 설정
     //String savePath = request.getServletContext().getRealPath("/uploads/review");
     //String savePath = "\\\\192.168.0.141\\sjw_java\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\Travel\\uploads\\review";
-    //String savePath = "\\\\192.168.0.141\\travel_uploads";
-    String savePath = "Z:/";
-	String urlPath = "/uploads/";  // 브라우저에서 접근할 URL 경로
+    String savePath = "\\\\192.168.0.141\\travel_uploads";
+    //String savePath = "Z:/";
+	//String urlPath = "/uploads/";  // 브라우저에서 접근할 URL 경로
 	
 	
     File dir = new File(savePath);
     if (!dir.exists()) dir.mkdirs(); 
 
-    int maxSize = 10 * 1024 * 1024; // 10MB
+    int maxSize = 100 * 1024 * 1024; 
 
     Connection conn = null;
     PreparedStatement pstmt = null;

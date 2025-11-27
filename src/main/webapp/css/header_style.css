@@ -43,6 +43,21 @@
     color: inherit; /* 부모 색상 상속 */
 }
 
+
+/* 뒤로가기 버튼 스타일 */
+#back_btn {
+    cursor: pointer;        /* 마우스 올리면 손가락 모양 */
+    margin-right: 15px;     /* 비행기 아이콘과의 간격 벌리기 */
+    font-size: 20px;        /* 아이콘 크기 */
+    color: #333;            /* 기본 색상 (진한 회색) */
+    transition: color 0.3s; /* 색상 부드럽게 변경 */
+}
+
+#back_btn:hover {
+    color: var(--point-mint); /* 마우스 올리면 민트색으로 변경 (#41E9C2) */
+}
+
+
 /* 사이드바 메뉴 버튼 */
 #menu_bar {
     position: absolute;
