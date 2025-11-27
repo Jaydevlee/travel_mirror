@@ -10,7 +10,7 @@
 
 <%
 	request.setCharacterEncoding("UTF-8");
-	String save = application.getRealPath("./img/profile");
+	String save = "\\\\192.168.0.141\\travel_uploads";
 	int maxSize= 10*1024*1024;
 	
 	MultipartRequest multi=new MultipartRequest(request, save, maxSize, "UTF-8", new DefaultFileRenamePolicy());

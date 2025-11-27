@@ -126,7 +126,7 @@ try {
 					        alt="프로필 사진" class="tr_profilePic" id="tr_profilePreview">
 					</c:when>
 					<c:otherwise>
-					   <img src="../../travel/img/profile/${mem.memFileName}" 
+					   <img src="/uploads/${mem.memFileName}" 
 					        alt="프로필 사진" class="tr_profilePic" id="tr_profilePreview">
 					</c:otherwise>
 					</c:choose>
