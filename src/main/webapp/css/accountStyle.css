@@ -93,14 +93,19 @@
 
 .tr_signUp p {
   height: 16px;
-  font-size: 12px;
+  font-size: 14px;
   padding-left: 5px;
   color: #999;
   margin-top: 0;
 }
 
 /* ---------------- 중복확인 버튼 영역 ---------------- */
-.idInput {
+.idInput,
+.pwInput,
+.pwVerInput,
+.nameInput,
+.emailInput,
+.phoneInput {
   position: relative;
   width: 100%;
   max-width: none;
@@ -130,6 +135,8 @@
   color: #fff;
 }
 
+
+
 /* ---------------- 회원가입 버튼 ---------------- */
 #signUpBtn {
   width: 100%;
@@ -151,6 +158,12 @@
 }
 
 /* ---------------- 약관 모달 ---------------- */
+/* 약관 전문보기 수정*/
+.tr_terms a{
+	color: black;
+	text-decoration: none;
+}
+
 
 .modal {
   display: none;
@@ -379,7 +392,7 @@
 }
 
 /* 회원탈퇴 버튼 - 오른쪽 상단 */
-.tr_updateContainer > a {
+#deleteMemBtn {
   position: absolute;
   top: 40px;
   right: 40px;
@@ -391,16 +404,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
+ 
   border: #ff4d4d solid 2px;
   border-radius: 5px;
   background-color: #fff;
 
   transition: all 0.25s ease;
   font-size: 14px;
+  text-decoration: none;
 }
 
-.tr_updateContainer a:hover {
+#deleteMemBtn:hover {
   background-color: #ff4d4d;
   color: #fff;
 }

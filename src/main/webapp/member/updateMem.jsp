@@ -34,15 +34,15 @@
  	} 
 	 request.setAttribute("mem", dto);%>
     <h1>회원정보 수정</h1>
-    <!-- 회원 탈퇴 부분 -->
-    <a href='deleteMem.jsp'>회원 탈퇴</a>
+    <!-- 회원 탈퇴 부분(js에서 confirm 추가로 링크 삭제) -->
+    <a href="#" id="deleteMemBtn">회원 탈퇴</a>
     <form action="process_update.jsp" method="post" id="updateForm">
       <div class="tr_pwUpdate">
-        <input type="password" id="tr_newPw" name="tr_newPw" class="tr_newPw" value="${mem.memPw}" placeholder="새 비밀번호 입력">
+        <input type="password" id="tr_newPw" name="tr_newPw" class="tr_newPw" placeholder="비밀번호 입력(비밀 번호를 변경할 경우 새 비밀번호 입력)">
         <p id="resultNewPw"></p> <!-- 새 pw 유효성검사 -->
       </div>
       <div class="tr_pwUpdateVer">
-        <input type="password" id="tr_newPwVer" name="tr_newPwVer" class="tr_newPwVer" placeholder="비밀번호 확인(기존 비밀번호를 유지하려면 기존 비밀번호 입력))">
+        <input type="password" id="tr_newPwVer" name="tr_newPwVer" class="tr_newPwVer" placeholder="비밀번호 확인(비밀번호를 유지하려면 새 비밀번호 입력)">
         <p id="resultNewPwVer"></p> <!-- 새 pw 일치여부 확인 -->
       </div>
       <div class="tr_emailUpdate">
