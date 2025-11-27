@@ -47,7 +47,16 @@
     
     // 4. 내 여행 리스트 가져오기
     TravelDAO dao = new TravelDAO();
-    List<TravelInfoDTO> myTravelList = dao.selectMyTravelList(conn, sessionId); 
+    List<TravelInfoDTO> myTravelList = dao.selectMyTravelList(conn, sessionId);
+    int Page = 1;
+    if(request.getParameter("Page") != null){
+    	Page = Integer.parseInt(request.getParameter("Page"));
+    }
+    int pagesize = 5;
+    int startpage = (Page-1)*pagesize;
+    int endpage = startpage+pagesize;
+    int totalpage = (int)Math.ceil(myTravelList.size()/5.0);
+    
 %>
 
 <html lang="ko">
@@ -96,7 +105,7 @@
 		<div class="rightSection">
 			<div class="myProfile">
 				<div class="title">
-					<a href="updateMem.jsp"><h3>내 프로필 &raquo;</h3></a>
+					<a href="updateMem.jsp"><h3>내 프로필&raquo;</h3></a>
 				</div>
 				<ul class="profileBox">
 					<li>아이디: ${mem.memId}</li>
@@ -107,23 +116,51 @@
 			
 			<div class="myTravel">
 		 		<div class="title">
-		 			<a href="../../travel/personalPlan/travelList.jsp"><h3>내 여행 &raquo;</h3></a>
+		 			<a href="../../travel/personalPlan/travelList.jsp"><h3>내 여행</h3></a>
 		 		</div>
 				<ul class="travelPlan">
 				<% if(myTravelList.size() == 0) { %>
 				    <li>등록된 여행이 없습니다.</li>
 				<% } else {
-				   for(TravelInfoDTO t : myTravelList) { %>
-				       <li>
-				       	<a class="travelListTitle" href="../../travel/personalPlan/makeAPlan.jsp?travelNo=<%= t.getTravelNo() %>"><%= t.getTitle() %> - <%= t.getCountry() %></a>
-				       </li>
-				<% 
-				   } 
-				   } %>
+					for(int i = startpage; i < endpage && i < myTravelList.size(); i++){
+						TravelInfoDTO t = myTravelList.get(i);
+						if(myTravelList.get(i) == null){
+							break;
+						} else{
+				%>
+					<li>
+				    	<a href="../../travel/personalPlan/makeAPlan.jsp?travelNo=<%= t.getTravelNo() %>"><%= t.getTitle() %> - <%= t.getCountry() %></a>
+				    </li>
+				<%							
+						}
+					}
+				}
+				 %>
 				</ul>
+				<div class="pagenation">
+					<%
+					    if (Page > 1) {
+					%>
+					        <a href="?Page=<%= Page - 1 %>">이전</a>
+					<%
+					    }				
+					    // 페이지 숫자들
+					    for (int i = 1; i <= totalpage; i++) {
+					%>
+					        	<a href="?Page=<%= i %>" <%= (i == Page ? "style='font-weight:bold;'" : "") %>><%= i %></a>
+					<%
+					    }
+					
+					    // 다음 버튼
+					    if (Page < totalpage) {
+					%>
+					        	<a href="?Page=<%= Page + 1 %>">다음</a>
+					<%
+					    }
+					%>
+				</div>
 			</div>
-		</div>
-		
+		</div>	
 	  </div>
 	</main>
   	<script src="../js/myInfoPage.js"></script>
