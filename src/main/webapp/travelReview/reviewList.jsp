@@ -19,6 +19,8 @@ try {
 } finally {
 	DBConnection.close(conn);
 }
+
+request.setAttribute("pageTitle", "여행 후기 게시판");
 %>
 
 <!DOCTYPE html>
@@ -31,7 +33,11 @@ try {
 	href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
 </head>
 <body>
+<jsp:include page="../header.jsp" />
 
+    <div class="review-container">
+        </div>
+        
 	<div class="container">
 		<div class="page-header">
 			<h2>📸 여행 후기 갤러리</h2>

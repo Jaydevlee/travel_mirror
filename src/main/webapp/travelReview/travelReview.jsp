@@ -34,6 +34,8 @@
     } finally {
         DBConnection.close(conn);
     }
+    
+    request.setAttribute("pageTitle", "여행 후기 작성");
 %>
 
 <!DOCTYPE html>
@@ -45,10 +47,7 @@
     <script src="../js/jquery-3.7.1.min.js"></script>
 </head>
 <body>
-
-    <div class="header">
-        <h2 onclick="location.href='../personalPlan/makeAPlan.jsp?travelNo=<%=travelNo%>'">⬅️ 여행 후기 작성</h2>
-    </div>
+	<jsp:include page="../header.jsp" />
 
     <div class="container">
         <aside class="left-sidebar">

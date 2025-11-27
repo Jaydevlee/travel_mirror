@@ -18,6 +18,8 @@
         list = dao.selectMyWishList(conn, memberId);
     } catch(Exception e) { e.printStackTrace();
     } finally { DBConnection.close(conn); }
+    
+    request.setAttribute("pageTitle", "wishList");
 %>
 
 <!DOCTYPE html>
@@ -28,6 +30,10 @@
     <link rel="stylesheet" href="../css/reviewList.css">
 </head>
 <body>
+<jsp:include page="../header.jsp" />
+
+    <div class="review-container">
+        </div>
     <div class="container">
         <div class="page-header">
             <h2>💖 가보고 싶은 곳</h2>

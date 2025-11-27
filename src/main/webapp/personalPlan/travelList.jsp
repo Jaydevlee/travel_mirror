@@ -30,6 +30,7 @@
     } finally {
         DBConnection.close(conn);
     }
+    request.setAttribute("pageTitle", "내 여행 리스트");
 %>
 
 <!DOCTYPE html>
@@ -50,11 +51,9 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 <body>
+	<jsp:include page="../header.jsp" />
 
     <div class="dashboard-container">
-        <div class="dashboard-header">
-            <h2>✈️ 나의 여행 리스트</h2>
-        </div>
 
         <div class="plan-grid">
             <div class="plan-card add-new-card" onclick="openInitModal()">

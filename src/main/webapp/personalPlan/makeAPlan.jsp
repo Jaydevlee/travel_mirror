@@ -44,6 +44,8 @@ if (info == null) {
 	response.sendRedirect("travelList.jsp");
 	return;
 }
+
+request.setAttribute("pageTitle", "상세 여행 계획");
 %>
 
 <!DOCTYPE html>
@@ -101,9 +103,7 @@ if (info == null) {
 </head>
 <body>
 
-	<div class="header">
-		<h2 onclick="location.href='travelList.jsp'">✈️ My 여행계획</h2>
-	</div>
+	<jsp:include page="../header.jsp" />
 
 	<div class="container">
 		<aside class="left-sidebar">

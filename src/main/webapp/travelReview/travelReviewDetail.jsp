@@ -61,6 +61,8 @@
     
     boolean isMyReview = (myId != null && myId.equals(review.getMemberId()));
     // boolean isMyReview = true; // 테스트용 (로그인 없이 수정 버튼 보고 싶으면 주석 해제)
+    
+    request.setAttribute("pageTitle", "후기 상세 보기");
 %>
 
 <!DOCTYPE html>
@@ -74,9 +76,7 @@
 </head>
 <body>
 
-    <div class="header">
-        <h2 onclick="history.back()">⬅️ 후기 상세 보기</h2>
-    </div>
+    <jsp:include page="../header.jsp" />
 
     <div class="detail-container">
         <div class="detail-header">

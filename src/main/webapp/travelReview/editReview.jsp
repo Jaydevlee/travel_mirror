@@ -47,6 +47,8 @@
     } finally {
         DBConnection.close(conn);
     }
+    
+    request.setAttribute("pageTitle", "후기 수정하기");
 %>
 
 <!DOCTYPE html>
@@ -67,9 +69,9 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2 onclick="history.back()">⬅️ 후기 수정하기</h2>
-    </div>
+    <jsp:include page="../header.jsp" />
+
+    <div class="container">
 
     <div class="container" style="justify-content: center;">
         <main class="right-main" style="width: 100%; max-width: 800px;">
