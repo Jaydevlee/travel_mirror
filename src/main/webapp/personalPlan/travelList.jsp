@@ -18,7 +18,6 @@
     Connection conn = null;
     TravelDAO dao = new TravelDAO();
     List<TravelInfoDTO> list = null;
-    
     try {
         conn = DBConnection.getConnection();
         
@@ -31,6 +30,15 @@
         DBConnection.close(conn);
     }
     request.setAttribute("pageTitle", "내 여행 리스트");
+    
+    int Page = 1;
+    if(request.getParameter("Page") != null){
+    	Page = Integer.parseInt(request.getParameter("Page"));
+    }
+    int pagesize = 7;
+    int startpage = (Page-1)*pagesize;
+    int endpage = startpage+pagesize;
+    int totalpage = (int)Math.ceil(list.size()/7.0);
 %>
 
 <!DOCTYPE html>
@@ -60,11 +68,11 @@
                 <div class="add-icon">+</div>
                 <div class="add-text">새로운 여행 떠나기</div>
             </div>
-
             <%-- 여행 리스트 반복 출력 --%>
             <%
             if (list != null) {
-                for (TravelInfoDTO dto : list) {
+            	for(int i = startpage; i < endpage && i < list.size(); i++){
+            		TravelInfoDTO dto = list.get(i);
                     String bgClass = "bg-default";
                     String country = dto.getCountry();
                     
@@ -113,8 +121,29 @@
             }
             %>
         </div>
+	        <div class="pagenation">
+				<%
+				    if (Page > 1) {
+				%>
+			        <a href="?Page=<%= Page - 1 %>">이전</a>
+				<%
+				    }				
+				    // 페이지 숫자들
+				    for (int i = 1; i <= totalpage; i++) {
+				%>
+		        	<a href="?Page=<%= i %>" <%= (i == Page ? "style='font-weight:bold;'" : "") %>><%= i %></a>
+				<%
+				    }
+				
+				    // 다음 버튼
+				    if (Page < totalpage) {
+				%>
+		        	<a href="?Page=<%= Page + 1 %>">다음</a>
+				<%
+				    }
+				%>
+			</div>
     </div>
-
     <div id="init-modal-overlay" class="modal-overlay">
         <div class="modal-window">
             <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">

@@ -161,6 +161,7 @@ li {
   transition: 0.25s;
 }
 
+/*페이지 네이션*/
 .pagenation {
     display: flex;
     justify-content: center; /* 가로 중앙 */
