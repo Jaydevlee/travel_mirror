@@ -18,7 +18,8 @@ if (memberId == null) {
 	
     // 파일 저장 경로 설정
     //String savePath = request.getServletContext().getRealPath("/uploads/review");
-    String savePath = "\\\\192.168.0.141\\sjw_java\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\Travel\\uploads\\review";
+    //String savePath = "\\\\192.168.0.141\\sjw_java\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\Travel\\uploads\\review";
+    String savePath = "\\\\192.168.0.141\\travel_uploads";
     File dir = new File(savePath);
     if (!dir.exists()) dir.mkdirs(); 
 
