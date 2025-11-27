@@ -45,7 +45,7 @@ tr_newPwVer.on('input', verifyPw);
 //email 유효성 검사
 const tr_newEmail = $('#tr_newEmail');  //이메일 입력창 지정
 const resultNewEmail = $("#resultNewEmail");  //이메일 유효성 결과 표시
-const emailReg = /^[a-zA-Z\d]+@[^\s가-힣]+\.[a-zA-Z]{2,5}$/;     //email정규식
+const emailReg = /^[0-9a-zA-Z]([._-]?[0-9a-zA-Z])*@[0-9a-zA-Z]([._-]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;     //email정규식
 function emailCheck(){
   if(emailReg.test(tr_newEmail.val())){
     resultNewEmail.html("");
@@ -60,9 +60,9 @@ function emailCheck(){
 tr_newEmail.on('input', emailCheck);
 // --------------------------------------------------------------------------------
 	//phone 유효성 검사
-const tr_phoneUpdate = $('#tr_newPhone');  //이메일 입력창 지정
-const resultNewPhone = $("#resultNewPhone");  //이메일 유효성 결과 표시
-const phoneReg = /^01[016789]\d{7,8}$/;     //email정규식
+const tr_phoneUpdate = $('#tr_newPhone');  //전화번호 입력창 지정
+const resultNewPhone = $("#resultNewPhone");  //전화번호 유효성 결과 표시
+const phoneReg = /^01[016789]\d{7,8}$/;     //전화번호 정규식
 function phoneCheck(){
   if(phoneReg.test(tr_phoneUpdate.val())){
     resultNewPhone.html("");
@@ -80,22 +80,43 @@ tr_phoneUpdate.on('input', phoneCheck);
 
 $('#updateForm').on("submit", function(e){
     
-    // 비밀번호 유효성 검사도 다시 실행
+    // 유효성 검사 다시 실행
     const pwValid = pwCheck();
     const pwVerValid = verifyPw();
+		const emailValid = emailCheck();
+		const phoneValid = phoneCheck();
 
     if (!pwValid) {
-        alert("비밀번호 형식이 올바르지 않습니다.");
+        alert("비밀번호 형식이 올바르지 않습니다!");
         e.preventDefault();
         return false;
     }
 
     if (!pwVerValid) {
-        alert("비밀번호 확인 칸을 정확히 입력해야 수정할 수 있습니다.");
+        alert("비밀번호가 일치하지 않습니다!");
+        e.preventDefault();
+        return false;
+    }
+		if (!emailValid) {
+        alert("이메일양식이 올바르지 않습니다!");
+        e.preventDefault();
+        return false;
+    }
+		if (!phoneValid) {
+        alert("전화번호 양식이 올바르지 않습니다!");
         e.preventDefault();
         return false;
     }
 
     return true;
 });
+// --------------------------------------------------------------------------------
+//회원 탈퇴 버튼 클릭하면 confirm창 띄우기
+$('#deleteMemBtn').on("click", function(e){
+	e.preventDefault();
+		if(confirm("탈퇴하시면 모든 데이터가 삭제되며 복구할 수 없습니다. 그래도 삭제하시겠습니까?")){
+			location.href="deleteMem.jsp";
+			return true;
+		} return false;
+	});
 });

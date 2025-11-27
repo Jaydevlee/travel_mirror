@@ -169,7 +169,7 @@ $(window).on("click", (e) => {
 
 // --------------------------------------------------------------------------------
 
-//회원가입버튼 이벤트 DB연결로 인한여 삭제 예정 localsession 다지워라
+//회원가입버튼 이벤트 
 const form = $('form');
 form.on('submit', () => {
 
@@ -181,6 +181,7 @@ form.on('submit', () => {
     alert("필수 이용약관에 동의해주세요.");
     return false;
   }
+	// 유효성 검사 모두 통과해야 process_signUp.jsp로 이동
   if(!idCheck() || !pwCheck() || !verifyPw() || !emailCheck() || !phoneCheck()){     
     alert("입력값을 다시 확인해주세요.");
 		return false;
