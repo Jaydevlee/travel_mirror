@@ -70,7 +70,7 @@
         <li><a href="<%=root%>/personalPlan/travelList.jsp">✈️ 여행계획 세우기</a></li>
         <li><a href="<%=root%>/travelReview/reviewList.jsp">📖 여행리뷰 보기</a></li>
         <% if (headerSessionId != null) { %>
-        	<li><a href="<%=root%>/wishList/myWishList.jsp">❤️ 나의 찜 목록</a></li>
+        	<li><a href="<%=root%>/travelReview/wishList.jsp">❤️ 나의 찜 목록</a></li>
             <li><a href="<%=root%>/member/myInfoPage.jsp">👤 마이페이지</a></li>
         <% } %>
     </ul>
