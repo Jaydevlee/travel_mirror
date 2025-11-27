@@ -12,16 +12,16 @@
 </head>
 <body >
 <script type="text/javascript">
-	function deleteTravelInfo(travelNo) {
-		if (confirm("해당 여행정보를 삭제합니다.") == true)
-			location.href =  "./admin_deleteMemberTravelInfo.jsp?travelNo=" + travelNo;
+	function deleteReview(reviewNo) {
+		if (confirm("해당 리뷰를 삭제합니다.") == true)
+			location.href =  "./admin_memberReviewDelete.jsp?reviewNo=" + reviewNo;
 		else
 			return;
 	}
 </script>
 <%@ include file="../menu.jsp"%>
 <%
-String id = request.getParameter("id");
+	String id = request.getParameter("id");
 %>
 <h1 class="text-center mt-5 mb-5"><%=id %> 여행 목록</h1>
 <div id = "list">
@@ -29,11 +29,9 @@ String id = request.getParameter("id");
 	<thead>
 		<tr>
 			<th scope="col">#</th>
-			<th scope="col">여행제목</th>
-			<th scope="col">여행국가</th>
-			<th scope="col">시작일</th>
-			<th scope="col">종료일</th>
-			<th scope="col">총예산</th>
+			<th scope="col">여행지</th>
+			<th scope="col">후기내용</th>
+			<th scope="col">작성일</th>
 			<th scope="col">삭제</th>
 		</tr>
 	</thead>
@@ -43,7 +41,7 @@ String id = request.getParameter("id");
 	PreparedStatement pstmt = null;
  	ResultSet rs = null;
  	conn = DBConnection.getConnection();
- 	String sql =  "SELECT ROW_NUMBER() OVER (ORDER BY TRAVEL_NO) AS rn, travel_info.* " + "FROM travel_info WHERE tr_mem_id=?";
+ 	String sql =  "SELECT ROW_NUMBER() OVER (ORDER BY REVIEW_NO) AS rn, TRAVEL_REVIEW.* " + "FROM TRAVEL_REVIEW WHERE TR_MEM_ID=?";
  	pstmt = conn.prepareStatement(sql);
  	pstmt.setString(1, id);
  	rs = pstmt.executeQuery();
@@ -52,12 +50,10 @@ String id = request.getParameter("id");
 		<tbody>
 			<tr>
 			<th scope="col"><%=rs.getInt("rn")%></th>
-			<th scope="col"><%=rs.getString("TITLE")%></th>
-			<th scope="col"><%=rs.getString("country")%></th>
-			<th scope="col"><%=rs.getDate("START_DATE")%></th>
-			<th scope="col"><%=rs.getDate("END_DATE")%></th>
-			<th scope="col"><%=Hyphen.formatPhoneNumber(rs.getString("TOTAL_BUDGET"))%></th>
-			<th><button class="btn btn-danger" onclick="deleteTravelInfo(<%=rs.getInt("TRAVEL_NO")%>)">삭제</button></th>
+			<th scope="col"><%=rs.getString("destination")%></th>
+			<th scope="col"><%=rs.getString("content")%></th>
+			<th scope="col"><%=rs.getDate("reg_date")%></th>
+			<th><button class="btn btn-danger" onclick="deleteReview(<%=rs.getInt("review_no")%>)">삭제</button></th>
 			</tr>
 		</tbody>
 		<%
