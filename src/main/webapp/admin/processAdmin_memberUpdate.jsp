@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="java.sql.*" %>
-<%@ include file = "../dbconn.jsp" %>
+<%@ page import="com.common.DBConnection" %>
 <%	
 	request.setCharacterEncoding("UTF-8");
 
@@ -12,7 +12,9 @@
 		
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
+	Connection conn = null;
 	
+	conn = DBConnection.getConnection();
 	String sql = "SELECT * FROM tr_member WHERE tr_mem_id = ?";
 	pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, id);
@@ -28,6 +30,9 @@
 			pstmt.setString(5, id);
 			pstmt.executeUpdate();
 	}
+	DBConnection.close(rs);
+	DBConnection.close(pstmt);
+	DBConnection.close(conn);
 
 	response.sendRedirect("admin_pageSucess.jsp?cnt=10");
 %>

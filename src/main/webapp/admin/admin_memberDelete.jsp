@@ -1,15 +1,16 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ page import="java.sql.*"%>
-<%@ include file="../dbconn.jsp"%>
+<%@ page import="com.common.DBConnection" %>
 <%
     request.setCharacterEncoding("UTF-8");
 
     String id = request.getParameter("id");
     
     
-
+    Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
+    conn = DBConnection.getConnection();
 
     String sql = "SELECT * FROM tr_member WHERE tr_mem_id = ?";
     pstmt = conn.prepareStatement(sql);
@@ -32,7 +33,7 @@
         out.println("일치하는 회원이 없습니다");
     }
 
-    if (rs != null) rs.close();
-    if (pstmt != null) pstmt.close();
-    if (conn != null) conn.close();
+    DBConnection.close(rs);
+    DBConnection.close(pstmt);
+    DBConnection.close(conn);
 %>

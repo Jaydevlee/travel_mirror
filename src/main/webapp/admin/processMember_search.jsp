@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="admin.Hyphen" %>
-<%@ include file = "../dbconn.jsp" %>
+<%@ page import="com.common.DBConnection" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
@@ -27,8 +27,10 @@
 <%
 String searchType = request.getParameter("searchType");
 String keyword = request.getParameter("keyword");
+Connection conn = null;
 PreparedStatement pstmt = null;
 ResultSet rs = null;
+conn = DBConnection.getConnection();
 String sql = "SELECT * FROM tr_member";
 if(searchType.equals("tr_mem_id")){
 	sql = "SELECT * FROM tr_member Where tr_mem_id like ?";
@@ -113,6 +115,9 @@ if(searchType.equals("tr_mem_phone")){
 <%
 	}
 }
+DBConnection.close(rs);
+DBConnection.close(pstmt);
+DBConnection.close(conn);
 %>
 </table>
 </body>

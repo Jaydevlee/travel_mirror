@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="admin.Hyphen" %>
-<%@ include file="../dbconn.jsp"%>
+<%@ page import="com.common.DBConnection" %> 
 <html>
 <head>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,9 +20,11 @@
 	
 	String id = request.getParameter("id");
 	
+	Connection conn = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	
+	conn = DBConnection.getConnection();
 	String sql = "SELECT * FROM tr_member WHERE tr_mem_id = ?";
 	pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, id);
@@ -84,6 +86,11 @@
 </div>
 </form>
 </div>
+<%
+	DBConnection.close(rs);
+	DBConnection.close(pstmt);
+	DBConnection.close(conn);
+%>
 <script src="../js/admin.js"></script>
 </body>
 </html>

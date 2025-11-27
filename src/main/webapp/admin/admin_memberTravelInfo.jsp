@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ page import="java.sql.*" %>
 <%@ page import="admin.Hyphen" %>
-<%@ include file = "../dbconn.jsp" %>
+<%@ page import="com.common.DBConnection" %> 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
@@ -28,9 +28,11 @@
 	</thead>
 <%	
 	int count = 1;
-	String id = request.getParameter("id"); 
+	String id = request.getParameter("id");
+	Connection conn = null;
 	PreparedStatement pstmt = null;
  	ResultSet rs = null;
+ 	conn = DBConnection.getConnection();
  	String sql =  "SELECT ROW_NUMBER() OVER (ORDER BY TRAVEL_NO) AS rn, travel_info.* " + "FROM travel_info WHERE tr_mem_id=?";
  	pstmt = conn.prepareStatement(sql);
  	pstmt.setString(1, id);
@@ -50,6 +52,9 @@
 		</tbody>
 		<%
 			}
+		DBConnection.close(rs);
+	    DBConnection.close(pstmt);
+	    DBConnection.close(conn);
 		%>
 </table>
 </body>

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="java.sql.*" %>
-<%@ include file = "../dbconn.jsp" %>
+<%@ page import="com.common.DBConnection" %>
 <%	
 	request.setCharacterEncoding("UTF-8");
 	String id = request.getParameter("tr_id");
@@ -9,8 +9,10 @@
 	System.out.println(id);
 	System.out.println(psw);
 	
+	Connection conn = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
+	conn = DBConnection.getConnection();
 	String sql = "SELECT * FROM tr_MEMBER where tr_mem_id = ?";
 	pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, id);
@@ -31,4 +33,8 @@
 	} else {
 		response.sendRedirect("login_failId.jsp");
 	}
+	
+	DBConnection.close(rs);
+    DBConnection.close(pstmt);
+    DBConnection.close(conn);
 %>

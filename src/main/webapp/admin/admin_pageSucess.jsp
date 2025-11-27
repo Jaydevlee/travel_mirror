@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ page import="java.sql.*" %>
 <%@ page import="admin.Hyphen" %>
-<%@ include file = "../dbconn.jsp" %>
+<%@ page import="com.common.DBConnection" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
@@ -39,6 +39,8 @@
 		int cnt = Integer.parseInt(request.getParameter("cnt"));
 		PreparedStatement pstmt = null;
 	 	ResultSet rs = null;
+	 	Connection conn = null;
+	 	conn = DBConnection.getConnection();
 	 	String sql = "SELECT * from (SELECT ROW_NUMBER() OVER (ORDER BY tr_mem_no) AS rn, tr_member.* FROM tr_member where tr_mem_level=? or tr_mem_level=?) WHERE rn BETWEEN ? and ?";
 	 	pstmt = conn.prepareStatement(sql);
 	 	pstmt.setInt(1, 2);
@@ -177,5 +179,10 @@
 </ul>
 </nav>
 </div>
+<%
+	DBConnection.close(rs);
+	DBConnection.close(pstmt);
+	DBConnection.close(conn);
+%>
 </body>
 </html>
