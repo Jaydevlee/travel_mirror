@@ -1,12 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="java.sql.*"%>
+<%@ page import="com.common.*" %>
 <%@ page import="com.member.dao.*" %>
 <%@ page import="com.member.dto.*" %>
 <%@ page import="com.oreilly.servlet.*" %>
 <%@ page import="com.oreilly.servlet.multipart.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.io.*" %>
-<%@ include file="dbconn.jsp" %>
+
 <%
 	request.setCharacterEncoding("UTF-8");
 	String save = application.getRealPath("./img/profile");
@@ -23,23 +24,20 @@
 	TravelMemberDTO dto = new TravelMemberDTO();
 	dto.setMemId(id);
 	dto.setMemFileName(fileName);
+	
+	//conn변수에 DBConnection의 DB연결 메소드 저장
+		Connection conn=DBConnection.getConnection();
 	TravelUpdateMemDAO dao = new TravelUpdateMemDAO();
+	
 	
 	try{
 		int result = dao.changePic(conn, dto);
-		if(result > 0){
-%>
-	<script type="text/javascript">
-	 alert("프로필 사진이 변경되었습니다.");
-	</script>
-	<%
-	response.sendRedirect("myInfoPage.jsp");
-	}
-		} catch(SQLException ex){
-		out.println("프로필사진 변경에 실패했습니다.<br>");
-		out.println("SQLException : " + ex.getMessage());
+			if(result > 0){
+			response.sendRedirect("myInfoPage.jsp");
+			}	
+		} catch(Exception ex){
+		ex.printStackTrace();
 	} finally {
-		if(conn!=null)
-			conn.close();
+		DBConnection.close(conn);
 	}
 %>

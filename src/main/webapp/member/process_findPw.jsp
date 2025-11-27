@@ -1,15 +1,18 @@
 <%@ page contentType="text/html; charset=utf-8"  language="java"%>
+<%@ page import="com.common.*" %>
 <%@ page import="com.member.dao.*"%>
 <%@ page import="com.member.dto.*"%>
 <%@ page import="java.sql.*" %>
-<%@ include file="dbconn.jsp" %>
+
  
 <%
 	request.setCharacterEncoding("UTF-8");
 	String id=request.getParameter("id_findPw");
 	String email=request.getParameter("email_findPw");
 
-	TravelSelectMemDAO dao = new TravelSelectMemDAO();	
+	TravelSelectMemDAO dao = new TravelSelectMemDAO();
+	//conn변수에 DBConnection의 DB연결 메소드 저장
+	Connection conn=DBConnection.getConnection();
 
 try{
 	TravelMemberDTO dto = dao.findMemPw(conn, email, id);
@@ -32,7 +35,6 @@ try{
 	out.println("오류가 발생했습니다.<br>");
 out.println("SQLException: " + ex.getMessage());
 	} finally {
-	if(conn!=null)
-	conn.close();
+	DBConnection.close(conn);
 	}
 %>

@@ -1,5 +1,6 @@
 package com.member.dao;
 import java.sql.*;
+import com.common.*;
 import com.member.dto.*;
 
 public class TravelUpdateMemDAO {
@@ -18,7 +19,7 @@ public class TravelUpdateMemDAO {
 		
 		return result;
 		} finally { 
-			if(pstmt!=null) pstmt.close();
+			DBConnection.close(pstmt);
 		}
 	}
 	
@@ -31,11 +32,9 @@ public class TravelUpdateMemDAO {
 			pstmt.setString(2, dto.getMemId());
 			int result = pstmt.executeUpdate();
 			
-			
 			return result;
 		 } finally {
-			 if(pstmt!=null) 
-			 pstmt.close();
+			 DBConnection.close(pstmt);
 		 }
 			
 	}
@@ -50,8 +49,7 @@ public class TravelUpdateMemDAO {
 			int result=pstmt.executeUpdate();
 			return result;
 		} finally {
-			if(pstmt!=null)
-				pstmt.close();
+			DBConnection.close(pstmt);
 		}
 	}
 	

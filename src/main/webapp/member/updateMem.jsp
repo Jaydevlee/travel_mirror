@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ page import="java.sql.*" %>
+<%@ page import="com.common.*" %>
 <%@ page import="com.member.dao.*" %>
 <%@ page import="com.member.dto.*" %>
-<%@ include file="dbconn.jsp" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -19,10 +19,14 @@
   <%
 	request.setCharacterEncoding("UTF-8");
 	String mem_id=(String) session.getAttribute("sessionId");
+	Connection conn = null;
+	TravelMemberDTO dto = null;
 	
-
+	try{
+		conn = DBConnection.getConnection();
+	
 	TravelSelectMemDAO dao = new TravelSelectMemDAO();
-	TravelMemberDTO dto= dao.selectMem(conn, mem_id);
+	dto= dao.selectMem(conn, mem_id);
  if(dto == null){
 %>
 	<script>
@@ -32,7 +36,19 @@
  <% 
  	return; 
  	} 
-	 request.setAttribute("mem", dto);%>
+	 request.setAttribute("mem", dto);
+	} catch(Exception e){
+    e.printStackTrace();
+    %>
+    <script>
+      alert("오류가 발생했습니다. 다시 시도해주세요.");
+      location.href="../firstPage.jsp";
+    </script>
+    <%
+    } finally {
+		DBConnection.close(conn);
+	}
+	 %>
     <h1>회원정보 수정</h1>
     <!-- 회원 탈퇴 부분(js에서 confirm 추가로 링크 삭제) -->
     <a href="#" id="deleteMemBtn">회원 탈퇴</a>

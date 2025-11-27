@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ page import="java.sql.*" %>
+<%@ page import="com.common.*" %>
 <%@ page import="com.member.dao.*" %>
 <%@ page import="com.member.dto.*" %>
-<%@ include file="dbconn.jsp" %>
 
 <!-- sessionId 가져오기 -->
 <% 
@@ -11,6 +11,10 @@
 	
 	dto.setMemId(id);
 	TravelDeleteMemDAO dao = new TravelDeleteMemDAO();
+	
+	//conn변수에 DBConnection의 DB연결 메소드 저장
+	Connection conn=DBConnection.getConnection();
+	
 	try{
 		int result = dao.deleteMem(conn, dto);
 		
@@ -34,7 +38,6 @@
 		out.println("오류가 발생했습니다.<br>");
 		out.println("SQLException : " + ex.getMessage());
 	} finally {
-		if(conn!=null)
-			conn.close();
+		DBConnection.close(conn);
 	}
 %>

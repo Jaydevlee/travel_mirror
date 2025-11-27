@@ -1,6 +1,7 @@
 package com.member.dao;
 import java.sql.*;
 import com.member.dto.*;
+import com.common.*;
 
 public class TravelDeleteMemDAO {
 	public int deleteMem(Connection conn, TravelMemberDTO dto) throws SQLException {
@@ -9,13 +10,10 @@ public class TravelDeleteMemDAO {
 	try {
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, dto.getMemId());
-		int result = pstmt.executeUpdate();
-		pstmt.close();
+		return pstmt.executeUpdate();
 		
-		return result;
 	} finally {
-		if(pstmt!=null)
-			pstmt.close();
+		DBConnection.close(pstmt);
 	}
 	}
 }

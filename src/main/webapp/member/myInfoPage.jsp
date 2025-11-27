@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="java.util.*" %>
+<%@ page import="com.common.*" %>
 <%@ page import="com.member.dao.*" %>
 <%@ page import="com.member.dto.*" %>
 <%@ page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy" %>
@@ -9,54 +10,96 @@
 <%@ page import="com.personalPlan.dto.TravelInfoDTO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="admin.Hyphen" %>
-<%@ include file="dbconn.jsp" %>
 
-<% 
-    request.setCharacterEncoding("utf-8");
-    
-    // 1. 세션에서 아이디 가져오기
+<%
+	request.setCharacterEncoding("utf-8");
+	
+	Connection conn = null;
+	//dto변수선언
+	TravelMemberDTO dto = null;
+	
+	//myTraveList 변수 선언
+	List<TravelInfoDTO> myTravelList = null;
+	
+	//페이지네이션 변수 선언
+	int Page = 1;
+	int pagesize = 5;
+	int startpage = 0;
+	int endpage = 0;
+	int totalpage=0;
+	
+	// 1. 세션에서 아이디 가져오기
     String sessionId = (String) session.getAttribute("sessionId");
+	
+try {
+    // DB 연결
+    conn = DBConnection.getConnection();
+
+    
 
     // 2. 로그인 안 했으면 튕겨내기
     if(sessionId == null){
 %>
-    <script type="text/javascript">
-        alert("로그인이 필요합니다.");
-        location.href="../firstPage.jsp"; 
-    </script>
-<% 
+        <script type="text/javascript">
+            alert("로그인이 필요합니다.");
+            location.href="../firstPage.jsp"; 
+        </script>
+<%
         return;
     }
 
     // 3. 회원 정보 가져오기
     TravelSelectMemDAO memDao = new TravelSelectMemDAO();
-    TravelMemberDTO dto = memDao.selectMem(conn, sessionId);
-    
+    dto = memDao.selectMem(conn, sessionId);
+
     // 회원 정보가 없으면 처리
     if(dto.getMemId() == null){
 %>
-    <script type="text/javascript">
-        alert("회원 정보를 찾을 수 없습니다.");
-        location.href="../firstPage.jsp";
-    </script>
-<% 
+        <script type="text/javascript">
+            alert("회원 정보를 찾을 수 없습니다.");
+            location.href="../firstPage.jsp";
+        </script>
+<%
         return;
     }
-    
+
     request.setAttribute("mem", dto);
-    
+
     // 4. 내 여행 리스트 가져오기
     TravelDAO dao = new TravelDAO();
-    List<TravelInfoDTO> myTravelList = dao.selectMyTravelList(conn, sessionId);
-    int Page = 1;
+    myTravelList = dao.selectMyTravelList(conn, sessionId);
+
+    // 페이지네이션
     if(request.getParameter("Page") != null){
-    	Page = Integer.parseInt(request.getParameter("Page"));
+        Page = Integer.parseInt(request.getParameter("Page"));
     }
-    int pagesize = 5;
-    int startpage = (Page-1)*pagesize;
-    int endpage = startpage+pagesize;
-    int totalpage = (int)Math.ceil(myTravelList.size()/5.0);
-    
+ 
+    startpage = (Page-1)*pagesize;
+    endpage = startpage + pagesize;
+   	totalpage = (int)Math.ceil(myTravelList.size() / 5.0);
+
+    // 페이지네이션 값 JSP에서 그대로 사용
+    request.setAttribute("myTravelList", myTravelList);
+    request.setAttribute("Page", Page);
+    request.setAttribute("pagesize", pagesize);
+    request.setAttribute("startpage", startpage);
+    request.setAttribute("endpage", endpage);
+    request.setAttribute("totalpage", totalpage);
+
+} catch(Exception e) {
+    e.printStackTrace();
+%>
+    <script>
+        alert("데이터를 불러오는 중 오류가 발생했습니다.");
+        location.href="../firstPage.jsp";
+    </script>
+<%
+    return;
+
+} finally {
+    // DB 커넥션 닫기
+    DBConnection.close(conn);
+}
 %>
 
 <html lang="ko">
