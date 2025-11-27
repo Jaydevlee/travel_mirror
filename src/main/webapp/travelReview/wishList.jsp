@@ -59,7 +59,7 @@
                 <div class="review-card" onclick="location.href='travelReviewDetail.jsp?reviewNo=<%=dto.getReviewNo()%>'">
                     <div class="card-image">
                         <% if(dto.getThumbnail() != null) { %>
-                            <img src="../uploads/review/<%=dto.getThumbnail()%>">
+                            <img src="/uploads/<%=dto.getThumbnail()%>">
                         <% } else { %>
                             <div class="no-image"><%=icon%></div>
                         <% } %>

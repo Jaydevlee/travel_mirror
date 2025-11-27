@@ -3,7 +3,8 @@
 <%@ page import="com.oreilly.servlet.MultipartRequest, com.oreilly.servlet.multipart.DefaultFileRenamePolicy" %>
  
 <%
-    String savePath = request.getServletContext().getRealPath("/uploads/review");
+	String savePath = "Z:/";
+	String urlPath = "/uploads/";  // 브라우저에서 접근할 URL 경로
     int maxSize = 10 * 1024 * 1024; 
 
     Connection conn = null;

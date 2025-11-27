@@ -59,7 +59,7 @@ request.setAttribute("pageTitle", "여행 후기 게시판");
 					<%
 					if (dto.getThumbnail() != null) {
 					%>
-					<img src="../uploads/review/<%=dto.getThumbnail()%>" alt="썸네일">
+					<img src="/uploads/<%=dto.getThumbnail()%>" alt="썸네일">
 					<%
 					} else {
 					%>

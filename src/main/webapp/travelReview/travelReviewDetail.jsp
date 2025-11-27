@@ -109,9 +109,13 @@
             %>
             <div class="media-item">
                 <% if ("VIDEO".equals(type)) { %>
-                    <video controls src="../uploads/review/<%=savedName%>"></video>
+                     <video controls src="/uploads/<%=savedName%>"></video>
                 <% } else { %>
-                    <img src="../uploads/review/<%=savedName%>" onclick="window.open(this.src)">
+                    <%--<img src="http://192.168.0.141/travel_uploads/travel_image.jpg" alt="Travel Image"> --%>
+                    <%--<img src="http://192.168.0.141/travel_uploads/<%=savedName%>" onclick="window.open(this.src)"> --%>
+                    
+            <img src="/uploads/<%=savedName%>" alt="Uploaded Image" onclick="window.open(this.src)">
+                    
                 <% } %>
             </div>
             <% 
