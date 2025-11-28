@@ -76,7 +76,7 @@
     
     <ul id="btn_menu">
         <% if (headerSessionId == null) { %>
-            <li><a href="<%=root%>/login/firstPage.jsp">로그인</a></li>
+            <li><a href="<%=root%>/firstPage.jsp">로그인</a></li>
             <li><a href="<%=root%>/member/signup.jsp">회원가입</a></li>            
         <% } else { %>
             <li><a href="<%=root%>/member/updateMem.jsp">회원수정</a></li>
