@@ -84,39 +84,42 @@ public class TravelDAO {
 
 	// 세부 일정 등록하기 (INSERT)
 	public int insertTravelPlan(Connection conn, TravelPlanDTO plan) {
-		int result = 0;
-		PreparedStatement pstmt = null;
+	    int result = 0;
+	    PreparedStatement pstmt = null;
 
-		String sql = "INSERT INTO TRAVEL_PLAN (PLAN_NO, TRAVEL_NO, DAY_NO, CATEGORY, TITLE, START_TIME, END_TIME, LOCATION, COST) "
-				+ "VALUES (SEQ_PLAN_NO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    // 1. SQL문에 BOOKING_NO 컬럼과 ? 추가
+	    String sql = "INSERT INTO TRAVEL_PLAN (PLAN_NO, TRAVEL_NO, DAY_NO, CATEGORY, TITLE, BOOKING_NO, START_TIME, END_TIME, LOCATION, COST) "
+	            + "VALUES (SEQ_PLAN_NO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-		try {
-			pstmt = conn.prepareStatement(sql);
+	    try {
+	        pstmt = conn.prepareStatement(sql);
 
-			pstmt.setInt(1, plan.getTravelNo()); // FK
-			pstmt.setInt(2, plan.getDayNo());
-			pstmt.setString(3, plan.getCategory());
-			pstmt.setString(4, plan.getTitle());
+	        pstmt.setInt(1, plan.getTravelNo());
+	        pstmt.setInt(2, plan.getDayNo());
+	        pstmt.setString(3, plan.getCategory());
+	        pstmt.setString(4, plan.getTitle());
+	        pstmt.setString(5, plan.getBookingNo()); 
 
-			// Timestamp로 넣어야 시간까지 저장됨
-			pstmt.setTimestamp(5, plan.getStartTime());
-			pstmt.setTimestamp(6, plan.getEndTime());
+	        pstmt.setTimestamp(6, plan.getStartTime()); 
+	        pstmt.setTimestamp(7, plan.getEndTime());   
 
-			pstmt.setString(7, plan.getLocation());
-			pstmt.setInt(8, plan.getCost());
+	        pstmt.setString(8, plan.getLocation());     
+	        pstmt.setInt(9, plan.getCost());            
 
-			result = pstmt.executeUpdate();
+	        result = pstmt.executeUpdate();
+	        
+	        if (result > 0) {
+	            refreshTotalBudget(conn, plan.getTravelNo());
+	        }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (pstmt != null)
-					pstmt.close();
-			} catch (Exception e) {
-			}
-		}
-		return result;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (pstmt != null) pstmt.close();
+	        } catch (Exception e) {}
+	    }
+	    return result;
 	}
 
 	// 세부 일정 특정 여행의 일정만 가져오기 (SELECT)
@@ -135,21 +138,23 @@ public class TravelDAO {
 			rset = pstmt.executeQuery();
 
 			while (rset.next()) {
-				TravelPlanDTO plan = new TravelPlanDTO();
-				plan.setPlanNo(rset.getInt("PLAN_NO"));
-				plan.setTravelNo(rset.getInt("TRAVEL_NO"));
-				plan.setDayNo(rset.getInt("DAY_NO"));
-				plan.setTitle(rset.getString("TITLE"));
-				plan.setCategory(rset.getString("CATEGORY"));
+		        TravelPlanDTO plan = new TravelPlanDTO();
+		        plan.setPlanNo(rset.getInt("PLAN_NO"));
+		        plan.setTravelNo(rset.getInt("TRAVEL_NO"));
+		        plan.setDayNo(rset.getInt("DAY_NO"));
+		        plan.setTitle(rset.getString("TITLE"));
+		        plan.setCategory(rset.getString("CATEGORY"));
+		        
+		        plan.setBookingNo(rset.getString("BOOKING_NO")); 
 
-				plan.setStartTime(rset.getTimestamp("START_TIME"));
-				plan.setEndTime(rset.getTimestamp("END_TIME"));
+		        plan.setStartTime(rset.getTimestamp("START_TIME"));
+		        plan.setEndTime(rset.getTimestamp("END_TIME"));
 
-				plan.setLocation(rset.getString("LOCATION"));
-				plan.setCost(rset.getInt("COST"));
+		        plan.setLocation(rset.getString("LOCATION"));
+		        plan.setCost(rset.getInt("COST"));
 
-				list.add(plan);
-			}
+		        list.add(plan);
+		    }
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -166,28 +171,42 @@ public class TravelDAO {
 
 //세부 일정 삭제하기 (DELETE)
 	public int deleteTravelPlan(Connection conn, int planNo) {
-		int result = 0;
-		PreparedStatement pstmt = null;
+	    int result = 0;
+	    PreparedStatement pstmt = null;
+	    PreparedStatement pstmtSelect = null;
+	    ResultSet rs = null;
+	    int travelNo = 0;
 
-		String sql = "DELETE FROM TRAVEL_PLAN WHERE PLAN_NO = ?";
+	    try {
+	        // 1. 삭제하기 전에 해당 일정의 travelNo를 먼저 조회 (예산 업데이트용)
+	        String sqlSelect = "SELECT TRAVEL_NO FROM TRAVEL_PLAN WHERE PLAN_NO = ?";
+	        pstmtSelect = conn.prepareStatement(sqlSelect);
+	        pstmtSelect.setInt(1, planNo);
+	        rs = pstmtSelect.executeQuery();
+	        if (rs.next()) {
+	            travelNo = rs.getInt("TRAVEL_NO");
+	        }
 
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, planNo);
+	        // 2. 일정 삭제
+	        String sql = "DELETE FROM TRAVEL_PLAN WHERE PLAN_NO = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, planNo);
+	        result = pstmt.executeUpdate();
+	        
+	        // 3. ★ 삭제 성공 시 총 예산 업데이트
+	        if (result > 0 && travelNo > 0) {
+	            refreshTotalBudget(conn, travelNo);
+	        }
 
-			result = pstmt.executeUpdate();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-
-			try {
-				if (pstmt != null)
-					pstmt.close();
-			} catch (Exception e) {
-			}
-		}
-		return result;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        // 자원 해제 (rs, pstmtSelect, pstmt 모두 닫기)
+	        try { if(rs!=null) rs.close(); } catch(Exception e){}
+	        try { if(pstmtSelect!=null) pstmtSelect.close(); } catch(Exception e){}
+	        try { if(pstmt!=null) pstmt.close(); } catch(Exception e){}
+	    }
+	    return result;
 	}
 
 // 세부 일정 수정하기 (UPDATE)
@@ -210,6 +229,10 @@ public class TravelDAO {
 			pstmt.setInt(8, plan.getPlanNo()); // 어떤 일정을 수정할지(WHERE 조건)
 
 			result = pstmt.executeUpdate();
+			
+			if(result >0) {
+				refreshTotalBudget(conn, plan.getTravelNo());
+		    }
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -313,5 +336,27 @@ public class TravelDAO {
             } catch(Exception e) {}
         }
         return info;
+    }
+    
+   
+ // 일정 변경 시 TRAVEL_INFO의 총 예산을 재계산하여 업데이트하는 메서드
+    public void refreshTotalBudget(Connection conn, int travelNo) {
+        PreparedStatement pstmt = null;
+        String sql = "UPDATE TRAVEL_INFO "
+                   + "SET TOTAL_BUDGET = (SELECT NVL(SUM(COST), 0) FROM TRAVEL_PLAN WHERE TRAVEL_NO = ?) "
+                   + "WHERE TRAVEL_NO = ?";
+
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, travelNo);
+            pstmt.setInt(2, travelNo);
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+            } catch (Exception e) {}
+        }
     }
 }

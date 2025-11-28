@@ -60,6 +60,10 @@ public class ReviewDTO {
     }
 
     public String getContent() {
+        // 내용이 null이면 "null" 글자 대신 빈 문자열("") 반환
+        if (content == null) {
+            return "";
+        }
         return content;
     }
 
