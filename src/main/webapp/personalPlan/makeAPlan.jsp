@@ -57,15 +57,12 @@ request.setAttribute("pageTitle", "상세 여행 계획");
 <link rel="stylesheet" href="../css/makeAPlan.css">
 
 <script src="../js/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
-<link
-	href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
-	rel="stylesheet" />
-<script
-	src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
 
 <script>
         window.serverTravelNo = "<%=info.getTravelNo()%>";
@@ -113,10 +110,9 @@ request.setAttribute("pageTitle", "상세 여행 계획");
 					<button onclick="openTravelEditModal()" class="btn-icon-edit"
 						title="여행 정보 수정">✏️</button>
 				</div>
-				<p>
-					📍
-					<%=info.getCountry()%></p>
-				<p>
+				<div id="country-display" data-codes="<%=info.getCountry()%>" style="margin-bottom: 10px;">
+				    <p>📍 <%=info.getCountry()%></p> 
+				</div>
 					📅 <span id="disp-start-date"><%=info.getStartDate()%></span> ~ <span
 						id="disp-end-date"><%=info.getEndDate()%></span>
 				</p>
@@ -277,9 +273,43 @@ request.setAttribute("pageTitle", "상세 여행 계획");
 	</div>
 
 	<script src="../js/countryData.js"></script>
-	<script
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdoGjJDp1c2WPiM8zSdTJbHx5OUBhyFY8&libraries=places&language=ko"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdoGjJDp1c2WPiM8zSdTJbHx5OUBhyFY8&libraries=places&language=ko"></script>
 	<script src="../js/personalPlan/personalPlan_action.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var displayBox = document.getElementById("country-display");
+    var rawCodes = displayBox.getAttribute("data-codes"); 
+
+    if (rawCodes && typeof countryList !== 'undefined') {
+        var codes = rawCodes.split(","); 
+        var html = "";
+
+        codes.forEach(function(code) {
+            code = code.trim(); 
+            if(!code) return;
+
+            var country = countryList.find(function(item) {
+                return item.id === code;
+            });
+
+            if (country) {
+
+                html += '<div style="display:flex; align-items:center; margin-bottom:4px; font-size:15px;">';
+
+                html += '  <span class="fi fi-' + code.toLowerCase() + '" style="margin-right:8px; border:1px solid #ddd; border-radius:2px;"></span>';
+
+                html += '  <span style="color:#333;">' + country.text + '</span>';
+                html += '</div>';
+            }
+        });
+
+        if (html) {
+            displayBox.innerHTML = html;
+        }
+    }
+});
+</script>
 
 </body>
 </html>
