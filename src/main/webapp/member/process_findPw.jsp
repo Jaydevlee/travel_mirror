@@ -22,7 +22,7 @@ try{
 		location.href="resetPassword.jsp?id=<%=id %>";
 	</script>
 <%
-} else {
+	} else {
 %>
 	<script type="text/javascript">
 		alert("해당아이디와 일치하는 비밀번호가 없습니다.");	
@@ -30,10 +30,15 @@ try{
 	</script>
 
 <%
-}
-} catch(SQLException ex) {
-	out.println("오류가 발생했습니다.<br>");
-out.println("SQLException: " + ex.getMessage());
+	}
+	} catch(Exception ex) {
+	ex.printStackTrace();
+%>
+	<script type="text/javascript">
+		alert("오류발생!");
+		history.back();
+	</script>
+<%
 	} finally {
 	DBConnection.close(conn);
 	}

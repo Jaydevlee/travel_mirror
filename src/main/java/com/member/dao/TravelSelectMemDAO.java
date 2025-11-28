@@ -5,7 +5,7 @@ import com.common.*;
 import com.member.dto.*;
 
 public class TravelSelectMemDAO {
-	public TravelMemberDTO selectMem(Connection conn, String id) throws SQLException {
+	public TravelMemberDTO selectMem(Connection conn, String id) throws Exception {
 		String sql="SELECT * FROM tr_member WHERE tr_mem_id=?";
 		
 		PreparedStatement pstmt=null;
@@ -32,7 +32,7 @@ public class TravelSelectMemDAO {
 	} finally{
 		DBConnection.close(rs);
 		DBConnection.close(pstmt);
-	}
+		}
 	}
 	
 	public TravelMemberDTO dupCheck(Connection conn, String id) throws Exception{
@@ -58,7 +58,7 @@ public class TravelSelectMemDAO {
 	}
 	
 	
-	public TravelMemberDTO findMemId(Connection conn, String email) throws SQLException {
+	public TravelMemberDTO findMemId(Connection conn, String email) throws Exception {
 		String sql="SELECT tr_mem_id FROM tr_member WHERE tr_mem_email=?";
 		PreparedStatement pstmt=null;
 		ResultSet rs = null;
@@ -80,7 +80,7 @@ public class TravelSelectMemDAO {
 		}	
 	}
 	
-	public TravelMemberDTO findMemPw(Connection conn, String email, String id) throws SQLException{
+	public TravelMemberDTO findMemPw(Connection conn, String email, String id) throws Exception{
 		String sql="SELECT tr_mem_password FROM tr_member WHERE tr_mem_email=? AND tr_mem_id=?";
 		PreparedStatement pstmt=null;
 		ResultSet rs = null;

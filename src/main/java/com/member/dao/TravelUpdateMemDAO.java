@@ -4,7 +4,7 @@ import com.common.*;
 import com.member.dto.*;
 
 public class TravelUpdateMemDAO {
-	public int updateMem(Connection conn, TravelMemberDTO dto) throws SQLException {
+	public int updateMem(Connection conn, TravelMemberDTO dto) throws Exception {
 		String sql="UPDATE tr_member SET tr_mem_password=?, tr_mem_email=?, tr_mem_phone=? WHERE tr_mem_id=?";
 		PreparedStatement pstmt=null;
 		
@@ -23,7 +23,7 @@ public class TravelUpdateMemDAO {
 		}
 	}
 	
-	public int resetPw(Connection conn, TravelMemberDTO dto) throws SQLException {
+	public int resetPw(Connection conn, TravelMemberDTO dto) throws Exception {
 		 String sql="UPDATE tr_member SET tr_mem_password=? WHERE tr_mem_id=?";
 		 PreparedStatement pstmt=null;
 		 try {
@@ -39,7 +39,7 @@ public class TravelUpdateMemDAO {
 			
 	}
 	
-	public int changePic(Connection conn, TravelMemberDTO dto) throws SQLException{
+	public int changePic(Connection conn, TravelMemberDTO dto) throws Exception{
 		String sql="UPDATE tr_member SET tr_mem_pic=? WHERE tr_mem_id=?";
 		PreparedStatement pstmt=null;
 		try {

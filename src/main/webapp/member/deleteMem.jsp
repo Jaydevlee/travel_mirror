@@ -34,9 +34,14 @@
 		</script>
 <% 
 	}
-	} catch(SQLException ex){
-		out.println("오류가 발생했습니다.<br>");
-		out.println("SQLException : " + ex.getMessage());
+	} catch(Exception ex){
+		ex.printStackTrace();
+	%>
+	<script type="text/javascript">
+		alert("오류발생!");
+		history.back();
+	</script>
+ <%
 	} finally {
 		DBConnection.close(conn);
 	}

@@ -148,7 +148,7 @@ try {
 		<div class="rightSection">
 			<div class="myProfile">
 				<div class="title">
-					<a href="updateMem.jsp"><h3>내 프로필&raquo;</h3></a>
+					<a href="updateMem.jsp"><h3>내 프로필 &raquo;</h3></a>
 				</div>
 				<ul class="profileBox">
 					<li>아이디: ${mem.memId}</li>
@@ -159,7 +159,7 @@ try {
 			
 			<div class="myTravel">
 		 		<div class="title">
-		 			<a href="../../travel/personalPlan/travelList.jsp"><h3>내 여행</h3></a>
+		 			<a href="../../travel/personalPlan/travelList.jsp"><h3>내 여행 &raquo;</h3></a>
 		 		</div>
 				<ul class="travelPlan">
 				<% if(myTravelList.size() == 0) { %>
@@ -172,7 +172,7 @@ try {
 						} else{
 				%>
 					<li>
-				    	<a href="../../travel/personalPlan/makeAPlan.jsp?travelNo=<%= t.getTravelNo() %>"><%= t.getTitle() %> - <%= t.getCountry() %></a>
+				    	<a class="travelListTitle" href="../../travel/personalPlan/makeAPlan.jsp?travelNo=<%= t.getTravelNo() %>"><%= t.getTitle() %> - <%= t.getCountry() %></a>
 				    </li>
 				<%							
 						}

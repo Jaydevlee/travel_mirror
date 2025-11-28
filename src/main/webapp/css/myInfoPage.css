@@ -170,7 +170,7 @@ li {
     display: flex;
     justify-content: center; /* 가로 중앙 */
     gap: 10px;               /* 링크 사이 간격 */
-    margin-top: 20px;
+    margin: 15px 0 15px 0;
 }
 
 .pagenation a {
@@ -183,4 +183,31 @@ li {
 
 .pagenation a:hover {
     background-color: #f0f0f0;
+}
+
+
+@media screen and (max-width: 768px){
+	/* 전체 레이아웃 감싸는 박스 */
+	main {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 0;
+  margin: 0 25px 25px 25px;
+  background-color: #f5f7fa;
+}
+
+/* 메인 컨테이너 */
+.tr_myInfoContainer {
+  max-width: 1200px;
+  width: 100%;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-sizing: border-box;
+}
 }

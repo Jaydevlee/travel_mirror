@@ -4,7 +4,7 @@ import com.member.dto.*;
 import com.common.*;
 
 public class TravelDeleteMemDAO {
-	public int deleteMem(Connection conn, TravelMemberDTO dto) throws SQLException {
+	public int deleteMem(Connection conn, TravelMemberDTO dto) throws Exception {
 		String sql = "DELETE FROM tr_member WHERE tr_mem_id=?";
 		PreparedStatement pstmt = null;
 	try {

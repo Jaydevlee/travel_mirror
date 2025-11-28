@@ -45,6 +45,12 @@ try{
 
 } catch (Exception ex) {
 	ex.printStackTrace();
+	%>
+	<script type="text/javascript">
+		alert("오류발생!");
+		history.back();
+	</script>
+ <%
 } finally {
 	DBConnection.close(conn);
 }
