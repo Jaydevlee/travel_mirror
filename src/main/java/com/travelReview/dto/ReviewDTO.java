@@ -1,9 +1,9 @@
 package com.travelReview.dto;
 
-import java.sql.Date; // ★ 핵심: Date 클래스를 사용하기 위해 import 필수!
+import java.sql.Date; 
 
 public class ReviewDTO {
-    // 멤버 변수 (DB 테이블 컬럼과 매칭)
+    
     private int reviewNo;       // REVIEW_NO
     private int planNo;         // PLAN_NO
     private int travelNo;       // TRAVEL_NO
@@ -12,6 +12,8 @@ public class ReviewDTO {
     private String content;     // CONTENT
     private int rating;         // RATING
     private Date regDate;       // REG_DATE
+    private String planTitle;  // 구체적인 장소 이름 (예: 에펠탑, 오사카 성)
+    private int mediaCount;    // 사진/영상 개수 (미디어 필터링용)
 
     // 기본 생성자
     public ReviewDTO() {
@@ -98,9 +100,15 @@ public class ReviewDTO {
     }
     
  // 위시리스트 목록 화면용 변수 (DB 컬럼 아님, JOIN해서 가져올 값)
-    private String category; // 카테고리 (예: dining__식당)
+    private String category; 
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
+    
+    public String getPlanTitle() { return planTitle; }
+    public void setPlanTitle(String planTitle) { this.planTitle = planTitle; }
+
+    public int getMediaCount() { return mediaCount; }
+    public void setMediaCount(int mediaCount) { this.mediaCount = mediaCount; }
 
 }

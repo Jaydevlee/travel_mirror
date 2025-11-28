@@ -82,17 +82,43 @@ public class ReviewDAO {
         return list;
     }
     
- // 전체 리뷰 목록 조회 (최신순 + 썸네일 포함)
-    public List<ReviewDTO> selectAllReviews(Connection conn) {
+ // 필터링 기능이 포함된 리뷰 조회 메서드
+    public List<ReviewDTO> selectFilteredReviews(Connection conn, String country, String category, String rating, String mediaType) {
         List<ReviewDTO> list = new ArrayList<>();
-        // 서브쿼리를 이용해 각 리뷰당 첫 번째 사진 하나만 가져옴
-        String sql = "SELECT r.*, " +
-                     " (SELECT saved_name FROM travel_media m WHERE m.review_no = r.review_no AND ROWNUM = 1) as thumbnail " +
-                     "FROM travel_review r " +
-                     "ORDER BY r.review_no DESC";
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT r.*, p.CATEGORY, p.TITLE AS PLAN_TITLE, ");
+        sql.append(" (SELECT saved_name FROM travel_media m WHERE m.review_no = r.review_no AND ROWNUM = 1) as thumbnail, ");
+        sql.append(" (SELECT count(*) FROM travel_media m WHERE m.review_no = r.review_no) as media_cnt ");
+        sql.append("FROM TRAVEL_REVIEW r ");
+        sql.append("JOIN TRAVEL_PLAN p ON r.PLAN_NO = p.PLAN_NO "); // ★ 핵심 JOIN
+        sql.append("WHERE 1=1 ");
+
+        if (country != null && !country.equals("all")) sql.append("AND r.DESTINATION = ? ");
+        if (category != null && !category.equals("all")) sql.append("AND p.CATEGORY LIKE ? ");
+        if (rating != null && !rating.equals("all")) sql.append("AND r.RATING = ? ");
+        
+        // 미디어 필터 (사진있음 vs 글만있음)
+        if ("photo".equals(mediaType)) {
+            sql.append("AND (SELECT count(*) FROM travel_media m WHERE m.review_no = r.review_no) > 0 ");
+        } else if ("text".equals(mediaType)) {
+            sql.append("AND (SELECT count(*) FROM travel_media m WHERE m.review_no = r.review_no) = 0 ");
+        }
+        
+        sql.append("ORDER BY r.REVIEW_NO DESC");
+
+        try {
+            pstmt = conn.prepareStatement(sql.toString());
+            
+            // 물음표(?) 인덱스 설정
+            int idx = 1;
+            if (country != null && !country.equals("all")) pstmt.setString(idx++, country);
+            if (category != null && !category.equals("all")) pstmt.setString(idx++, "%" + category + "%");
+            if (rating != null && !rating.equals("all")) pstmt.setInt(idx++, Integer.parseInt(rating));
+
+            rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 ReviewDTO dto = new ReviewDTO();
@@ -102,14 +128,20 @@ public class ReviewDAO {
                 dto.setContent(rs.getString("CONTENT"));
                 dto.setRating(rs.getInt("RATING"));
                 dto.setRegDate(rs.getDate("REG_DATE"));
-                // 썸네일 저장
-                String thumb = rs.getString("thumbnail");
-                dto.setThumbnail(thumb); 
+                dto.setThumbnail(rs.getString("thumbnail"));
                 
+                // 새로 추가한 정보 담기
+                dto.setCategory(rs.getString("CATEGORY"));
+                dto.setPlanTitle(rs.getString("PLAN_TITLE")); // 장소 이름
+                dto.setMediaCount(rs.getInt("media_cnt"));
+
                 list.add(dto);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if(rs!=null) try{rs.close();}catch(Exception e){}
+            if(pstmt!=null) try{pstmt.close();}catch(Exception e){}
         }
         return list;
     }
@@ -160,42 +192,93 @@ public class ReviewDAO {
     }
 
     
- // 내가 찜한 리뷰 목록 가져오기 (썸네일 포함 )
-    public List<ReviewDTO> selectMyWishList(Connection conn, String userId) throws SQLException {
+ // 위시리스트 조회 (필터링 기능 추가됨)
+    public List<ReviewDTO> selectMyWishList(Connection conn, String userId, String country, String category, String rating, String mediaType) {
         List<ReviewDTO> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        
-        String sql = "SELECT r.*, " +
-                     " (SELECT saved_name FROM travel_media m WHERE m.review_no = r.review_no AND ROWNUM = 1) as thumbnail " +
-                     "FROM TRAVEL_REVIEW r " +
-                     "JOIN TRAVEL_WISHLIST w ON r.REVIEW_NO = w.REVIEW_NO " +
-                     "WHERE w.TR_MEM_ID = ? " +
-                     "ORDER BY w.WISH_NO DESC";
+
+        StringBuilder sql = new StringBuilder();
+
+        sql.append("SELECT r.*, p.CATEGORY, p.TITLE AS PLAN_TITLE, ");
+        sql.append(" (SELECT saved_name FROM travel_media m WHERE m.review_no = r.review_no AND ROWNUM = 1) as thumbnail, ");
+        sql.append(" (SELECT count(*) FROM travel_media m WHERE m.review_no = r.review_no) as media_cnt ");
+        sql.append("FROM TRAVEL_REVIEW r ");
+        sql.append("JOIN TRAVEL_WISHLIST w ON r.REVIEW_NO = w.REVIEW_NO ");
+        sql.append("JOIN TRAVEL_PLAN p ON r.PLAN_NO = p.PLAN_NO ");
+        sql.append("WHERE w.TR_MEM_ID = ? "); // 내 아이디 조건 필수
+
+
+        if (country != null && !country.equals("all")) {
+            sql.append("AND r.DESTINATION = ? ");
+        }
+        if (category != null && !category.equals("all")) {
+            sql.append("AND p.CATEGORY LIKE ? ");
+        }
+        if (rating != null && !rating.equals("all")) {
+            sql.append("AND r.RATING = ? ");
+        }
+        // 미디어 필터
+        if ("photo".equals(mediaType)) {
+            sql.append("AND (SELECT count(*) FROM travel_media m WHERE m.review_no = r.review_no) > 0 ");
+        } else if ("text".equals(mediaType)) {
+            sql.append("AND (SELECT count(*) FROM travel_media m WHERE m.review_no = r.review_no) = 0 ");
+        }
+
+        sql.append("ORDER BY w.WISH_NO DESC");
 
         try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, userId);
+            pstmt = conn.prepareStatement(sql.toString());
+            
+            int idx = 1;
+            pstmt.setString(idx++, userId); 
+
+            if (country != null && !country.equals("all")) pstmt.setString(idx++, country);
+            if (category != null && !category.equals("all")) pstmt.setString(idx++, "%" + category + "%");
+            if (rating != null && !rating.equals("all")) pstmt.setInt(idx++, Integer.parseInt(rating));
+
             rs = pstmt.executeQuery();
             
             while (rs.next()) {
                 ReviewDTO dto = new ReviewDTO();
                 dto.setReviewNo(rs.getInt("REVIEW_NO"));
-                dto.setTravelNo(rs.getInt("TRAVEL_NO"));
                 dto.setMemberId(rs.getString("TR_MEM_ID"));
                 dto.setDestination(rs.getString("DESTINATION"));
                 dto.setContent(rs.getString("CONTENT"));
                 dto.setRating(rs.getInt("RATING"));
                 dto.setRegDate(rs.getDate("REG_DATE"));
+                dto.setThumbnail(rs.getString("thumbnail"));
                 
-                String thumb = rs.getString("thumbnail");
-                dto.setThumbnail(thumb);
-                
+                // 추가 정보
+                dto.setCategory(rs.getString("CATEGORY"));
+                dto.setPlanTitle(rs.getString("PLAN_TITLE"));
+                dto.setMediaCount(rs.getInt("media_cnt")); // 미디어 개수
+
                 list.add(dto);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            if(rs != null) rs.close();
-            if(pstmt != null) pstmt.close();
+            if(rs!=null) try{rs.close();}catch(Exception e){}
+            if(pstmt!=null) try{pstmt.close();}catch(Exception e){}
+        }
+        return list;
+    }
+    
+ // 리뷰가 존재하는 국가 코드 목록만 조회 (중복 제거)
+    public List<String> selectExistCountries(Connection conn) {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT DESTINATION FROM TRAVEL_REVIEW " +
+                     "WHERE DESTINATION IS NOT NULL ORDER BY DESTINATION ASC";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                list.add(rs.getString("DESTINATION")); 
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }

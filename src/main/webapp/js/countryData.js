@@ -28,7 +28,7 @@
 		        { id: 'ES', text: '🇪🇸 스페인 (Spain)' },
 		        { id: 'CH', text: '🇨🇭 스위스 (Switzerland)' },
 		        { id: 'DE', text: '🇩🇪 독일 (Germany)' },
-		        { id: 'IE', text: '🇮🇪 아일랜드 (Ireland)' }, // 여기 있습니다!
+		        { id: 'IE', text: '🇮🇪 아일랜드 (Ireland)' }, 
 		        { id: 'AT', text: '🇦🇹 오스트리아 (Austria)' },
 		        { id: 'CZ', text: '🇨🇿 체코 (Czechia)' },
 		        { id: 'HU', text: '🇭🇺 헝가리 (Hungary)' },

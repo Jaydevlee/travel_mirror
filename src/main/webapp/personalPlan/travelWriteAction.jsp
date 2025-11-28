@@ -9,7 +9,11 @@
 <%
     request.setCharacterEncoding("UTF-8");
     String title = request.getParameter("title");
-    String country = request.getParameter("country");
+    String[] countries = request.getParameterValues("country");
+    String country = "";
+    if (countries != null) {
+        country = String.join(",", countries);
+    }
     String companion = request.getParameter("companion");
     String startDateStr = request.getParameter("startDate");
     String endDateStr = request.getParameter("endDate");
